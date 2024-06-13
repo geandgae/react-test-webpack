@@ -1,28 +1,20 @@
 * rolldice
 
-app/
-│
-├── public/
-│   └── index.html
-│
-├── src/
-│   └── index.js
-│
-├── .babelrc
-├── package.json
-└── webpack.config.js
-
-
 my-react-app/
 │
 ├── public/
 │   └── index.html
 │
 ├── src/
-│   ├── index.js
+│   ├── assets/
+│   │   └── scss/
+│   │       └── default.scss
 │   ├── components/
-│   │   └── Header.js
-│   └── styles.scss
+│   │   ├── Login.js
+│   │   ├── Signup.js
+│   │   └── ForgotPassword.js
+│   ├── App.js
+│   └── index.js
 │
 ├── .babelrc
 ├── package.json
