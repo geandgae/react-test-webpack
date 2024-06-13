@@ -25,3 +25,5 @@ my-react-app/
 ├── .babelrc
 ├── package.json
 └── webpack.config.js
+
+* main
