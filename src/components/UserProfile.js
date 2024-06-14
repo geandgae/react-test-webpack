@@ -1,4 +1,5 @@
 import React from 'react';
+import Dice from './Dice';
 
 const LoggedInUser = ({ user, onLogout }) => {
   return (
@@ -8,6 +9,7 @@ const LoggedInUser = ({ user, onLogout }) => {
       <p><strong>Name:</strong> {user.name}</p>
       <p><strong>Birth Date:</strong> {user.birthDate}</p>
       {/* <button onClick={onLogout}>Logout</button> */}
+      <Dice />
     </div>
   );
 };
