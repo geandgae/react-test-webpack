@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Dice from './Dice';
 import Avatar from './Avatar';
 import Stage from './Stage';
+import Inventory from './Inventory';
 
 const LoggedInUser = ({ user, onLogout }) => {
   const [userStatus, setUserStatus] = useState('avatar');
@@ -28,6 +29,10 @@ const LoggedInUser = ({ user, onLogout }) => {
 
   const handleSelectAvatar = () => {
     setUserStatus('avatar');
+  };
+
+  const handleSelectInventory = () => {
+    setUserStatus('inventory');
   };
 
   return (
@@ -62,11 +67,13 @@ const LoggedInUser = ({ user, onLogout }) => {
       <button onClick={handleSelectDice}>Dice</button>
       <button onClick={handleSelectStage}>Stage</button>
       <button onClick={handleSelectAvatar}>Avatar</button>
+      <button onClick={handleSelectInventory}>Inventory</button>
 
       {/* userStatus에 따라 컴포넌트를 조건부로 렌더링 */}
       {userStatus === 'dice' && <Dice />}
       {userStatus === 'stage' && <Stage />}
       {userStatus === 'avatar' && <Avatar onSave={handleAvatarSave} />}
+      {userStatus === 'inventory' && <Inventory />}
       
 
       <br></br>

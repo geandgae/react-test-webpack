@@ -18,6 +18,21 @@ const Avatar = ({ onSave }) => {
     }));
   };
 
+  const nameList = ['John', 'Jane', 'Michael', 'Emma', 'David']; 
+  const generateRandomName = () => {
+    // const randomName = 'Avatar' + Math.floor(Math.random() * 1000); // 예시로 간단히 숫자를 붙임
+    // setAvatar((prevAvatar) => ({
+    //   ...prevAvatar,
+    //   name: randomName,
+    // }));
+    const randomIndex = Math.floor(Math.random() * nameList.length);
+    const randomName = nameList[randomIndex];
+    setAvatar((prevAvatar) => ({
+      ...prevAvatar,
+      name: randomName,
+    }));
+  };
+
   const handleSave = () => {
     localStorage.setItem('avatar', JSON.stringify(avatar));
     onSave(avatar);
@@ -71,8 +86,13 @@ const Avatar = ({ onSave }) => {
         <h3>Information</h3>
         <div>
           <label>
-            Name:
-            <input type="text" name="name" value={avatar.name} onChange={handleInputChange} />
+            Name: {avatar.name}{' '}
+            {/* <input type="text" name="name" value={avatar.name} onChange={handleInputChange} /> */}
+          </label>
+          <label>
+            <span onClick={generateRandomName}>
+              Refresh
+            </span>
           </label>
         </div>
         <div>
