@@ -27,7 +27,7 @@ const Dice = () => {
       <div className="dice-container">
         {/* 주사위 이미지 */}
         <img
-          src={`dice${diceNumber}.png`}
+          src={`./assets/images/dice${diceNumber}.png`}
           alt={`Dice ${diceNumber}`}
           className={`dice-image ${rolling ? 'rolling' : ''}`}
         />
