@@ -47,7 +47,7 @@ const App = () => {
       ) : (
         <div>
           {/* 로그인, 회원가입, 비밀번호 찾기 페이지 */}
-          {currentPage === 'login' && <Login onLogin={handleLogin} />}
+          {currentPage === 'login' && <Login onLogin={handleLogin} setCurrentPage={setCurrentPage} />}
           {currentPage === 'signup' && <Signup onSignup={handleSignup} />}
           {currentPage === 'forgot-password' && <ForgotPassword />}
 

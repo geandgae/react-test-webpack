@@ -30,6 +30,7 @@ const Login = ({ onLogin, setCurrentPage }) => {
       <button type="submit">Login</button>
       <div>
         <a href="#signup" onClick={() => setCurrentPage('signup')}>Signup</a> | <a href="#forgot-password" onClick={() => setCurrentPage('forgot-password')}>Forgot Password</a>
+        {/* <button onClick={() => setCurrentPage('signup')}>Signup</button> | <button onClick={() => setCurrentPage('forgot-password')}>Forgot Password</button> */}
       </div>
     </form>
   );
