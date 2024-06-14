@@ -27,7 +27,7 @@ const App = () => {
 
   return (
     <div>
-      {currentPage === 'login' && <Login onLogin={handleLogin} />}
+      {currentPage === 'login' && <Login onLogin={handleLogin} setCurrentPage={setCurrentPage} />}
       {currentPage === 'signup' && <Signup onSignup={handleSignup} />}
       {currentPage === 'forgot-password' && <ForgotPassword />}
       {currentPage !== 'home' && (
