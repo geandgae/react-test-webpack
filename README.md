@@ -26,4 +26,4 @@ my-react-app/
 ├── package.json
 └── webpack.config.js
 
-* main
+* main.
