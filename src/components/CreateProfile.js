@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
   const [profileData, setProfileData] = useState(profile);
@@ -29,7 +29,7 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
           <label>
             name:
             <input
-              className='input-name'
+              className="input-name"
               type="text"
               name="name"
               value={profileData.name}

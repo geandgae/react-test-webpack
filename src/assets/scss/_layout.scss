@@ -245,6 +245,7 @@
 
 .d-flex {
   @include flex-center;
+  gap: 30px;
 }
 body {
   font-family: Arial, sans-serif;
@@ -350,6 +351,13 @@ a:hover {
     border-radius: 50%;
     filter: blur(5px);
     background-color: rgba(0, 0, 0, 0.75);
+  }
+  &.enemy {
+    .dice-3d {
+      & > span {
+        border: 1px solid #ff0000;
+      }
+    }
   }
   .dice-3d {
     position: absolute;
@@ -548,6 +556,15 @@ a:hover {
         background-color: #dfe9d2;
         border-radius : 5px;
       }
+    }
+  }
+}
+.Avatar-figure {
+  &.view {
+    font-size: 10px;
+    padding: 0;
+    & div {
+      margin-bottom: 5px;
     }
   }
 }

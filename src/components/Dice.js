@@ -1,73 +1,108 @@
-// src/components/Dice.js
+import React, { useState, useEffect } from "react";
 
-import React, { useState } from 'react';
+const Dice = ({ diceCount, enemyDiceCount }) => {
+  const [rollingPlayer, setRollingPlayer] = useState(false);
+  const [rollingEnemy, setRollingEnemy] = useState(false);
+  const [diceNumbers, setDiceNumbers] = useState([]);
+  const [opponentDiceNumbers, setOpponentDiceNumbers] = useState([]);
+  console.log(opponentDiceNumbers);
 
-const Dice = () => {
-  const [diceNumber, setDiceNumber] = useState(1);
-  const [rolling, setRolling] = useState(false);
-  const [diceNumber2, setDiceNumber2] = useState(1);
+  useEffect(() => {
+    // Initialize player's dice numbers array based on diceCount
+    const initialDiceNumbers = Array(diceCount).fill(0);
+    setDiceNumbers(initialDiceNumbers);
+  }, [diceCount]);
+
+  useEffect(() => {
+    // Initialize opponent's dice numbers array based on enemyDiceCount
+    const storedEnemyDiceCount = localStorage.getItem("enemyDiceCount");
+    const initialOpponentDiceNumbers = Array(
+      storedEnemyDiceCount ? parseInt(storedEnemyDiceCount, 10) : 1
+    ).fill(0);
+    setOpponentDiceNumbers(initialOpponentDiceNumbers);
+    // const initialOpponentDiceNumbers = Array(enemyDiceCount).fill(0);
+    // setOpponentDiceNumbers(initialOpponentDiceNumbers);
+  }, [enemyDiceCount]);
 
   const rollDice = () => {
-    if (!rolling) {
-      setRolling(true);
+    if (!rollingPlayer && !rollingEnemy) {
+      setRollingEnemy(true);
       setTimeout(() => {
-        const randomNumber = Math.floor(Math.random() * 6) + 1;
-        setDiceNumber(randomNumber);
-
-        const randomNumber2 = Math.floor(Math.random() * 6) + 1;
-        setDiceNumber2(randomNumber2);
-
-        setRolling(false);
-      }, 2000); // n초 후에 주사위 숫자 변경
+        // Roll opponent's dice first
+        const newOpponentDiceNumbers = Array(enemyDiceCount).fill(0).map(() => Math.floor(Math.random() * 6) + 1);
+        setOpponentDiceNumbers(newOpponentDiceNumbers);
+        setRollingEnemy(false);
+        setRollingPlayer(true);
+        setTimeout(() => {
+          // Roll player's dice after 1 second
+          const newDiceNumbers = Array(diceCount).fill(0).map(() => Math.floor(Math.random() * 6) + 1);
+          setDiceNumbers(newDiceNumbers);
+          setRollingPlayer(false);
+        }, 1000);
+      }, 1000);
     }
   };
 
+  // Calculate sum of opponent's dice numbers
+  const opponentDiceSum = opponentDiceNumbers.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
+
+  // Calculate sum of player's dice numbers
+  const playerDiceSum = diceNumbers.reduce(
+    (accumulator, currentValue) => accumulator + currentValue,
+    0
+  );
 
   return (
     <div>
-      <br></br>
-      <h1>Dice Roller</h1>
       <div>
-        <p>Number: {diceNumber}</p>
-        <p>Number: {diceNumber2}</p>
-      </div>
-      <div className="dice-container">
-        {/* 주사위 이미지 */}
-        <img
-          src={`./assets/images/dice${diceNumber}.png`}
-          alt={`Dice ${diceNumber}`}
-          className={`dice-image ${rolling ? 'rolling' : ''}`}
-        />
+        <h3>Opponent's Dice {opponentDiceSum}</h3>
+        {opponentDiceNumbers.map((number, index) => (
+          <p key={index}>Number: {number}</p>
+        ))}
       </div>
       <div className="d-flex">
-        <div className="dice-wrap">
-          <div className={`dice-3d ${rolling ? 'rolling' : ''}`}>
-            <span className={`active-${diceNumber}`}>{diceNumber}</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-            <span>6</span>
+        {opponentDiceNumbers.map((number, index) => (
+          <div className="dice-wrap" key={index}>
+            <div className={`dice-3d ${rollingEnemy ? "rolling" : ""}`}>
+              <span className={`active-${number}`}>{number}</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+            </div>
           </div>
-        </div>
-        <div className="dice-wrap">
-          <div className={`dice-3d ${rolling ? 'rolling' : ''}`}>
-            <span className={`active-${diceNumber2}`}>{diceNumber2}</span>
-            <span>2</span>
-            <span>3</span>
-            <span>4</span>
-            <span>5</span>
-            <span>6</span>
-          </div>
-        </div>
+        ))}
       </div>
       <div>
-        {/* <button onClick={rollDice}>Roll Dice</button> */}
-        <button onClick={rollDice} disabled={rolling}>
-          {rolling ? 'Rolling...' : 'Roll Dice'}
+        <h3>Your Dice {playerDiceSum}</h3>
+        {diceNumbers.map((number, index) => (
+          <p key={index}>Number: {number}</p>
+        ))}
+      </div>
+      <div className="d-flex">
+        {diceNumbers.map((number, index) => (
+          <div className="dice-wrap" key={index}>
+            <div className={`dice-3d ${rollingPlayer ? "rolling" : ""}`}>
+              <span className={`active-${number}`}>{number}</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <button onClick={rollDice} disabled={rollingPlayer}>
+          {rollingPlayer ? "Rolling..." : "Roll Dice"}
         </button>
       </div>
-      <br></br>
+      <br />
     </div>
   );
 };

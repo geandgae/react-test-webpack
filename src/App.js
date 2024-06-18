@@ -4,21 +4,28 @@ import ViewProfile from "./components/ViewProfile";
 
 const App = () => {
   const [profile, setProfile] = useState({
-    name: "",
+    name: "test",
     head: "bald",
     eyes: "smallEyes",
     face: "round",
     job: "warrior",
-    skill: "swordsmanship"
+    skill: "swordsmanship",
   });
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [currentPage, setCurrentPage] = useState("main");
+  const [stage, setStage] = useState("1");
 
   useEffect(() => {
+    // profile
     const storedProfile = JSON.parse(localStorage.getItem("user"));
     if (storedProfile) {
       setProfile(storedProfile);
       setIsProfileSaved(true);
+    }
+    // stage
+    const savedStage = localStorage.getItem("stage");
+    if (savedStage) {
+      setStage(savedStage);
     }
     // intro
     const introDom = document.querySelector(".intro");
@@ -33,25 +40,32 @@ const App = () => {
 
   const saveUserToLocalStorage = () => {
     localStorage.setItem("user", JSON.stringify(profile));
+    localStorage.setItem("stage", stage);
     setIsProfileSaved(true);
     setCurrentPage("main")
   };
 
   const removeFromLocalStorage = () => {
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user");
+    // 로컬 스토리지 전체 삭제
+    localStorage.clear(); 
     setProfile({
-      name: "",
+      name: "test",
       head: "bald",
       eyes: "smallEyes",
       face: "round",
       job: "warrior",
-      skill: "swordsmanship"
+      skill: "swordsmanship",
     });
+    setStage("1")
     setIsProfileSaved(false);
   };
 
-  
+  // test
+  console.log(profile.name);
   console.log(currentPage);
+  console.log(stage);
+  
   
   return (
     <div>
@@ -79,16 +93,17 @@ const App = () => {
       
       {isProfileSaved ? (
         <div>
-          {currentPage === 'load' && 
+          {currentPage === "load" && 
             <ViewProfile 
               profile={profile}
-              removeFromLocalStorage={removeFromLocalStorage}
+              stage={stage}
+              setStage={setStage}
             />
           }
         </div>
       ) : (
         <div>
-          {currentPage === 'new' && 
+          {currentPage === "new" && 
             <CreateProfile
               profile={profile}
               setProfile={setProfile}

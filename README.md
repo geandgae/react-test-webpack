@@ -24,3 +24,9 @@ my-react-app/
 * 사용자는 최종 목적지에 도달
 * 방해자는 사용자의 행동을 방해
 * 턴으로 진행
+
+
+
+* intro > main > load(ViewProfile) > stage
+* intro / main 은 app (사용자 정보);
+* stage 는 dice / inven (진행정보)
