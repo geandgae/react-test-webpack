@@ -16,7 +16,7 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
 
   return (
     <div>
-      <h2>유저 등록 및 삭제</h2>
+      <h2>CreateProfile</h2>
       <div className={`Avatar-preview ${profileData.head} ${profileData.eyes} ${profileData.face}`}>
         <div className="Avatar-inner">
           <div className="Avatar-head"><span></span></div>
@@ -29,6 +29,7 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
           <label>
             name:
             <input
+              className='input-name'
               type="text"
               name="name"
               value={profileData.name}

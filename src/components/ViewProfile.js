@@ -3,7 +3,6 @@ import React from "react";
 const ViewProfile = ({ profile, removeFromLocalStorage }) => {
   return (
     <div>
-      <button onClick={removeFromLocalStorage}>삭제</button>
       <div className={`Avatar-preview ${profile.head} ${profile.eyes} ${profile.face}`}>
         <div className="Avatar-inner">
           <div className="Avatar-head"><span></span></div>
