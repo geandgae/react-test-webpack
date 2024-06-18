@@ -96,7 +96,6 @@ const App = () => {
         ) : (
           <button disabled>remove</button>
         )}
-        
       </nav>
       }
       {/* gameover */}
@@ -105,29 +104,28 @@ const App = () => {
         <span>gameover</span>
       </div>
       }
-      
+      {/* load & new */}
       {isProfileSaved ? (
-        <div>
-          {currentPage === "load" && 
-            <ViewProfile 
-              profile={profile}
-              stage={stage}
-              setStage={setStage}
-              setCurrentPage={setCurrentPage}
-            />
-          }
-        </div>
+      <div>
+        {currentPage === "load" && 
+          <ViewProfile 
+            profile={profile}
+            stage={stage}
+            setStage={setStage}
+            setCurrentPage={setCurrentPage}
+          />
+        }
+      </div>
       ) : (
-        <div>
-          {currentPage === "new" && 
-            <CreateProfile
-              profile={profile}
-              setProfile={setProfile}
-              saveUserToLocalStorage={saveUserToLocalStorage}
-            />
-          }
-        </div>
-        
+      <div>
+        {currentPage === "new" && 
+          <CreateProfile
+            profile={profile}
+            setProfile={setProfile}
+            saveUserToLocalStorage={saveUserToLocalStorage}
+          />
+        }
+      </div>
       )}
     </div>
   );
