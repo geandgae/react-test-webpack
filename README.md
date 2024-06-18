@@ -25,8 +25,9 @@ my-react-app/
 * 방해자는 사용자의 행동을 방해
 * 턴으로 진행
 
-
-
 * intro > main > load(ViewProfile) > stage
 * intro / main 은 app (사용자 정보);
 * stage 는 dice / inven (진행정보)
+
+* 방해요소 이벤트(lose)
+* 보상설정(굴림설정/확률값)
