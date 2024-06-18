@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Dice from "./Dice";
 import Inventory from "./Inventory";
 
-const GameStage = ({ profile, stage, setStage, setCurrentPage, removeFromLocalStorage }) => {
-  const [hp, setHp] = useState(10);
+const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
+  const [hp, setHp] = useState(1);
   const [diceCount, setDiceCount] = useState(1);
   const [enemyDiceCount , setEnemyDiceCount ] = useState(1);
   const [gameResult, setGameResult] = useState("");
@@ -68,8 +68,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, removeFromLocalSt
     }
     if (newValue <= 0) {
       console.log("gameover");
-      removeFromLocalStorage();
-      setCurrentPage("main");
+      setCurrentPage("gameover");
     }
   };
   // diceUp

@@ -61,6 +61,11 @@ const App = () => {
     setIsProfileSaved(false);
   };
 
+  const gameover = () => {
+    removeFromLocalStorage();
+    setCurrentPage("main")
+  }
+
   // test
   console.log(currentPage);
   console.log(stage);
@@ -86,8 +91,19 @@ const App = () => {
         ) : (
           <button disabled>load</button>
         )}
-        <button onClick={removeFromLocalStorage}>remove</button>
+        {isProfileSaved ? (
+          <button onClick={removeFromLocalStorage}>remove</button>
+        ) : (
+          <button disabled>remove</button>
+        )}
+        
       </nav>
+      }
+      {/* gameover */}
+      {currentPage === "gameover" && 
+      <div className="intro" onClick={gameover}>
+        <span>gameover</span>
+      </div>
       }
       
       {isProfileSaved ? (
@@ -98,7 +114,6 @@ const App = () => {
               stage={stage}
               setStage={setStage}
               setCurrentPage={setCurrentPage}
-              removeFromLocalStorage={removeFromLocalStorage}
             />
           }
         </div>
