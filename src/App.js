@@ -62,7 +62,6 @@ const App = () => {
   };
 
   // test
-  console.log(profile.name);
   console.log(currentPage);
   console.log(stage);
   
@@ -98,6 +97,8 @@ const App = () => {
               profile={profile}
               stage={stage}
               setStage={setStage}
+              setCurrentPage={setCurrentPage}
+              removeFromLocalStorage={removeFromLocalStorage}
             />
           }
         </div>

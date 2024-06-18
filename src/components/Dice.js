@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const Dice = ({ diceCount, enemyDiceCount }) => {
+const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, setDiceCount }) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
   const [opponentDiceNumbers, setOpponentDiceNumbers] = useState([]);
-  console.log(opponentDiceNumbers);
+  const [playerDiceSum, setPlayerDiceSum] = useState(0);
+  const [opponentDiceSum, setOpponentDiceSum] = useState(0);
 
   useEffect(() => {
     // Initialize player's dice numbers array based on diceCount
@@ -20,45 +21,57 @@ const Dice = ({ diceCount, enemyDiceCount }) => {
       storedEnemyDiceCount ? parseInt(storedEnemyDiceCount, 10) : 1
     ).fill(0);
     setOpponentDiceNumbers(initialOpponentDiceNumbers);
-    // const initialOpponentDiceNumbers = Array(enemyDiceCount).fill(0);
-    // setOpponentDiceNumbers(initialOpponentDiceNumbers);
   }, [enemyDiceCount]);
 
   const rollDice = () => {
     if (!rollingPlayer && !rollingEnemy) {
       setRollingEnemy(true);
+
+      // Roll opponent's dice
+      const newOpponentDiceNumbers = Array(enemyDiceCount)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * 6) + 1);
+      setOpponentDiceNumbers(newOpponentDiceNumbers);
+
       setTimeout(() => {
-        // Roll opponent's dice first
-        const newOpponentDiceNumbers = Array(enemyDiceCount).fill(0).map(() => Math.floor(Math.random() * 6) + 1);
-        setOpponentDiceNumbers(newOpponentDiceNumbers);
+        // Calculate sum of opponent's dice numbers
+        const opponentSum = newOpponentDiceNumbers.reduce((acc, val) => acc + val, 0);
+        setOpponentDiceSum(opponentSum);
+
+        // Roll player's dice after 1 second
+        const newDiceNumbers = Array(diceCount)
+          .fill(0)
+          .map(() => Math.floor(Math.random() * 6) + 1);
+        setDiceNumbers(newDiceNumbers);
         setRollingEnemy(false);
         setRollingPlayer(true);
+
         setTimeout(() => {
-          // Roll player's dice after 1 second
-          const newDiceNumbers = Array(diceCount).fill(0).map(() => Math.floor(Math.random() * 6) + 1);
-          setDiceNumbers(newDiceNumbers);
+          // Calculate sum of player's dice numbers
+          const playerSum = newDiceNumbers.reduce((acc, val) => acc + val, 0);
+          setPlayerDiceSum(playerSum);
           setRollingPlayer(false);
-        }, 1000);
-      }, 1000);
+
+          // Determine game result
+          if (playerSum >= opponentSum) {
+            setGameResult("win");
+            stageCtrl();
+          } else {
+            setGameResult("lose");
+            hpCtrl(-1)
+          }
+
+          // 임시주사위 삭제
+          setDiceCount(1);
+        }, 1000); // Wait 1 second before calculating player's sum
+      }, 1000); // Wait 1 second before calculating opponent's sum
     }
   };
-
-  // Calculate sum of opponent's dice numbers
-  const opponentDiceSum = opponentDiceNumbers.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
-    0
-  );
-
-  // Calculate sum of player's dice numbers
-  const playerDiceSum = diceNumbers.reduce(
-    (accumulator, currentValue) => accumulator + currentValue,
-    0
-  );
 
   return (
     <div>
       <div>
-        <h3>Opponent's Dice {opponentDiceSum}</h3>
+        <h3>Opponent's Dice Sum: {opponentDiceSum}</h3>
         {opponentDiceNumbers.map((number, index) => (
           <p key={index}>Number: {number}</p>
         ))}
@@ -78,7 +91,7 @@ const Dice = ({ diceCount, enemyDiceCount }) => {
         ))}
       </div>
       <div>
-        <h3>Your Dice {playerDiceSum}</h3>
+        <h3>Your Dice Sum: {playerDiceSum}</h3>
         {diceNumbers.map((number, index) => (
           <p key={index}>Number: {number}</p>
         ))}
@@ -98,8 +111,8 @@ const Dice = ({ diceCount, enemyDiceCount }) => {
         ))}
       </div>
       <div>
-        <button onClick={rollDice} disabled={rollingPlayer}>
-          {rollingPlayer ? "Rolling..." : "Roll Dice"}
+        <button onClick={rollDice} disabled={rollingPlayer || rollingEnemy}>
+          {rollingPlayer || rollingEnemy ? "Rolling..." : "Roll Dice"}
         </button>
       </div>
       <br />

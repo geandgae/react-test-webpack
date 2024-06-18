@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import Dice from "./Dice";
 import Inventory from "./Inventory";
 
-const GameStage = ({ profile, stage, setStage }) => {
-  const [hp, setHp] = useState(5);
+const GameStage = ({ profile, stage, setStage, setCurrentPage, removeFromLocalStorage }) => {
+  const [hp, setHp] = useState(10);
   const [diceCount, setDiceCount] = useState(1);
   const [enemyDiceCount , setEnemyDiceCount ] = useState(1);
-  const [bag, setBag] = useState("true");
+  const [gameResult, setGameResult] = useState("");
   
 
   useEffect(() => {
@@ -32,30 +32,53 @@ const GameStage = ({ profile, stage, setStage }) => {
   const updateStage = (newStage) => {
     setStage(newStage);
     localStorage.setItem("stage", newStage);
-    if (stage > 10) {
+    if (stage === 5) {
+      enemyDiceUp(1);
+    }
+    if (stage === 10) {
+      enemyDiceUp(1);
+    }
+    if (stage === 15) {
+      enemyDiceUp(1);
+    }
+    if (stage === 20) {
+      enemyDiceUp(1);
+    }
+    if (stage === 25) {
+      enemyDiceUp(1);
+    }
+    if (stage === 30) {
       enemyDiceUp(1);
     }
   };
-  const handleClick = () => {
-    updateStage(parseInt(stage, 10) + 1); // 클릭 시 stage를 현재 값 + 1로 업데이트
+  const stageCtrl = () => {
+    updateStage(parseInt(stage, 10) + 1);
   };
 
-  // hpUp
-  const hpUp = (v) => {
+  // hpCtrl
+  const hpCtrl = (v) => {
     const newValue = (parseInt(hp, 10) + v);
-    if (newValue <= 200) {
+    if (newValue <= 10) {
       setHp(newValue);
       localStorage.setItem("hp", newValue);
     } else {
-      console.log("최대치입니다.")
+      setHp(10);
+      localStorage.setItem("hp", 10);
+      console.log("최대치입니다.");
+    }
+    if (newValue <= 0) {
+      console.log("gameover");
+      removeFromLocalStorage();
+      setCurrentPage("main");
     }
   };
   // diceUp
   const diceUp = (v) => {
     const newValue = (parseInt(diceCount, 10) + v);
-    if (newValue <= 3) {
+    if (newValue <= 5) {
       setDiceCount(newValue);
     } else {
+      setDiceCount(5);
       console.log("최대치입니다.")
     }
   };
@@ -89,22 +112,30 @@ const GameStage = ({ profile, stage, setStage }) => {
           <div className="Avatar-face"><span></span></div>
         </div>
       </div> */}
-      <div>stage: {stage}</div>
-      <div>hp: {hp}</div>
-      <div>dice: {diceCount}</div>
-      <div>enemy: {enemyDiceCount}</div>
-      <div>bag: {bag}</div>
-      <button onClick={handleClick}>upstage</button>
-      <button onClick={updateStage2}>add2</button>
-      <button onClick={hpUp}>hptest</button>
+      <div className="d-flex">
+        <div>stage: {stage}</div>
+        <div>hp: {hp}</div>
+        <div>dice: {diceCount}</div>
+        <div>enemy: {enemyDiceCount}</div>
+      </div>
+      <button onClick={stageCtrl}>upstage</button>
+      {/* <button onClick={updateStage2}>add2</button> */}
+      <button onClick={hpCtrl}>hptest</button>
       <Dice
+        hpCtrl={hpCtrl}
         diceCount={diceCount}
+        setDiceCount={setDiceCount}
         enemyDiceCount={enemyDiceCount}
+        setGameResult={setGameResult}
+        stageCtrl={stageCtrl}
       />
       <Inventory
-        hpUp={hpUp}
+        hpCtrl={hpCtrl}
         diceUp={diceUp}
       />
+      <div>
+        <h3>Result: {gameResult}</h3>
+      </div>
     </div>
   );
 };

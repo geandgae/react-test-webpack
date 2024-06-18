@@ -336,13 +336,13 @@ a:hover {
   position: relative;
   width: 52px;
   height: 52px;
-  margin: 100px auto;
+  margin: 30px auto;
   perspective: 700px;
   cursor: pointer;
   &::after {
     position: absolute;
     left: 50%;
-    bottom: -40px;
+    bottom: -30px;
     transform: translateX(-50%);
     display: block;
     content: "";

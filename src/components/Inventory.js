@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Inventory = ({ hpUp, diceUp }) => {
+const Inventory = ({ hpCtrl, diceUp }) => {
   const maxItems = 5; // 최대 아이템 개수
   const [items, setItems] = useState([]);
 
@@ -46,13 +46,13 @@ const Inventory = ({ hpUp, diceUp }) => {
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
     if (name === "AAA") {
-      hpUp(1);
+      hpCtrl(1);
     }
     if (name === "BBB") {
-      hpUp(2);
+      hpCtrl(2);
     }
     if (name === "CCC") {
-      hpUp(3);
+      hpCtrl(3);
     }
     if (name === "DDD") {
       diceUp(1);
