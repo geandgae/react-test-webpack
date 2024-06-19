@@ -3,7 +3,8 @@ import Dice from "./Dice";
 import Inventory from "./Inventory";
 
 const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
-  const [hp, setHp] = useState(10);
+  const [maxHp, setMaxHp] = useState(10);
+  const [hp, setHp] = useState(maxHp);
   const [diceCount, setDiceCount] = useState(1);
   const [diceBuff, setDiceBuff] = useState(0);
   const [enemyDiceCount, setEnemyDiceCount] = useState(1);
@@ -17,6 +18,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const stageP1 = `stage-${stage + 1}`;
   const stageP2 = `stage-${stage + 2}`;
   const enemyWalk = `step-${enemyStep}`;
+  const hpCurent = `hp-${hp}`
   
   console.log(`enemyStep : ${enemyStep}`)
 
@@ -103,12 +105,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   // hpCtrl
   const hpCtrl = (v) => {
     const newValue = (parseInt(hp, 10) + v);
-    if (newValue <= 10) {
+    if (newValue <= maxHp) {
       setHp(newValue);
       localStorage.setItem("hp", newValue);
     } else {
-      setHp(10);
-      localStorage.setItem("hp", 10);
+      setHp(maxHp);
+      localStorage.setItem("hp", maxHp);
       console.log("최대치입니다.");
     }
     if (newValue <= 0) {
@@ -188,6 +190,11 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
           <div className={stageP1}>{stageP1}</div>
           <div className={stageP2}>{stageP2}</div>
         </div>
+      </div>
+      <div className={`hp-bar ${hpCurent}`}>
+        {Array.from({ length: maxHp }).map((_, index) => (
+          <span key={index}></span>
+        ))}
       </div>
       <div className="d-flex">
         <div>stage: {stage}</div>

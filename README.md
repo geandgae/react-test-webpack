@@ -33,3 +33,5 @@ my-react-app/
 * 보상설정(굴림설정/확률값)
 
 * result(턴리셋) 개선 > dice에서 결과 연산후 stage에서 호출
+
+* max-hp 설정 필요
