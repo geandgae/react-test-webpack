@@ -5,6 +5,7 @@ import Inventory from "./Inventory";
 const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const [hp, setHp] = useState(1);
   const [diceCount, setDiceCount] = useState(1);
+  const [diceBuff, setDiceBuff] = useState(0);
   const [enemyDiceCount , setEnemyDiceCount ] = useState(1);
   const [gameResult, setGameResult] = useState("");
   
@@ -14,6 +15,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     const savedHp = localStorage.getItem("hp");
     if (savedHp) {
       setHp(parseInt(savedHp, 10));
+    }
+
+    // diceCount
+    const savedDiceCount = localStorage.getItem("diceCount");
+    if (savedDiceCount) {
+      setDiceCount(parseInt(savedDiceCount, 10));
     }
 
     // enemyDiceCount
@@ -73,11 +80,11 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   };
   // diceUp
   const diceUp = (v) => {
-    const newValue = (parseInt(diceCount, 10) + v);
+    const newValue = (parseInt(diceBuff, 10) + v);
     if (newValue <= 5) {
-      setDiceCount(newValue);
+      setDiceBuff(newValue);
     } else {
-      setDiceCount(5);
+      setDiceBuff(5);
       console.log("최대치입니다.")
     }
   };
@@ -86,6 +93,11 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     const newValue = enemyDiceCount + v;
     setEnemyDiceCount(newValue);
     localStorage.setItem("enemyDiceCount", newValue);
+  };
+  const diceUpEquip = (v) => {
+    const newValue = (parseInt(diceCount, 10) + v);
+    setDiceCount(newValue);
+    localStorage.setItem("diceCount", newValue);
   };
   
   // 오브젝트 로컬 저장 예 test
@@ -127,10 +139,13 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
         enemyDiceCount={enemyDiceCount}
         setGameResult={setGameResult}
         stageCtrl={stageCtrl}
+        diceBuff={diceBuff}
+        setDiceBuff={setDiceBuff}
       />
       <Inventory
         hpCtrl={hpCtrl}
         diceUp={diceUp}
+        diceUpEquip={diceUpEquip}
       />
       <div>
         <h3>Result: {gameResult}</h3>

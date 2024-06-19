@@ -12,7 +12,7 @@ const App = () => {
     skill: "swordsmanship",
   });
   const [isProfileSaved, setIsProfileSaved] = useState(false);
-  const [currentPage, setCurrentPage] = useState("main");
+  const [currentPage, setCurrentPage] = useState("intro");
   const [stage, setStage] = useState("1");
 
   useEffect(() => {
@@ -31,7 +31,8 @@ const App = () => {
     const introDom = document.querySelector(".intro");
     if (introDom) {
       setTimeout(() => {
-        introDom.classList.add("hide");
+        // introDom.classList.add("hide");
+        setCurrentPage("main");
       }, 500);
     } else {
       console.error(`Element with class intro not found.`);
@@ -67,17 +68,18 @@ const App = () => {
   }
 
   // test
-  console.log(currentPage);
-  console.log(stage);
+  console.log(`페이지 : ${currentPage}`);
+  console.log(`단계 : ${stage}`);
   
   
   return (
     <div>
       {/* intro */}
+      {currentPage === "intro" && 
       <div className="intro">
         <span>intro</span>
-        <div className="skip">skip</div>
       </div>
+      }
       {/* main */}
       {currentPage === "main" && 
       <nav className="main-menu">

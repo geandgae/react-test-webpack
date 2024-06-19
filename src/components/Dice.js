@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, setDiceCount }) => {
+const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, diceBuff, setDiceBuff }) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
@@ -8,11 +8,15 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, set
   const [playerDiceSum, setPlayerDiceSum] = useState(0);
   const [opponentDiceSum, setOpponentDiceSum] = useState(0);
 
+  const totalDice = diceCount + diceBuff;
+
+  console.log(`diceCount : ${diceCount} : ${diceBuff} : ${totalDice}`)
+
   useEffect(() => {
-    // Initialize player's dice numbers array based on diceCount
-    const initialDiceNumbers = Array(diceCount).fill(0);
+    // Initialize player's dice numbers array based on totalDice
+    const initialDiceNumbers = Array(totalDice).fill(0);
     setDiceNumbers(initialDiceNumbers);
-  }, [diceCount]);
+  }, [totalDice]);
 
   useEffect(() => {
     // Initialize opponent's dice numbers array based on enemyDiceCount
@@ -39,7 +43,7 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, set
         setOpponentDiceSum(opponentSum);
 
         // Roll player's dice after 1 second
-        const newDiceNumbers = Array(diceCount)
+        const newDiceNumbers = Array(totalDice)
           .fill(0)
           .map(() => Math.floor(Math.random() * 6) + 1);
         setDiceNumbers(newDiceNumbers);
@@ -62,7 +66,7 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, set
           }
 
           // 임시주사위 삭제
-          setDiceCount(1);
+          setDiceBuff(0);
         }, 1000); // Wait 1 second before calculating player's sum
       }, 1000); // Wait 1 second before calculating opponent's sum
     }

@@ -628,3 +628,12 @@ h2, h3 {
 .input-name {
   ime-mode:inactive;
 }
+
+.item-box {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.equip-item {
+  background-color: #e7e7e7;
+}
