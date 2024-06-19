@@ -13,7 +13,7 @@ const App = () => {
   });
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [currentPage, setCurrentPage] = useState("intro");
-  const [stage, setStage] = useState("1");
+  const [stage, setStage] = useState(1);
 
   useEffect(() => {
     // profile
@@ -58,7 +58,7 @@ const App = () => {
       job: "warrior",
       skill: "swordsmanship",
     });
-    setStage("1")
+    setStage(1)
     setIsProfileSaved(false);
   };
 

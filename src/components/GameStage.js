@@ -11,6 +11,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const [looting, setLooting] = useState(false);
   const [enemyStep, setEnemyStep] = useState(0);
   const [findItem, setFindItem] = useState(1);
+
+  const stageCurent = `stage-${stage}`;
+  const stageN1 = `stage-${stage - 1}`;
+  const stageP1 = `stage-${stage + 1}`;
+  const stageP2 = `stage-${stage + 2}`;
+  const enemyWalk = `step-${enemyStep}`;
   
   console.log(`enemyStep : ${enemyStep}`)
 
@@ -172,14 +178,15 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
           <div className="Avatar-head"><span></span></div>
           <div className="Avatar-eyes"><span></span></div>
           <div className="Avatar-face"><span></span></div>
-        </div>enemyStep
+        </div>
       </div> */}
       <div className="stage-wrap">
         <div className="stage">
-          <div className={`enemy ${enemyStep === 1 ? "step1" : enemyStep === 2 ? "step2" : enemyStep === 3 ? "step3" : ""}`}></div>
-          <div className="before"></div>
-          <div className="curent"></div>
-          <div className="after"></div>
+          <div className={`enemy ${enemyWalk}`}></div>
+          <div className={`before ${stageN1}`}>{stageN1}</div>
+          <div className={`curent ${stageCurent}`}>{stageCurent}</div>
+          <div className={stageP1}>{stageP1}</div>
+          <div className={stageP2}>{stageP2}</div>
         </div>
       </div>
       <div className="d-flex">
