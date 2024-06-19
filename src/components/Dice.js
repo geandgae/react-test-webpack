@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, diceBuff, setDiceBuff }) => {
+const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, diceBuff, enemyCtrl, findCtrl}) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
@@ -10,7 +10,7 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
 
   const totalDice = diceCount + diceBuff;
 
-  console.log(`diceCount : ${diceCount} : ${diceBuff} : ${totalDice}`)
+  console.log(`totalDice : ${totalDice}`);
 
   useEffect(() => {
     // Initialize player's dice numbers array based on totalDice
@@ -57,16 +57,17 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
           setRollingPlayer(false);
 
           // Determine game result
-          if (playerSum >= opponentSum) {
+          if (playerSum > opponentSum) {
             setGameResult("win");
+            const dice = Math.floor(Math.random() * 3) + 1;
             stageCtrl();
+            findCtrl(dice);
+            enemyCtrl(-1);
           } else {
             setGameResult("lose");
-            hpCtrl(-1)
+            hpCtrl(-1);
+            enemyCtrl(1);
           }
-
-          // 임시주사위 삭제
-          setDiceBuff(0);
         }, 1000); // Wait 1 second before calculating player's sum
       }, 1000); // Wait 1 second before calculating opponent's sum
     }
@@ -76,9 +77,9 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
     <div>
       <div>
         <h3>Opponent's Dice Sum: {opponentDiceSum}</h3>
-        {opponentDiceNumbers.map((number, index) => (
+        {/* {opponentDiceNumbers.map((number, index) => (
           <p key={index}>Number: {number}</p>
-        ))}
+        ))} */}
       </div>
       <div className="d-flex">
         {opponentDiceNumbers.map((number, index) => (
@@ -96,9 +97,9 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
       </div>
       <div>
         <h3>Your Dice Sum: {playerDiceSum}</h3>
-        {diceNumbers.map((number, index) => (
+        {/* {diceNumbers.map((number, index) => (
           <p key={index}>Number: {number}</p>
-        ))}
+        ))} */}
       </div>
       <div className="d-flex">
         {diceNumbers.map((number, index) => (

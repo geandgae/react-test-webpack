@@ -632,8 +632,83 @@ h2, h3 {
 .item-box {
   max-height: 200px;
   overflow-y: auto;
+  li {
+    border: 1px solid #e7e7e7;
+  }
 }
 
 .equip-item {
   background-color: #e7e7e7;
+}
+
+.stage-wrap {
+  width: 250px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  background-color: #fffff6;
+  overflow: hidden;
+  & div {
+    margin: 0;
+    padding: 0;
+  }
+  .stage {
+    width: 200px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    & > div {
+      width: 50px;
+      height: 50px;
+      border: 1px solid #ccc;
+      margin-left: -1px;
+    }
+    .curent {
+      background-color: #e2f0ff;
+      &::before { 
+        content: "";
+        width: 20px;
+        height: 20px;
+        border: none;
+        background-color: #559eff;
+        border-radius: 50%;
+        position: absolute;
+        top : 15px;
+        left: 120px;
+      }
+    }
+    .before {
+      background-color: #f3f3f3;
+    }
+    .after {
+      background-color: #f1fbff;
+    }
+    .enemy {
+      background-color: #e9e9e9;
+      &::before { 
+        content: "";
+        width: 20px;
+        height: 20px;
+        border: none;
+        background-color: #919191;
+        border-radius: 50%;
+        position: absolute;
+        top: 15px;
+        left: -10px; 
+        z-index: 1;
+      }
+      &.step1::before { 
+        left: 15px;
+      }
+      &.step2::before { 
+        left: 63px;
+      }
+      &.step3::before { 
+        left: 112px;
+        background-color: #ff5858;
+      }
+    }
+  }
 }
