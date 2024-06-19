@@ -12,6 +12,8 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const [looting, setLooting] = useState(false);
   const [enemyStep, setEnemyStep] = useState(0);
   const [findItem, setFindItem] = useState(1);
+  const [dialog, setDialog] = useState("");
+  const [dialogClass, setDialogClass] = useState(""); // 클래스 상태 추가
 
   const stageCurent = `stage-${stage}`;
   const stageN1 = `stage-${stage - 1}`;
@@ -64,6 +66,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     }
   }, [enemyStep]);
 
+  // updateStage
   const updateStage = (newStage) => {
     setStage(newStage);
     localStorage.setItem("stage", newStage);
@@ -98,10 +101,10 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       enemyDiceUp(1);
     }
   };
+  // stageCtrl
   const stageCtrl = () => {
     updateStage(parseInt(stage, 10) + 1);
   };
-
   // hpCtrl
   const hpCtrl = (v) => {
     const newValue = (parseInt(hp, 10) + v);
@@ -149,13 +152,17 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const itemCtrl = () => {
     findCtrl(-1);
     const dice = Math.floor(Math.random() * 100) + 1;
-    if (dice <= 30) {
-      setLooting(true);
-      console.log("아이템을 찾았습니다.");
-    } else {
-      setLooting(false)
-      console.log("아이템을 찾지 못했습니다.");
-    }
+    renderDialog("loading", "아이템을 찾는중입니다.");
+    setTimeout(() => {
+      renderDialog("close", "");
+      if (dice <= 30) {
+        setLooting(true);
+        renderDialog("open", "아이템을 찾았습니다.");
+      } else {
+        setLooting(false)
+        renderDialog("open", "아이템을 찾지 못했습니다.");
+      }
+    }, 2000);
   }
   // enemyCtrl
   const enemyCtrl = (v) => {
@@ -172,6 +179,17 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     setGameResult("");
     setDiceBuff(0);
   }
+  // rederDialog
+  const renderDialog = (state, msg) => {
+    setDialog(msg);
+    if (state === "open") {
+      setDialogClass("open"); // 클래스 상태 업데이트
+    } else if (state === "loading") {
+      setDialogClass("loading"); // 클래스 상태 업데이트
+    } else {
+      setDialogClass("");
+    }
+  }
   
   return (
     <div>
@@ -182,6 +200,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
           <div className="Avatar-face"><span></span></div>
         </div>
       </div> */}
+      <div className={`dialog-wrap ${dialogClass}`}>
+        <div className="dialog">
+          {dialog}
+          { dialogClass ==="open" &&  <button onClick={() => renderDialog("close", "")}>확인</button> }
+        </div>
+      </div>
       <div className="stage-wrap">
         <div className="stage">
           <div className={`enemy ${enemyWalk}`}></div>
@@ -202,8 +226,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
         <div>dice: {diceCount}</div>
         <div>enemy: {enemyDiceCount}</div>
       </div>
-      {/* <button onClick={stageCtrl}>upstage</button> */}
-      {/* <button onClick={hpCtrl}>hptest</button> */}
+      {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {findItem >=1 &&
       <button onClick={itemCtrl}>looting({findItem})</button>
