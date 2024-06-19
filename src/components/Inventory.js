@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
   const maxItems = 5; // 최대 아이템 개수
   const [items, setItems] = useState([]);
+  const [itemsMsg, setItemsMsg] = useState(false);
   const [equippedItems, setEquippedItems] = useState(() => {
     const saved = localStorage.getItem('equippedItems');
     return saved ? JSON.parse(saved) : [];
@@ -23,7 +24,8 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
   const addItem = () => {
     if (items.length >= maxItems) {
       console.log(`인벤토리에는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
-      setLooting(false);
+      // setLooting(false);
+      setItemsMsg(true);
       return;
     }
 
@@ -39,14 +41,15 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
     const updatedItems = [...items, newItem];
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
-    setLooting(false)
+    // setLooting(false);
+    setItemsMsg(true);
   };
 
   const generateUniqueName = () => {
     
     // 아이템 타입 결정 
     let itemType;
-    const diceType = Math.floor(Math.random() * 200) + 1;
+    const diceType = Math.floor(Math.random() * 100) + 1;
     itemType = (diceType <= 10) ? "equipment" : "normal";
     // switch (true) {
     //   case (diceType >= 1 && diceType <= 199):
@@ -68,9 +71,9 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
     const itemTableEB = ["EB00"];
 
     if (itemType === "equipment") {
-      itemList = (diceItem <= 50) ? itemTableEA : itemTableEB;
+      itemList = (diceItem <= 80) ? itemTableEA : itemTableEB;
     } else { // itemType === "normal"
-      itemList = (diceItem <= 90) ? itemTableA : itemTableB;
+      itemList = (diceItem <= 50) ? itemTableA : itemTableB;
     }
 
     // if (itemType === "normal") {
@@ -92,7 +95,7 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
     //       break;
     //   }
     // }
-    console.log(`diceItem  : ${diceItem } ${itemList}`);
+    console.log(`diceItem  : ${diceItem} ${itemList}`);
     
     const randomIndex = Math.floor(Math.random() * itemList.length);
     const randomItem = itemList[randomIndex];
@@ -156,12 +159,24 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
     }
   }
 
+  const test = () => {
+    setItemsMsg(false);
+    setLooting(false);
+  }
+
   return (
     <div>
       {/* looting */}
       {looting === true && 
       <div className="intro">
+        {itemsMsg === true ? (
+        <div>
+          <div>아이템을 얻었습니다.</div>
+          <button onClick={test}>닫기</button>
+        </div>
+        ) : (
         <button onClick={addItem}>Looting Item</button>
+        )}
       </div>
       }
       <h2>Inventory</h2>

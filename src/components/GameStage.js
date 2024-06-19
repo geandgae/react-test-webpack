@@ -57,12 +57,16 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   }, []);
 
   useEffect(() => {
-    if (enemyStep >= 3) {
+    if (enemyStep === 3) {
       hpCtrl(-3);
       setTimeout(() => {
         enemyCtrl(-3);
       }, 2000);
       console.log("attack");
+    } else if (enemyStep >= 4) {
+      setTimeout(() => {
+        enemyCtrl(-3);
+      }, 2000);
     }
   }, [enemyStep]);
 
@@ -155,9 +159,9 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     renderDialog("loading", "아이템을 찾는중입니다.");
     setTimeout(() => {
       renderDialog("close", "");
-      if (dice <= 30) {
+      if (dice <= 40) {
         setLooting(true);
-        renderDialog("open", "아이템을 찾았습니다.");
+        // renderDialog("open", "아이템을 찾았습니다.");
       } else {
         setLooting(false)
         renderDialog("open", "아이템을 찾지 못했습니다.");
