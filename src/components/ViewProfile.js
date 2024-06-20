@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import GameStage from "./GameStage";
 
-const ViewProfile = ({ profile, stage, setStage, setCurrentPage }) => {
+const ViewProfile = ({ profile, stage, setStage, setCurrentPage, environments }) => {
   const [MovePage, setMovePage] = useState("view");
 
   return (
@@ -34,6 +34,7 @@ const ViewProfile = ({ profile, stage, setStage, setCurrentPage }) => {
           stage={stage}
           setStage={setStage}
           setCurrentPage={setCurrentPage}
+          environments={environments}
         />
       </div>
       )}

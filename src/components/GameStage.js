@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Dice from "./Dice";
 import Inventory from "./Inventory";
 
-const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
+const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) => {
   const [maxHp] = useState(profile.vit);
   const [hp, setHp] = useState(maxHp);
   const [diceCount, setDiceCount] = useState(profile.str);
@@ -15,15 +15,14 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const [dialogClass, setDialogClass] = useState(""); // 클래스 상태 추가
   const [find, setFind] = useState("");
 
-  const stageCurent = `stage-${stage}`;
-  const stageN1 = `stage-${stage - 1}`;
-  const stageP1 = `stage-${stage + 1}`;
-  const stageP2 = `stage-${stage + 2}`;
+  const stageCurrent = stage;
+  const stageN1 = (parseInt(stage, 10) - 1);
+  const stageP1 = (parseInt(stage, 10) + 1);
+  const stageP2 = (parseInt(stage, 10) + 2);
   const enemyWalk = `step-${enemyStep}`;
-  const hpCurent = `hp-${hp}`
+  const hpCurrent = `hp-${hp}`
   
-  console.log(`enemyStep : ${enemyStep}`)
-  
+  console.log(`enemyStep : ${enemyStep}`);
 
   useEffect(() => {
     // HP
@@ -71,6 +70,34 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       }, 2000);
     }
   }, [enemyStep]);
+
+  // stage 안내
+  useEffect(() => {
+    const replaceEnv = () => {
+      if (environments[stageCurrent] === 0) {
+        return "환경0에 진입했습니다.(find 체력소모 없음)"
+      }
+      if (environments[stageCurrent] === 1) {
+        return "환경1에 진입했습니다.(find 체력소모 -1)"
+      }
+      if (environments[stageCurrent] === 2) {
+        return "환경2에 진입했습니다.(find 체력소모 -2)"
+      }
+      if (environments[stageCurrent] === 3) {
+        return "환경3에 진입했습니다.(find 체력소모 -3)"
+      }
+      if (environments[stageCurrent] === 4) {
+        return "환경4에 진입했습니다.(find 체력소모 -4)"
+      }
+      if (environments[stageCurrent] === 5) {
+        return "환경5에 진입했습니다.(find 체력소모 -5)"
+      }
+      if (environments[stageCurrent] === 6) {
+        return "환경6에 진입했습니다.(find 체력소모 -6)"
+      }
+    }
+    renderDialog("open", `${replaceEnv()}`);
+  }, [stage]);
 
   // stageCtrl
   const stageCtrl = () => {
@@ -145,7 +172,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     setTimeout(() => {
       renderDialog("close", "");
       switch (true) {
-        case dice <= 10:
+        case dice <= 30:
           setLooting(false);
           renderDialog("loading", "적과 마주칩니다.");
           setTimeout(() => {
@@ -153,7 +180,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
             findCtrl("auto");
           }, 1000);
           break;
-        case dice <= 20:
+        case dice <= 50:
           setLooting(true);
           break;
         default:
@@ -186,10 +213,37 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     localStorage.setItem("Find", newValue);
   }
   // activeFind
-  const activeFind = () => {
-    if (hp > 1) {
-      hpCtrl(-1);
+  const activeFind = (v) => {
+    const int = (parseInt(diceCount, 10) + v)
+    if (hp > (int - 1)) {
+      // switch (v) {
+      //   case "env-a":
+      //     hpCtrl(0);
+      //     break;
+      //   case "env-b":
+      //     hpCtrl(-1);
+      //     break;
+      //   case "env-c":
+      //     hpCtrl(-2);
+      //     break;
+      //   case "env-d":
+      //     hpCtrl(-3);
+      //     break;
+      //   case "env-e":
+      //     hpCtrl(-4);
+      //     break;
+      //   case "env-f":
+      //     hpCtrl(-5);
+      //     break;
+      //   case "env-g":
+      //     hpCtrl(-6);
+      //     break;  
+      //   default:
+      //     break;
+      // }
+      hpCtrl(-(int - 1));
       itemCtrl();
+      console.log(int);
     } else {
       renderDialog("open", "체력이 없습니다.");
     }
@@ -225,16 +279,18 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
           { dialogClass ==="open" &&  <button onClick={() => renderDialog("close", "")}>확인</button> }
         </div>
       </div>
+
       <div className="stage-wrap">
         <div className="stage">
           <div className={`enemy ${enemyWalk}`}></div>
-          <div className={`before ${stageN1}`}>{stageN1}</div>
-          <div className={`curent ${stageCurent}`}>{stageCurent}</div>
-          <div className={stageP1}>{stageP1}</div>
-          <div className={stageP2}>{stageP2}</div>
+          <div className={`before stage-${stageN1} env-${environments[stageN1]}`}>stage-{stageN1} env-{environments[stageN1]}</div>
+          <div className={`current stage-${stageCurrent} env-${environments[stageCurrent]}`}>stage-{stageCurrent} env-{environments[stageCurrent]}</div>
+          <div className={`stage-${stageP1} env-${environments[stageP1]}`}>stage-{stageP1} env-{environments[stageP1]}</div>
+          <div className={`stage-${stageP2} env-${environments[stageP2]}`}>stage-{stageP2} env-{environments[stageP2]}</div>
         </div>
       </div>
-      <div className={`hp-bar ${hpCurent}`}>
+      
+      <div className={`hp-bar ${hpCurrent}`}>
         {Array.from({ length: maxHp }).map((_, index) => (
           <span key={index}></span>
         ))}
@@ -246,9 +302,10 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
         <div>enemy: {enemyDiceCount}</div>
       </div>
       {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
+      <button onClick={() => stageCtrl(1)}>test</button>
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" &&
-      <button onClick={activeFind}>find</button>
+      <button onClick={() => activeFind(environments[stageCurrent])}>find</button>
       }
       {find === "" &&
       <button onClick={() => findCtrl("enemy")}>next</button>

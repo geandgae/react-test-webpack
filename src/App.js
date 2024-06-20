@@ -17,8 +17,16 @@ const App = () => {
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [currentPage, setCurrentPage] = useState("intro");
   const [stage, setStage] = useState(1);
+  const [environments, setEnvironments] = useState([]);
 
   useEffect(() => {
+    // env
+    if (!localStorage.getItem("stageEnvironments")) {
+      generateAndStoreEnvironments();
+    }
+    const storedEnvironments = JSON.parse(localStorage.getItem("stageEnvironments"));
+    setEnvironments(storedEnvironments || []);
+
     // profile
     const storedProfile = JSON.parse(localStorage.getItem("user"));
     if (storedProfile) {
@@ -41,6 +49,15 @@ const App = () => {
       console.error(`Element with class intro not found.`);
     }
   }, []);
+
+  // generateAndStoreEnvironments
+  const generateAndStoreEnvironments = () => {
+    const envOptions = [0, 1, 2, 3, 4, 5, 6];
+    const environments = Array.from({ length: 100 }, () => {
+      return envOptions[Math.floor(Math.random() * envOptions.length)];
+    });
+    localStorage.setItem("stageEnvironments", JSON.stringify(environments));
+  };
 
   const saveUserToLocalStorage = () => {
     localStorage.setItem("user", JSON.stringify(profile));
@@ -121,6 +138,7 @@ const App = () => {
             stage={stage}
             setStage={setStage}
             setCurrentPage={setCurrentPage}
+            environments={environments}
           />
         }
       </div>

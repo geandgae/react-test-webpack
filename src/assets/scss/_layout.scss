@@ -673,7 +673,7 @@ h2, h3 {
       background-color: #f1f1f1;
       font-size: 10px;
     }
-    .curent {
+    .current {
       &::before { 
         content: "";
         width: 20px;
@@ -719,41 +719,29 @@ h2, h3 {
         height: 100%;
         display: block;
         content: "";
-        background-color: rgba(0, 0, 0, 0.15);
+        background-color: rgba(0, 0, 0, 0.2);
       }
     }
-    .stage-0 {
-      background-color: #f5fbff;
+    .env-0 {
+      background-color: #ffe9e9;
     }
-    .stage-1 {
-      background-color: #e2f0ff;
+    .env-1 {
+      background-color: #fff5eb;
     }
-    .stage-2 {
-      background-color: #f1fbff;
+    .env-2 {
+      background-color: #fbffe4;
     }
-    .stage-3 {
+    .env-3 {
       background-color: #e9ffec;
     }
-    .stage-4 {
-      background-color: #f4e4ff;
+    .env-4 {
+      background-color: #e6f7ff;
     }
-    .stage-5 {
-      background-color: #fff2e4;
+    .env-5 {
+      background-color: #e1ecff;
     }
-    .stage-6 {
-      background-color: #eafff8;
-    }
-    .stage-7 {
-      background-color: #ffe1fa;
-    }
-    .stage-8 {
-      background-color: #fffddd;
-    }
-    .stage-9 {
-      background-color: #e1ffea;
-    }
-    .stage-10 {
-      background-color: #ffd9d9;
+    .env-6 {
+      background-color: #faeaff;
     }
   }
 }
