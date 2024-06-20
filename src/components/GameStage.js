@@ -302,7 +302,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         <div>enemy: {enemyDiceCount}</div>
       </div>
       {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
-      {/* <button onClick={() => stageCtrl(1)}>test</button> */}
+      {/* <button onClick={() => stageCtrl()}>test</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" &&
       <button onClick={() => activeFind(environments[stageCurrent])}>find</button>

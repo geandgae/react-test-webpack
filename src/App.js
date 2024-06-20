@@ -53,7 +53,7 @@ const App = () => {
   // generateAndStoreEnvironments
   const generateAndStoreEnvironments = () => {
     const envOptions = [0, 1, 2, 3, 4, 5, 6];
-    const environments = Array.from({ length: 100 }, () => {
+    const environments = Array.from({ length: 500 }, () => {
       return envOptions[Math.floor(Math.random() * envOptions.length)];
     });
     localStorage.setItem("stageEnvironments", JSON.stringify(environments));
