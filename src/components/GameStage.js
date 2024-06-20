@@ -140,15 +140,33 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   // itemCtrl
   const itemCtrl = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
+    console.log(dice);
     renderDialog("loading", "아이템을 찾는중입니다.");
     setTimeout(() => {
       renderDialog("close", "");
-      if (dice <= 20) {
-        setLooting(true);
-      } else {
-        setLooting(false)
-        renderDialog("open", "아이템을 찾지 못했습니다.");
+      switch (true) {
+        case dice <= 10:
+          setLooting(false);
+          renderDialog("loading", "적과 마주칩니다.");
+          setTimeout(() => {
+            renderDialog("close", "");
+            findCtrl("auto");
+          }, 1000);
+          break;
+        case dice <= 20:
+          setLooting(true);
+          break;
+        default:
+          setLooting(false);
+          renderDialog("open", "아이템을 찾지 못했습니다.");
+          break;
       }
+      // if (dice <= 20) {
+      //   setLooting(true);
+      // } else {
+      //   setLooting(false)
+      //   renderDialog("open", "아이템을 찾지 못했습니다.");
+      // }
     }, 1000);
   }
   // enemyCtrl
@@ -171,8 +189,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const activeFind = () => {
     if (hp > 1) {
       hpCtrl(-1);
-      const dice = Math.floor(Math.random() * 100) + 1;
-      dice <= 90 ? itemCtrl() : findCtrl("auto");
+      itemCtrl();
     } else {
       renderDialog("open", "체력이 없습니다.");
     }
@@ -236,22 +253,6 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       {find === "" &&
       <button onClick={() => findCtrl("enemy")}>next</button>
       }
-      <div className="ground">
-        {find !== "" &&
-        <Dice
-          hpCtrl={hpCtrl}
-          diceCount={diceCount}
-          setDiceCount={setDiceCount}
-          enemyDiceCount={enemyDiceCount}
-          setGameResult={setGameResult}
-          stageCtrl={stageCtrl}
-          diceBuff={diceBuff}
-          enemyCtrl={enemyCtrl}
-          setLooting={setLooting}
-          findCtrl={findCtrl}
-        />
-        }
-      </div>
       <Inventory
         hpCtrl={hpCtrl}
         diceUp={diceUp}
@@ -260,6 +261,25 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
         setLooting={setLooting}
         profile={profile}
       />
+      {/* dice */}
+      {find !== "" &&
+      <div className="intro">
+        <div className="ground">
+          <Dice
+            hpCtrl={hpCtrl}
+            diceCount={diceCount}
+            setDiceCount={setDiceCount}
+            enemyDiceCount={enemyDiceCount}
+            setGameResult={setGameResult}
+            stageCtrl={stageCtrl}
+            diceBuff={diceBuff}
+            enemyCtrl={enemyCtrl}
+            setLooting={setLooting}
+            findCtrl={findCtrl}
+          />
+        </div>
+      </div>
+      }
       {/* result */}
       {gameResult && 
       <div className="intro" onClick={reSet}>

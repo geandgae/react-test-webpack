@@ -162,30 +162,32 @@ const Inventory = ({ profile, hpCtrl, diceUp, diceEquip, looting, setLooting}) =
         )}
       </div>
       }
-      <h2>Inventory {items.length} / {maxItems}</h2>
-      <ul className="item-box">
-        {items.map((item) => (
-          <li key={item.id} className={equippedItems.includes(item.id) ? 'equip-item' : ''}>
-            <div className="d-flex">
-              <span className={item.icon}></span>
-              <strong>{item.name} : {item.id} : {item.type}</strong>
-              {item.type === "equipment" ? (
-              <div>
-                <span onClick={() => equipItem(item.id, item.name)}>
-                  {equippedItems.includes(item.id) ? '해제' : '장착'}
-                </span>
-                {!equippedItems.includes(item.id) &&
-                <span onClick={() => useItem(item.id, item.name)}>삭제</span>
-                }
+      <div className="inventory">
+        <h2>Inventory {items.length} / {maxItems}</h2>
+        <ul className="item-box">
+          {items.map((item) => (
+            <li key={item.id} className={equippedItems.includes(item.id) ? 'equip-item' : ''}>
+              <div className="d-flex">
+                <span className={item.icon}></span>
+                <strong>{item.name} : {item.id} : {item.type}</strong>
+                {item.type === "equipment" ? (
+                <div>
+                  <span onClick={() => equipItem(item.id, item.name)}>
+                    {equippedItems.includes(item.id) ? '해제' : '장착'}
+                  </span>
+                  {!equippedItems.includes(item.id) &&
+                  <span onClick={() => useItem(item.id, item.name)}>삭제</span>
+                  }
+                </div>
+                ) : (
+                <span onClick={() => useItem(item.id, item.name)}>사용</span>
+                )}
               </div>
-              ) : (
-              <span onClick={() => useItem(item.id, item.name)}>사용</span>
-              )}
-            </div>
-            <div>{item.description}</div>
-          </li>
-        ))}
-      </ul>
+              <div>{item.description}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

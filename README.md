@@ -35,3 +35,6 @@ my-react-app/
 * result(턴리셋) 개선 > dice에서 결과 연산후 stage에서 호출
 
 * max-hp 설정 필요
+
+* stage 패턴 설정(환경에 따른 이벤트)
+* 특정스테이지 보상 강화 / 능력강화

@@ -115,7 +115,7 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
           </div>
         ))}
       </div>
-      <div>
+      <div className="align-center">
         <button onClick={rollDice} disabled={rollingPlayer || rollingEnemy}>
           {rollingPlayer || rollingEnemy ? "Rolling..." : "Roll Dice"}
         </button>

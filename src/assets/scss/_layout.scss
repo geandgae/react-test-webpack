@@ -630,6 +630,10 @@ h2, h3 {
   ime-mode:inactive;
 }
 
+.inventory {
+  margin-top: 20px;
+}
+
 .item-box {
   min-width: 400px;
   max-height: 200px;
@@ -831,23 +835,51 @@ h2, h3 {
   height: 20px;
   display: block;
   border: 1px solid #ccc;
-  background-color: #fff;
+  background-color: #ffffff;
   &.item-aaa {
-    background-color: #fffd6d;
+    background-color: #d4ffc1;
   }
   &.item-bbb {
-    background-color: #776dff;
+    background-color: #a5ff6a;
   }
   &.item-ccc {
-    background-color: #089e9e;
+    background-color: #0ed43f;
+  }
+  &.item-ddd {
+    background-color: #b3fff9;
+  }
+  &.item-eee {
+    background-color: #5fdad3;
+  }
+  &.item-fff {
+    background-color: #1eb3f8;
+  }
+  &.item-ea00 {
+    background-color: #ffde21;
+  }
+  &.item-eb00 {
+    background-color: #ff9317;
   }
   &.item-max {
-    background-color: #ff6d6d;
+    background-color: #ff0000;
   }
 }
 
 .ground {
   width: 100%;
-  min-height: 100px;
-  margin: 20px auto;
+  height: 100%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  position: relative;
+  color: #111;
+  & div div + div {
+    margin-top: 30px;
+  }
+}
+
+.align-center {
+  align-items: center;
 }
