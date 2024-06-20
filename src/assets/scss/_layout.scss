@@ -245,7 +245,7 @@
 
 .d-flex {
   @include flex-center;
-  gap: 30px;
+  gap: 20px;
 }
 body {
   font-family: Arial, sans-serif;
@@ -253,7 +253,8 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
+  // margin: 50px;
+  // padding: 100px 50px;
 }
 
 form {
@@ -630,6 +631,7 @@ h2, h3 {
 }
 
 .item-box {
+  min-width: 400px;
   max-height: 200px;
   overflow-y: auto;
   li {
@@ -753,68 +755,33 @@ h2, h3 {
 }
 
 .hp-bar {
-  width: 100px;
+  width: auto;
   height: 10px;
   display: flex;
   align-items: center;
-  & > span {
-    width: 10px;
-    height: 10px;
-    border: 1px solid #252525;
-    margin-left: -1px;
-    background-color: #ff4848;
-  }
-  &.hp-9 {
-    & span:nth-child(10) {
-      background-color: #fff
-    }
-  }
-  &.hp-8 {
-    & span:nth-child(10), span:nth-child(9) {
-      background-color: #fff
-    }
-  }
-  &.hp-7 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8) {
-      background-color: #fff
-    }
-  }
-  &.hp-6 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8), span:nth-child(7) {
-      background-color: #fff
-    }
-  }
-  &.hp-5 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8), span:nth-child(7), span:nth-child(6) {
-      background-color: #fff
-    }
-  }
-  &.hp-4 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8), span:nth-child(7), span:nth-child(6), span:nth-child(5) {
-      background-color: #fff
-    }
-  }
-  &.hp-3 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8), span:nth-child(7), span:nth-child(6), span:nth-child(5), span:nth-child(4) {
-      background-color: #fff
-    }
-  }
-  &.hp-2 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8), span:nth-child(7), span:nth-child(6), span:nth-child(5), span:nth-child(4), span:nth-child(3) {
-      background-color: #fff
-    }
-  }
-  &.hp-1 {
-    & span:nth-child(10), span:nth-child(9), span:nth-child(8), span:nth-child(7), span:nth-child(6), span:nth-child(5), span:nth-child(4), span:nth-child(3), span:nth-child(2) {
-      background-color: #fff
-    }
-  }
-  &.hp-0 {
-    & span {
-      background-color: #fff
+
+  @for $i from 0 through 20 {
+    &.hp-#{$i} {
+      & > span {
+        width: 10px;
+        height: 10px;
+        border: 1px solid #252525;
+        margin-left: -1px;
+        background-color: #ff4848;
+      }
+
+      // Set background color of spans based on hp level
+      @for $j from 20 through 1 {
+        & span:nth-child(#{$j}) {
+          @if $j > $i {
+            background-color: #fff;
+          }
+        }
+      }
     }
   }
 }
+
 .dialog-wrap {
   opacity: 0;
   position: absolute;
@@ -848,4 +815,39 @@ h2, h3 {
   background-color: #fff;
   border-radius: 10px;
   @include posXY;
+}
+
+// [class^="item-icon-"] { 
+//   width: 50px;
+//   height: 50px;
+//   background-color: #fff;
+//   & max {
+//     background-color: #ff6d6d;
+//   }
+// }
+
+.item-icon { 
+  width: 20px;
+  height: 20px;
+  display: block;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  &.item-aaa {
+    background-color: #fffd6d;
+  }
+  &.item-bbb {
+    background-color: #776dff;
+  }
+  &.item-ccc {
+    background-color: #089e9e;
+  }
+  &.item-max {
+    background-color: #ff6d6d;
+  }
+}
+
+.ground {
+  width: 100%;
+  min-height: 100px;
+  margin: 20px auto;
 }

@@ -17,11 +17,11 @@ const ViewProfile = ({ profile, stage, setStage, setCurrentPage }) => {
         </div>
         <div className="Avatar-figure view">
           <div>name: {profile.name}</div>
-          <div>head: {profile.head}</div>
-          <div>eyes: {profile.eyes}</div>
-          <div>face: {profile.face}</div>
           <div>job: {profile.job}</div>
           <div>skill: {profile.skill}</div>
+          <div>str: {profile.str}</div>
+          <div>vit: {profile.vit}</div>
+          <div>inv: {profile.inv}</div>
           <div>stage: {stage}</div>
         </div>
         <button onClick={() => setMovePage("stage")}>stage</button>

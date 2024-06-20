@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 
-const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
-  const maxItems = 5; // 최대 아이템 개수
+const Inventory = ({ profile, hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
+  const maxItems = profile.inv; // 최대 아이템 개수
   const [items, setItems] = useState([]);
-  const [itemsMsg, setItemsMsg] = useState(false);
+  const [itemsMsg, setItemsMsg] = useState();
+  const [itemsIcon, setItemsIcon] = useState();
   const [equippedItems, setEquippedItems] = useState(() => {
     const saved = localStorage.getItem('equippedItems');
     return saved ? JSON.parse(saved) : [];
@@ -23,26 +24,26 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
 
   const addItem = () => {
     if (items.length >= maxItems) {
-      console.log(`인벤토리에는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
-      // setLooting(false);
-      setItemsMsg(true);
+      setItemsIcon("item-icon item-max");
+      setItemsMsg(`인벤토리에는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
       return;
     }
 
-    const { randomItem, description, itemType } = generateUniqueName();
+    const { randomItem, description, itemType, itemIcon } = generateUniqueName();
 
     const newItem = {
       id: Date.now(),
       name: randomItem,
       description: description,
-      type: itemType
+      type: itemType,
+      icon: itemIcon,
     };
 
     const updatedItems = [...items, newItem];
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
-    // setLooting(false);
-    setItemsMsg(true);
+    setItemsIcon(newItem.icon);
+    setItemsMsg(`${newItem.name}을 얻었습니다.`);
   };
 
   const generateUniqueName = () => {
@@ -51,16 +52,7 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
     let itemType;
     const diceType = Math.floor(Math.random() * 100) + 1;
     itemType = (diceType <= 10) ? "equipment" : "normal";
-    // switch (true) {
-    //   case (diceType >= 1 && diceType <= 199):
-    //     itemType = "normal";
-    //     break;
-    //   case (diceType === 200):
-    //     itemType = "equipment";
-    //     break;
-    // }
     console.log(`diceType : ${diceType} ${itemType}`);
-
 
     // 아이템 테이블 결정
     let itemList;
@@ -76,27 +68,7 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
       itemList = (diceItem <= 50) ? itemTableA : itemTableB;
     }
 
-    // if (itemType === "normal") {
-    //   switch (true) {
-    //     case (diceItem  >= 1 && diceItem  <= 50):
-    //       itemList = itemTableA;
-    //       break;
-    //     case (diceItem  >= 51 && diceItem  <= 100):
-    //       itemList = itemTableB;
-    //       break;
-    //   }
-    // } else {
-    //   switch (true) {
-    //     case (diceItem  >= 1 && diceItem  <= 50):
-    //       itemList = itemTableEA;
-    //       break;
-    //     case (diceItem  >= 51 && diceItem  <= 100):
-    //       itemList = itemTableEB;
-    //       break;
-    //   }
-    // }
-    console.log(`diceItem  : ${diceItem} ${itemList}`);
-    
+    // 아이템 설명
     const randomIndex = Math.floor(Math.random() * itemList.length);
     const randomItem = itemList[randomIndex];
     const description = 
@@ -108,7 +80,17 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
       randomItem === "FFF" ? "1턴 동안 주사위 + 3" :
       randomItem === "EA00" ? "장비하면 주사위를 한개 늘려준다" :
       randomItem === "EB00" ? "장비하면 주사위를 두개 늘려준다" : "---";
-    return { randomItem, description, itemType};
+    const itemIcon = 
+      randomItem === "AAA" ? "item-icon item-aaa" : 
+      randomItem === "BBB" ? "item-icon item-bbb" : 
+      randomItem === "CCC" ? "item-icon item-ccc" :
+      randomItem === "DDD" ? "item-icon item-ddd" :
+      randomItem === "EEE" ? "item-icon item-eee" :
+      randomItem === "FFF" ? "item-icon item-fff" :
+      randomItem === "EA00" ? "item-icon item-ea00" :
+      randomItem === "EB00" ? "item-icon item-eb00" : "item-icon";
+    console.log(`diceItem  : ${diceItem} ${itemList}`);  
+    return { randomItem, description, itemType, itemIcon};
   };
 
   const useItem = (id, name) => {
@@ -169,9 +151,10 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
       {/* looting */}
       {looting === true && 
       <div className="intro">
-        {itemsMsg === true ? (
+        {itemsMsg ? (
         <div>
-          <div>아이템을 얻었습니다.</div>
+          <div className={itemsIcon}></div>
+          <div>{itemsMsg}</div>
           <button onClick={test}>닫기</button>
         </div>
         ) : (
@@ -179,23 +162,26 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
         )}
       </div>
       }
-      <h2>Inventory</h2>
+      <h2>Inventory {items.length} / {maxItems}</h2>
       <ul className="item-box">
         {items.map((item) => (
           <li key={item.id} className={equippedItems.includes(item.id) ? 'equip-item' : ''}>
-            <strong>{item.name} : {item.id} : {item.type}</strong>
-            {item.type === "equipment" ? (
-            <div>
-              <span onClick={() => equipItem(item.id, item.name)}>
-                {equippedItems.includes(item.id) ? '해제' : '장착'}
-              </span>
-              {!equippedItems.includes(item.id) &&
-              <span onClick={() => useItem(item.id, item.name)}>삭제</span>
-              }
+            <div className="d-flex">
+              <span className={item.icon}></span>
+              <strong>{item.name} : {item.id} : {item.type}</strong>
+              {item.type === "equipment" ? (
+              <div>
+                <span onClick={() => equipItem(item.id, item.name)}>
+                  {equippedItems.includes(item.id) ? '해제' : '장착'}
+                </span>
+                {!equippedItems.includes(item.id) &&
+                <span onClick={() => useItem(item.id, item.name)}>삭제</span>
+                }
+              </div>
+              ) : (
+              <span onClick={() => useItem(item.id, item.name)}>사용</span>
+              )}
             </div>
-            ) : (
-            <span onClick={() => useItem(item.id, item.name)}>사용</span>
-            )}
             <div>{item.description}</div>
           </li>
         ))}

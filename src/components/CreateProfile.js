@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
   const [profileData, setProfileData] = useState(profile);
@@ -13,6 +13,29 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
       [name]: value,
     }));
   };
+
+  // 스킬설정
+  useEffect(() => {
+    switch (profile.skill) {
+      case "swordsmanship":
+        profile.str = 1;
+        profile.vit = 20;
+        profile.inv = 7;
+        break;
+      case "magic":
+        profile.str = 3;
+        profile.vit = 3;
+        profile.inv = 5;
+        break;
+      case "archery":
+        profile.str = 1;
+        profile.vit = 10;
+        profile.inv = 10;
+        break;
+      default:
+        break;
+    }
+  }, [profile.skill]);
 
   return (
     <div>
@@ -41,7 +64,6 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
           <label>
             Head:
             <select name="head" value={profileData.head} onChange={handleInputChange}>
-              <option value="">Select Head</option>
               <option value="shortHair">Short Hair</option>
               <option value="longHair">Long Hair</option>
               <option value="bald">Bald</option>
@@ -52,7 +74,6 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
           <label>
             Eyes:
             <select name="eyes" value={profileData.eyes} onChange={handleInputChange}>
-              <option value="">Select Eyes</option>
               <option value="bigEyes">Big Eyes</option>
               <option value="smallEyes">Small Eyes</option>
             </select>
@@ -62,7 +83,6 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
           <label>
             Face:
             <select name="face" value={profileData.face} onChange={handleInputChange}>
-              <option value="">Select Face</option>
               <option value="round">Round</option>
               <option value="square">Square</option>
             </select>
@@ -71,19 +91,19 @@ const CreateProfile = ({ profile, setProfile, saveUserToLocalStorage }) => {
         <div>
           <label>
             Job:
-            <select name="job" value={profileData.job} onChange={handleInputChange}>
-              <option value="">Select Job</option>
-              <option value="warrior">Warrior</option>
-              <option value="mage">Mage</option>
-              <option value="archer">Archer</option>
-            </select>
+            <input
+              className="input-name"
+              type="text"
+              name="name"
+              value={profileData.job}
+              onChange={handleInputChange}
+            />
           </label>
         </div>
         <div>
           <label>
             Skill:
             <select name="skill" value={profileData.skill} onChange={handleInputChange}>
-              <option value="">Select Skill</option>
               <option value="swordsmanship">Swordsmanship</option>
               <option value="magic">Magic</option>
               <option value="archery">Archery</option>

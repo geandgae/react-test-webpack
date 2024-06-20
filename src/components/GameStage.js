@@ -3,17 +3,17 @@ import Dice from "./Dice";
 import Inventory from "./Inventory";
 
 const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
-  const [maxHp, setMaxHp] = useState(10);
+  const [maxHp] = useState(profile.vit);
   const [hp, setHp] = useState(maxHp);
-  const [diceCount, setDiceCount] = useState(1);
+  const [diceCount, setDiceCount] = useState(profile.str);
   const [diceBuff, setDiceBuff] = useState(0);
   const [enemyDiceCount, setEnemyDiceCount] = useState(1);
   const [gameResult, setGameResult] = useState("");
-  const [looting, setLooting] = useState(false);
   const [enemyStep, setEnemyStep] = useState(0);
-  const [findItem, setFindItem] = useState(1);
+  const [looting, setLooting] = useState(false);
   const [dialog, setDialog] = useState("");
   const [dialogClass, setDialogClass] = useState(""); // 클래스 상태 추가
+  const [find, setFind] = useState("");
 
   const stageCurent = `stage-${stage}`;
   const stageN1 = `stage-${stage - 1}`;
@@ -23,6 +23,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
   const hpCurent = `hp-${hp}`
   
   console.log(`enemyStep : ${enemyStep}`)
+  
 
   useEffect(() => {
     // HP
@@ -49,13 +50,14 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       setEnemyStep(parseInt(savedEnemyStep, 10));
     }
 
-    // findItem
-    const savedFindItem = localStorage.getItem("findItem");
-    if (savedFindItem) {
-      setFindItem(parseInt(savedFindItem, 10));
+    // find
+    const savedFind = localStorage.getItem("find");
+    if (savedFind) {
+      setFind("");
     }
   }, []);
 
+  // 버그 확인
   useEffect(() => {
     if (enemyStep === 3) {
       hpCtrl(-3);
@@ -70,44 +72,32 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
     }
   }, [enemyStep]);
 
-  // updateStage
-  const updateStage = (newStage) => {
-    setStage(newStage);
-    localStorage.setItem("stage", newStage);
-    if (stage === 5) {
-      enemyDiceUp(1);
-    }
-    if (stage === 10) {
-      enemyDiceUp(1);
-    }
-    if (stage === 15) {
-      enemyDiceUp(1);
-    }
-    if (stage === 20) {
-      enemyDiceUp(1);
-    }
-    if (stage === 25) {
-      enemyDiceUp(1);
-    }
-    if (stage === 30) {
-      enemyDiceUp(1);
-    }
-    if (stage === 35) {
-      enemyDiceUp(1);
-    }
-    if (stage === 40) {
-      enemyDiceUp(1);
-    }
-    if (stage === 45) {
-      enemyDiceUp(1);
-    }
-    if (stage === 50) {
-      enemyDiceUp(1);
-    }
-  };
   // stageCtrl
   const stageCtrl = () => {
-    updateStage(parseInt(stage, 10) + 1);
+    const newValue = (parseInt(stage, 10) + 1);
+    setStage(newValue);
+    localStorage.setItem("stage", newValue);
+    // 5의 배수마다 주사위 추가
+    if (stage % 5 === 0) {
+      enemyDiceUp(1);
+    }
+    // 특정구간 표현은 스위치로
+    // switch (stage) {
+    //   case 5:
+    //   case 10:
+    //   case 15:
+    //   case 20:
+    //   case 25:
+    //   case 30:
+    //   case 35:
+    //   case 40:
+    //   case 45:
+    //   case 50:
+    //     enemyDiceUp(1);
+    //     break;
+    //   default:
+    //     break;
+    // }
   };
   // hpCtrl
   const hpCtrl = (v) => {
@@ -135,38 +125,31 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       console.log("최대치입니다.")
     }
   };
+  // diceEquip 
+  const diceEquip = (v) => {
+    const newValue = (parseInt(diceCount, 10) + v);
+    setDiceCount(newValue);
+    localStorage.setItem("diceCount", newValue);
+  };
   // enemyDiceUp
   const enemyDiceUp = (v) => {
     const newValue = enemyDiceCount + v;
     setEnemyDiceCount(newValue);
     localStorage.setItem("enemyDiceCount", newValue);
   };
-  const diceEquip = (v) => {
-    const newValue = (parseInt(diceCount, 10) + v);
-    setDiceCount(newValue);
-    localStorage.setItem("diceCount", newValue);
-  };
-  // findCtrl
-  const findCtrl = (v) => {
-    const newValue = (parseInt(findItem, 10) + v);
-    setFindItem(newValue);
-    localStorage.setItem("findItem", newValue);
-  }
   // itemCtrl
   const itemCtrl = () => {
-    findCtrl(-1);
     const dice = Math.floor(Math.random() * 100) + 1;
     renderDialog("loading", "아이템을 찾는중입니다.");
     setTimeout(() => {
       renderDialog("close", "");
-      if (dice <= 40) {
+      if (dice <= 20) {
         setLooting(true);
-        // renderDialog("open", "아이템을 찾았습니다.");
       } else {
         setLooting(false)
         renderDialog("open", "아이템을 찾지 못했습니다.");
       }
-    }, 2000);
+    }, 1000);
   }
   // enemyCtrl
   const enemyCtrl = (v) => {
@@ -177,8 +160,24 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       setEnemyStep(newValue);
     }
     localStorage.setItem("enemyStep", newValue);
+  }
+  // findCtrl
+  const findCtrl = (v) => {
+    const newValue = v;
+    setFind(newValue);
+    localStorage.setItem("Find", newValue);
+  }
+  // activeFind
+  const activeFind = () => {
+    if (hp > 1) {
+      hpCtrl(-1);
+      const dice = Math.floor(Math.random() * 100) + 1;
+      dice <= 90 ? itemCtrl() : findCtrl("auto");
+    } else {
+      renderDialog("open", "체력이 없습니다.");
+    }
   } 
-  // reSet
+  // reSet 
   const reSet = () => {
     setGameResult("");
     setDiceBuff(0);
@@ -194,7 +193,6 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       setDialogClass("");
     }
   }
-  
   return (
     <div>
       {/* <div className={`Avatar-preview ${profile.head} ${profile.eyes} ${profile.face}`}>
@@ -226,32 +224,41 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage }) => {
       </div>
       <div className="d-flex">
         <div>stage: {stage}</div>
-        <div>hp: {hp}</div>
+        <div>hp: {hp} / {maxHp}</div>
         <div>dice: {diceCount}</div>
         <div>enemy: {enemyDiceCount}</div>
       </div>
       {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {findItem >=1 &&
-      <button onClick={itemCtrl}>looting({findItem})</button>
+      {find === "" &&
+      <button onClick={activeFind}>find</button>
       }
-      <Dice
-        hpCtrl={hpCtrl}
-        diceCount={diceCount}
-        setDiceCount={setDiceCount}
-        enemyDiceCount={enemyDiceCount}
-        setGameResult={setGameResult}
-        stageCtrl={stageCtrl}
-        diceBuff={diceBuff}
-        enemyCtrl={enemyCtrl}
-        findCtrl={findCtrl}
-      />
+      {find === "" &&
+      <button onClick={() => findCtrl("enemy")}>next</button>
+      }
+      <div className="ground">
+        {find !== "" &&
+        <Dice
+          hpCtrl={hpCtrl}
+          diceCount={diceCount}
+          setDiceCount={setDiceCount}
+          enemyDiceCount={enemyDiceCount}
+          setGameResult={setGameResult}
+          stageCtrl={stageCtrl}
+          diceBuff={diceBuff}
+          enemyCtrl={enemyCtrl}
+          setLooting={setLooting}
+          findCtrl={findCtrl}
+        />
+        }
+      </div>
       <Inventory
         hpCtrl={hpCtrl}
         diceUp={diceUp}
         diceEquip={diceEquip}
         looting={looting}
         setLooting={setLooting}
+        profile={profile}
       />
       {/* result */}
       {gameResult && 

@@ -8,8 +8,11 @@ const App = () => {
     head: "bald",
     eyes: "smallEyes",
     face: "round",
-    job: "warrior",
+    job: "none",
     skill: "swordsmanship",
+    str: 1,
+    vit: 10,
+    inv: 5,
   });
   const [isProfileSaved, setIsProfileSaved] = useState(false);
   const [currentPage, setCurrentPage] = useState("intro");
@@ -55,8 +58,11 @@ const App = () => {
       head: "bald",
       eyes: "smallEyes",
       face: "round",
-      job: "warrior",
+      job: "none",
       skill: "swordsmanship",
+      str: 1,
+      vit: 10,
+      inv: 5,
     });
     setStage(1)
     setIsProfileSaved(false);

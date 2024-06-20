@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, diceBuff, enemyCtrl, findCtrl}) => {
+const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, diceBuff, enemyCtrl, setLooting, findCtrl}) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
@@ -59,15 +59,15 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
           // Determine game result
           if (playerSum > opponentSum) {
             setGameResult("win");
-            const dice = Math.floor(Math.random() * 3) + 1;
+            setLooting(true)
             stageCtrl();
-            findCtrl(dice);
             enemyCtrl(-1);
           } else {
             setGameResult("lose");
             hpCtrl(-1);
             enemyCtrl(1);
           }
+          findCtrl("");
         }, 1000); // Wait 1 second before calculating player's sum
       }, 1000); // Wait 1 second before calculating opponent's sum
     }
