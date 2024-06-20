@@ -103,24 +103,30 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         return "환경6에 진입했습니다.(find 체력소모 -6)"
       }
     }
-    switch (stage) {
-      case 10:
+    const reward = (v) => {
+      if (v === 1) {
+        hpCtrl(20);
+        stageCtrl();
+      }
+    }
+    switch (stage) { 
+      case 2:
       case 40:
       case 70:
       case 100:
       case 130:
-        renderDialog("loading", "체력을 회복합니다.");
-        setTimeout(() => {
-          hpCtrl(20);
-          stageCtrl();
-        }, 1000);
+        renderDialog("open", "체력을 회복합니다.");
+        console.log(dialogClass)
+        if (dialogClass === "close") {
+          reward(1);
+        }
         break;
       case 20:
       case 50:
       case 80:
       case 110:
       case 140:
-        renderDialog("loading", "주사위를 얻습니다.");
+        renderDialog("open", "주사위를 얻습니다.");
         setTimeout(() => {
           diceEquip(1);
           stageCtrl();
@@ -131,7 +137,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
       case 90:
       case 120:
       case 150:
-        renderDialog("loading", "가방을 얻습니다.");
+        renderDialog("open", "가방을 얻습니다.");
         setTimeout(() => {
           invenCtrl(1);
           stageCtrl();
@@ -263,36 +269,11 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   }
   // activeFind
   const activeFind = (v) => {
-    const int = (parseInt(diceCount, 10) + v)
-    if (hp > (int - 1)) {
-      // switch (v) {
-      //   case "env-a":
-      //     hpCtrl(0);
-      //     break;
-      //   case "env-b":
-      //     hpCtrl(-1);
-      //     break;
-      //   case "env-c":
-      //     hpCtrl(-2);
-      //     break;
-      //   case "env-d":
-      //     hpCtrl(-3);
-      //     break;
-      //   case "env-e":
-      //     hpCtrl(-4);
-      //     break;
-      //   case "env-f":
-      //     hpCtrl(-5);
-      //     break;
-      //   case "env-g":
-      //     hpCtrl(-6);
-      //     break;  
-      //   default:
-      //     break;
-      // }
-      hpCtrl(-(int - 1));
+    const int = (parseInt(v, 10));
+    console.log(int);
+    if (hp > (int)) {
+      hpCtrl(-int);
       itemCtrl();
-      console.log(int);
     } else {
       renderDialog("open", "체력이 없습니다.");
     }
@@ -310,7 +291,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
     } else if (state === "loading") {
       setDialogClass("loading"); // 클래스 상태 업데이트
     } else {
-      setDialogClass("");
+      setDialogClass("close");
     }
   }
   return (
@@ -325,7 +306,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
       <div className={`dialog-wrap ${dialogClass}`}>
         <div className="dialog">
           {dialog}
-          { dialogClass ==="open" &&  <button onClick={() => renderDialog("close", "")}>확인</button> }
+          { dialogClass ==="open" &&  <button onClick={() => renderDialog("close")}>확인</button> }
         </div>
       </div>
 
