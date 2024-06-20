@@ -14,6 +14,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   const [dialog, setDialog] = useState("");
   const [dialogClass, setDialogClass] = useState(""); // 클래스 상태 추가
   const [find, setFind] = useState("");
+  const [maxItems, setMaxItems] = useState(profile.inv);
 
   const stageCurrent = stage;
   const stageN1 = (parseInt(stage, 10) - 1);
@@ -41,6 +42,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
     const savedEnemyDiceCount = localStorage.getItem("enemyDiceCount");
     if (savedEnemyDiceCount) {
       setEnemyDiceCount(parseInt(savedEnemyDiceCount, 10));
+    }
+
+    // maxItems
+    const savedMaxItems = localStorage.getItem("maxItems");
+    if (savedMaxItems) {
+      setMaxItems(parseInt(savedMaxItems, 10));
     }
 
     // enemyStep
@@ -96,12 +103,48 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         return "환경6에 진입했습니다.(find 체력소모 -6)"
       }
     }
-    renderDialog("open", `${replaceEnv()}`);
+    switch (stage) {
+      case 10:
+      case 40:
+      case 70:
+      case 100:
+      case 130:
+        renderDialog("loading", "체력을 회복합니다.");
+        setTimeout(() => {
+          hpCtrl(20);
+          stageCtrl();
+        }, 1000);
+        break;
+      case 20:
+      case 50:
+      case 80:
+      case 110:
+      case 140:
+        renderDialog("loading", "주사위를 얻습니다.");
+        setTimeout(() => {
+          diceEquip(1);
+          stageCtrl();
+        }, 1000);
+        break;
+      case 30:
+      case 60:
+      case 90:
+      case 120:
+      case 150:
+        renderDialog("loading", "가방을 얻습니다.");
+        setTimeout(() => {
+          invenCtrl(1);
+          stageCtrl();
+        }, 1000);
+        break; 
+      default:
+        renderDialog("open", replaceEnv());
+    }
   }, [stage]);
 
   // stageCtrl
-  const stageCtrl = () => {
-    const newValue = (parseInt(stage, 10) + 1);
+  const stageCtrl = (v = 1) => {
+    const newValue = (parseInt(stage, 10) + v);
     setStage(newValue);
     localStorage.setItem("stage", newValue);
     // 5의 배수마다 주사위 추가
@@ -158,6 +201,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
     setDiceCount(newValue);
     localStorage.setItem("diceCount", newValue);
   };
+  // invenCtrl
+  const invenCtrl = (v) => {
+    const newValue = (parseInt(maxItems, 10) + v);
+    setMaxItems(newValue);
+    localStorage.setItem("maxItems", newValue);
+  }
   // enemyDiceUp
   const enemyDiceUp = (v) => {
     const newValue = enemyDiceCount + v;
@@ -302,7 +351,8 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         <div>enemy: {enemyDiceCount}</div>
       </div>
       {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
-      {/* <button onClick={() => stageCtrl()}>test</button> */}
+      {/* <button onClick={() => stageCtrl()}>sttest</button> */}
+      {/* <button onClick={() => invenCtrl(1)}>invtest</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" &&
       <button onClick={() => activeFind(environments[stageCurrent])}>find</button>
@@ -316,7 +366,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         diceEquip={diceEquip}
         looting={looting}
         setLooting={setLooting}
-        profile={profile}
+        maxItems={maxItems}
       />
       {/* dice */}
       {find !== "" &&

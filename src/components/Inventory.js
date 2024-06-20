@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Inventory = ({ profile, hpCtrl, diceUp, diceEquip, looting, setLooting}) => {
-  const maxItems = profile.inv; // 최대 아이템 개수
+const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting, maxItems }) => {
   const [items, setItems] = useState([]);
   const [itemsMsg, setItemsMsg] = useState();
   const [itemsIcon, setItemsIcon] = useState();
