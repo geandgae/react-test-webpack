@@ -176,7 +176,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   };
   // maxHp
   const maxHpCtrl = (v) => {
-    const newValue = (parseInt(hp, 10) + v);
+    const newValue = (parseInt(maxHp, 10) + v);
     setHp(newValue);
     setMaxHp(newValue)
     localStorage.setItem("hp", newValue);
@@ -184,6 +184,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   }
   // hpCtrl
   const hpCtrl = (v) => {
+    renderDialog("open", `체력을 ${v}`);
     const newValue = (parseInt(hp, 10) + v);
     if (newValue <= maxHp) {
       setHp(newValue);
@@ -191,7 +192,6 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
     } else {
       setHp(maxHp);
       localStorage.setItem("hp", maxHp);
-      console.log("최대치입니다.");
     }
     if (newValue <= 0) {
       console.log("gameover");
@@ -200,12 +200,13 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   };
   // diceUp
   const diceUp = (v) => {
+    renderDialog("open", "1턴 동안 주사위를 늘립니다.");
     const newValue = (parseInt(diceBuff, 10) + v);
     if (newValue <= 5) {
       setDiceBuff(newValue);
     } else {
       setDiceBuff(5);
-      console.log("최대치입니다.")
+      renderDialog("open", "최대치입니다.");
     }
   };
   // diceEquip 
@@ -343,7 +344,6 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   }
   // nextStage 
   const nextStage = () => {
-    setDiceBuff(0);
     clearCtrl(null);
     rewardCtrl("true");
     stageCtrl();
@@ -431,6 +431,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
             setLooting={setLooting}
             findCtrl={findCtrl}
             clearCtrl={clearCtrl}
+            setDiceBuff={setDiceBuff}
           />
         </div>
       </div>

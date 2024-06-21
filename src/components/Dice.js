@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DialogComponent from "./dialog";
 
-const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl, stageCtrl, diceBuff, enemyCtrl, setLooting, findCtrl }) => {
+const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl, stageCtrl, diceBuff, enemyCtrl, setLooting, findCtrl, setDiceBuff }) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
@@ -76,6 +76,7 @@ const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl,
             }, 1000);
           }
           findCtrl("");
+          setDiceBuff(0);
         }, 1000); // Wait 1 second before calculating player's sum
       }, 1000); // Wait 1 second before calculating opponent's sum
     }
