@@ -60,7 +60,7 @@ const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl,
           // Determine game result
           if (playerSum > opponentSum) {
             clearCtrl("win");
-            renderDialog("loading", "승리하였습니다.");
+            renderDialog("loading", "승리하였습니다. 보상을 얻습니다.");
             setTimeout(() => {
               renderDialog(null);
               setLooting(true);
@@ -68,7 +68,7 @@ const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl,
             }, 1000);
           } else {
             clearCtrl("lose");
-            renderDialog("loading", "패배하였습니다.");
+            renderDialog("loading", "패배하였습니다. 체력을 잃습니다.");
             setTimeout(() => {
               renderDialog(null);
               hpCtrl(-1);
@@ -94,6 +94,12 @@ const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl,
         id: Date.now(),
         message: message,
         class: "open",
+      });
+    } else if (state === "confirm") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "confirm",
       });
     } else if (state === "loading") {
       setDialog({

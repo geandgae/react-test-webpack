@@ -16,6 +16,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   const [find, setFind] = useState("");
   const [maxItems, setMaxItems] = useState(profile.inv);
   const [rewardChk, setRewardChk] = useState("true");
+  const [confirmed, setConfirmed] = useState("");
 
   const stageCurrent = stage;
   const stageN1 = (parseInt(stage, 10) - 1);
@@ -181,10 +182,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
     setMaxHp(newValue)
     localStorage.setItem("hp", newValue);
     localStorage.setItem("maxHp", newValue);
-  }
+  };
   // hpCtrl
-  const hpCtrl = (v) => {
-    renderDialog("open", `체력을 ${v}`);
+  const hpCtrl = (v , use) => {
+    if (use === "use") {
+      renderDialog("open", `체력을 ${v} 회복합니다.`);
+    }
     const newValue = (parseInt(hp, 10) + v);
     if (newValue <= maxHp) {
       setHp(newValue);
@@ -220,7 +223,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
     const newValue = (parseInt(maxItems, 10) + v);
     setMaxItems(newValue);
     localStorage.setItem("maxItems", newValue);
-  }
+  };
   // enemyDiceUp
   const enemyDiceUp = (v) => {
     const newValue = enemyDiceCount + v;
@@ -230,7 +233,6 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
   // itemCtrl
   const itemCtrl = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
-    console.log(dice);
     renderDialog("loading", "아이템을 찾는중입니다.");
     setTimeout(() => {
       renderDialog(null);
@@ -251,14 +253,8 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
           renderDialog("open", "아이템을 찾지 못했습니다.");
           break;
       }
-      // if (dice <= 20) {
-      //   setLooting(true);
-      // } else {
-      //   setLooting(false)
-      //   renderDialog("open", "아이템을 찾지 못했습니다.");
-      // }
     }, 1000);
-  }
+  };
   // enemyCtrl
   const enemyCtrl = (v) => {
     const newValue = (parseInt(enemyStep, 10) + v);
@@ -268,24 +264,31 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
       setEnemyStep(newValue);
     }
     localStorage.setItem("enemyStep", newValue);
-  }
+  };
   // findCtrl
   const findCtrl = (v) => {
     const newValue = v;
     setFind(newValue);
     localStorage.setItem("find", newValue);
-  }
+  };
   // activeFind
-  const activeFind = (v) => {
-    const int = (parseInt(v, 10));
-    console.log(int);
-    if (hp > (int)) {
-      hpCtrl(-int);
-      itemCtrl();
-    } else {
-      renderDialog("open", "체력이 없습니다.");
+  useEffect(() => {
+    if (confirmed === "confirmed") {
+      const int = (parseInt(environments[stageCurrent], 10));
+      if (hp > (int)) {
+        hpCtrl(-int);
+        itemCtrl();
+        setConfirmed("");
+      } else {
+        setConfirmed("");
+        renderDialog("open", "체력이 없습니다.");
+      }
     }
-  } 
+  }, [confirmed]);
+  const activeFind = (v) => {
+    renderDialog("confirm", `탐색에는 체력을 ${v}만큼 잃습니다. 괜찮습니까?`);
+  };
+  
   // reward
   const reward = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
@@ -320,7 +323,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
       renderDialog("open", "이미 보상을 얻었습니다.");
       findCtrl("");
     }
-  }
+  };
   // renderDialog 
   const renderDialog = (state, message) => {
     setDialog({
@@ -334,6 +337,12 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         message: message,
         class: "open",
       });
+    } else if (state === "confirm") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "confirm",
+      });
     } else if (state === "loading") {
       setDialog({
         id: Date.now(),
@@ -341,13 +350,19 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         class: "loading",
       });
     }
-  }
+  };
+  // onConfirm
+  const onConfirm = (v) => {
+    setConfirmed(v);
+    renderDialog(null);
+  };
   // nextStage 
   const nextStage = () => {
     clearCtrl(null);
     rewardCtrl("true");
     stageCtrl();
-  }
+  };
+  
 
 
   return (
@@ -356,6 +371,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
         dialogMsg={dialog.message}
         dialogClass={dialog.class}
         renderDialog={renderDialog}
+        onConfirm={onConfirm}
       />
       
       <div className={`Avatar-preview only-stage ${profile.head} ${profile.eyes} ${profile.face}`}>
@@ -393,6 +409,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
       {/* <button onClick={() => hpCtrl(maxHp)}>restore</button> */}
       {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
       {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
+      {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" && gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stageCurrent])}>find</button>

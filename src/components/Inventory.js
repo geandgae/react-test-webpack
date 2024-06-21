@@ -97,13 +97,13 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting, maxItems })
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
     if (name === "AAA") {
-      hpCtrl(1);
+      hpCtrl(1, "use");
     }
     if (name === "BBB") {
-      hpCtrl(2);
+      hpCtrl(2, "use");
     }
     if (name === "CCC") {
-      hpCtrl(3);
+      hpCtrl(3, "use");
     }
     if (name === "DDD") {
       diceUp(1);

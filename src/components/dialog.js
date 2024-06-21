@@ -1,5 +1,5 @@
 import React from "react";
-const DialogComponent = ({ dialogMsg, dialogClass, renderDialog }) => {
+const DialogComponent = ({ dialogMsg, dialogClass, renderDialog, onConfirm }) => {
 
   const handleCloseDialog = () => {
     renderDialog(null);
@@ -18,6 +18,12 @@ const DialogComponent = ({ dialogMsg, dialogClass, renderDialog }) => {
         {dialogClass === "open" && 
         <div className="dialog-confirm">
           <button onClick={handleCloseDialog}>확인</button>
+        </div>
+        }
+        {dialogClass === "confirm" && 
+        <div className="dialog-confirm">
+          <button onClick={() => onConfirm("confirmed")}>확인</button>
+          <button onClick={handleCloseDialog}>취소</button>
         </div>
         }
       </div>

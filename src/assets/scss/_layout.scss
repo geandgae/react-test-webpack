@@ -356,6 +356,7 @@ a:hover {
   &.dice-enemy {
     .dice-3d {
       & > span {
+        // background-color: rgba(255, 255, 255, 0);
         &:nth-child(1) {
           background-image: url("../images/en_dice1.png");
         }
@@ -812,7 +813,7 @@ h2, h3 {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.9);
   z-index: -1;
-  &.open, &.loading {
+  &.open, &.loading, &.confirm  {
     opacity: 1;
     z-index: 100;
     display: block;
