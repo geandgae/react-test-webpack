@@ -18,6 +18,7 @@ const App = () => {
   const [currentPage, setCurrentPage] = useState("intro");
   const [stage, setStage] = useState(1);
   const [environments, setEnvironments] = useState([]);
+  const [trophy, setTrophy] = useState(stage);
 
   useEffect(() => {
     // env
@@ -33,11 +34,19 @@ const App = () => {
       setProfile(storedProfile);
       setIsProfileSaved(true);
     }
+
     // stage
     const savedStage = localStorage.getItem("stage");
     if (savedStage) {
       setStage(savedStage);
     }
+
+    // trophy
+    const savedTrophy = localStorage.getItem("trophy");
+    if (savedTrophy) {
+      setTrophy(parseInt(savedTrophy, 10));
+    }
+
     // intro
     const introDom = document.querySelector(".intro");
     if (introDom) {
@@ -49,6 +58,12 @@ const App = () => {
       console.error(`Element with class intro not found.`);
     }
   }, []);
+
+  useEffect(() => {
+    if (stage > trophy) {
+      localStorage.setItem("trophy", stage);
+    }
+  }, [stage]);
 
   // generateAndStoreEnvironments
   const generateAndStoreEnvironments = () => {
@@ -67,6 +82,7 @@ const App = () => {
   };
 
   const removeFromLocalStorage = () => {
+    let excludeKeys = trophy;
     // localStorage.removeItem("user");
     // 로컬 스토리지 전체 삭제
     localStorage.clear(); 
@@ -83,6 +99,9 @@ const App = () => {
     });
     setStage(1)
     setIsProfileSaved(false);
+    // 보존할 항목 다시 설정
+    setTrophy(excludeKeys)
+    localStorage.setItem("trophy", excludeKeys);
   };
 
   const gameover = () => {
@@ -116,6 +135,7 @@ const App = () => {
         ) : (
           <button disabled>remove</button>
         )}
+        <span>trophy : {trophy}</span>
       </nav>
       }
       {/* gameover */}
