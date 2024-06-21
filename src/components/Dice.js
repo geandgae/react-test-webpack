@@ -119,7 +119,7 @@ const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl,
       </div>
       <div className="d-flex">
         {opponentDiceNumbers.map((number, index) => (
-          <div className="dice-wrap" key={index}>
+          <div className="dice-wrap dice-enemy" key={index}>
             <div className={`dice-3d ${rollingEnemy ? "rolling" : ""}`}>
               <span className={`active-${number}`}>{number}</span>
               <span>2</span>
