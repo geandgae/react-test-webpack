@@ -126,7 +126,7 @@ const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) =
       }
     }
     switch (true) { 
-      case stage % 2 === 0:
+      case stage % 5 === 0:
         findCtrl("reward");
         renderDialog("open", "보상단계에 진입했습니다.");
         break;
