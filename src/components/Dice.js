@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import DialogComponent from "./dialog";
 
-const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, diceBuff, enemyCtrl, setLooting, findCtrl}) => {
+const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl, stageCtrl, diceBuff, enemyCtrl, setLooting, findCtrl }) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
@@ -58,14 +59,21 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
 
           // Determine game result
           if (playerSum > opponentSum) {
-            setGameResult("win");
-            setLooting(true)
-            stageCtrl();
-            enemyCtrl(-1);
+            clearCtrl("win");
+            renderDialog("loading", "승리하였습니다.");
+            setTimeout(() => {
+              renderDialog(null);
+              setLooting(true);
+              enemyCtrl(-1);
+            }, 1000);
           } else {
-            setGameResult("lose");
-            hpCtrl(-1);
-            enemyCtrl(1);
+            clearCtrl("lose");
+            renderDialog("loading", "패배하였습니다.");
+            setTimeout(() => {
+              renderDialog(null);
+              hpCtrl(-1);
+              enemyCtrl(1);
+            }, 1000);
           }
           findCtrl("");
         }, 1000); // Wait 1 second before calculating player's sum
@@ -73,8 +81,36 @@ const Dice = ({ diceCount, enemyDiceCount, setGameResult, hpCtrl, stageCtrl, dic
     }
   };
 
+  // renderDialog 
+  const renderDialog = (state, message) => {
+    setDialog({
+      id: Date.now(),
+      message: message,
+      class: "close"
+    });
+    if (state === "open") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "open",
+      });
+    } else if (state === "loading") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "loading",
+      });
+    }
+  }
+
   return (
     <div>
+      <DialogComponent
+        dialogMsg={dialog.message}
+        dialogClass={dialog.class}
+        renderDialog={renderDialog}
+      />
+
       <div>
         <h3>Opponent's Dice Sum: {opponentDiceSum}</h3>
         {/* {opponentDiceNumbers.map((number, index) => (

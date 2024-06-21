@@ -90,11 +90,6 @@ const App = () => {
     setCurrentPage("main")
   }
 
-  // test
-  console.log(`페이지 : ${currentPage}`);
-  console.log(`단계 : ${stage}`);
-  
-  
   return (
     <div>
       {/* intro */}
