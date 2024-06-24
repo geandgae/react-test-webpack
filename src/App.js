@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CreateProfile from "./components/CreateProfile";
 import ViewProfile from "./components/ViewProfile";
-import TestComponent from "./components/Test";
+import TestComponent from "./components/AutoTagTest";
 
 const App = () => {
   const [profile, setProfile] = useState({
