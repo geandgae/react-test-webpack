@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import CreateProfile from "./components/CreateProfile";
 import ViewProfile from "./components/ViewProfile";
+import TestComponent from "./components/Test";
 
 const App = () => {
   const [profile, setProfile] = useState({
@@ -136,6 +137,8 @@ const App = () => {
           <button disabled>remove</button>
         )}
         <span>trophy : {trophy}</span>
+        {/* test */}
+        <span onClick={() => setCurrentPage("test")}>test</span>
       </nav>
       }
       {/* gameover */}
@@ -168,6 +171,10 @@ const App = () => {
         }
       </div>
       )}
+      {/* test */}
+      {currentPage === "test" && 
+      <TestComponent/>
+      }
     </div>
   );
 };
