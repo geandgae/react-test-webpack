@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import CreateProfile from "./components/CreateProfile";
 import ViewProfile from "./components/ViewProfile";
 import TestComponent from "./components/AutoTagTest";
+import StoreTest from "./test/storeTest";
 
 const App = () => {
   const [profile, setProfile] = useState({
@@ -139,6 +140,7 @@ const App = () => {
         <span>trophy : {trophy}</span>
         {/* test */}
         <span onClick={() => setCurrentPage("test")}>test</span>
+        <StoreTest></StoreTest>
       </nav>
       }
       {/* gameover */}
