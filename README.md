@@ -42,4 +42,5 @@ my-react-app/
 * 다이얼로그 콜백 또는 보상스테이지 변경(next 이벤트 변경) / 전투결과창 따로 / 아이템 획득창 따로
 * 보스전은 게이지 100% 일때? / 케릭생성 / 메뉴 인트로 변경
 
-* 스토어 적용할거임
+* 스토어 구성 useReducer / Context API 
+<!-- * 스토어 구성 react-redux / @reduxjs/toolkit -->
