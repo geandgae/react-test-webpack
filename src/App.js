@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from "react";
 import CreateProfile from "./components/CreateProfile";
 import ViewProfile from "./components/ViewProfile";
-import TestComponent from "./test/AutoTagTest";
+// store
+import { useAppState, useAppDispatch, actionTypes } from './store/Store';
 
 const App = () => {
+  // store
+  const { isProfileSaved, currentPage, trophy } = useAppState();
+  const { dispatch, setCurrentPage }= useAppDispatch();
+  
+  // 스토어 적용전
   const [profile, setProfile] = useState({
     name: "test",
     head: "bald",
@@ -15,11 +21,8 @@ const App = () => {
     vit: 10,
     inv: 5,
   });
-  const [isProfileSaved, setIsProfileSaved] = useState(false);
-  const [currentPage, setCurrentPage] = useState("intro");
   const [stage, setStage] = useState(1);
   const [environments, setEnvironments] = useState([]);
-  const [trophy, setTrophy] = useState(stage);
 
   useEffect(() => {
     // env
@@ -33,19 +36,13 @@ const App = () => {
     const storedProfile = JSON.parse(localStorage.getItem("user"));
     if (storedProfile) {
       setProfile(storedProfile);
-      setIsProfileSaved(true);
+      dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
     }
 
     // stage
     const savedStage = localStorage.getItem("stage");
     if (savedStage) {
       setStage(savedStage);
-    }
-
-    // trophy
-    const savedTrophy = localStorage.getItem("trophy");
-    if (savedTrophy) {
-      setTrophy(parseInt(savedTrophy, 10));
     }
 
     // intro
@@ -78,7 +75,8 @@ const App = () => {
   const saveUserToLocalStorage = () => {
     localStorage.setItem("user", JSON.stringify(profile));
     localStorage.setItem("stage", stage);
-    setIsProfileSaved(true);
+
+    dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
     setCurrentPage("main")
   };
 
@@ -99,10 +97,8 @@ const App = () => {
       inv: 5,
     });
     setStage(1)
-    setIsProfileSaved(false);
-    // 보존할 항목 다시 설정
-    setTrophy(excludeKeys)
-    localStorage.setItem("trophy", excludeKeys);
+    dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: false });
+    dispatch({ type: actionTypes.SET_TROPHY, payload: excludeKeys });
   };
 
   const gameover = () => {
@@ -111,7 +107,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <>
       {/* intro */}
       {currentPage === "intro" && 
       <div className="intro">
@@ -137,8 +133,6 @@ const App = () => {
           <button disabled>remove</button>
         )}
         <span>trophy : {trophy}</span>
-        {/* test */}
-        <span onClick={() => setCurrentPage("test")}>test</span>
       </nav>
       }
       {/* gameover */}
@@ -149,19 +143,18 @@ const App = () => {
       }
       {/* load & new */}
       {isProfileSaved ? (
-      <div>
+      <>
         {currentPage === "load" && 
           <ViewProfile 
             profile={profile}
             stage={stage}
             setStage={setStage}
-            setCurrentPage={setCurrentPage}
             environments={environments}
           />
         }
-      </div>
+      </>
       ) : (
-      <div>
+      <>
         {currentPage === "new" && 
           <CreateProfile
             profile={profile}
@@ -169,13 +162,9 @@ const App = () => {
             saveUserToLocalStorage={saveUserToLocalStorage}
           />
         }
-      </div>
+      </>
       )}
-      {/* test */}
-      {currentPage === "test" && 
-      <TestComponent/>
-      }
-    </div>
+    </>
   );
 };
 

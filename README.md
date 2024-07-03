@@ -42,5 +42,42 @@ my-react-app/
 * 다이얼로그 콜백 또는 보상스테이지 변경(next 이벤트 변경) / 전투결과창 따로 / 아이템 획득창 따로
 * 보스전은 게이지 100% 일때? / 케릭생성 / 메뉴 인트로 변경
 
+* html 태그정리
+
 * 스토어 구성 useReducer / Context API 
 <!-- * 스토어 구성 react-redux / @reduxjs/toolkit -->
+
+
+src/
+│
+├── components/          # 재사용 가능한 프레젠테이셔널 컴포넌트
+│   ├── CreateProfile.js
+│   ├── ViewProfile.js            
+│
+├── context/             # Context 및 Reducer 관련 파일
+│   ├── AppStateContext.js   # 상태를 제공하는 Context 컴포넌트
+│   ├── AppReducer.js        # 상태 변경을 관리하는 Reducer
+│   └── initialState.js      # 초기 상태 정의
+│
+├── hooks/               # 커스텀 훅
+│   └── useLocalStorage.js   # localStorage 사용을 추상화한 커스텀 훅
+│
+├── pages/               # 페이지 단위 컴포넌트
+│   ├── HomePage.js
+│   ├── LoadPage.js
+│   ├── NewProfilePage.js
+│   ├── IntroPage.js
+│   ├── GameOverPage.js
+│   └── TestPage.js
+│
+├── utils/               # 유틸리티 함수
+│   └── generateEnvironments.js
+│
+├── App.js               # 최상위 App 컴포넌트
+├── index.js             # 엔트리 포인트
+
+
+
+* isProfileSaved 변환
+* trophy 변환
+* currentPage 변환

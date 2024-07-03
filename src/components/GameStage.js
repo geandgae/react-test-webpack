@@ -2,8 +2,14 @@ import React, { useState, useEffect } from "react";
 import Dice from "./Dice";
 import Inventory from "./Inventory";
 import DialogComponent from "./dialog";
+// store
+import { useAppState, useAppDispatch, actionTypes } from '../store/Store';
 
-const GameStage = ({ profile, stage, setStage, setCurrentPage, environments }) => {
+const GameStage = ({ profile, stage, setStage, environments }) => {
+
+  // store
+  const { setCurrentPage } = useAppDispatch();
+
   const [maxHp, setMaxHp] = useState(profile.vit);
   const [hp, setHp] = useState(maxHp);
   const [diceCount, setDiceCount] = useState(profile.str);
