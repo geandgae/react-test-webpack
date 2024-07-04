@@ -5,10 +5,11 @@ import DialogComponent from "./dialog";
 // store
 import { useAppState, useAppDispatch, actionTypes } from '../store/Store';
 
-const GameStage = ({ profile, stage, setStage, environments }) => {
+const GameStage = () => {
 
   // store
-  const { setCurrentPage } = useAppDispatch();
+  const { profile, stage, environments } = useAppState();
+  const { dispatch, setCurrentPage } = useAppDispatch();
 
   const [maxHp, setMaxHp] = useState(profile.vit);
   const [hp, setHp] = useState(maxHp);
@@ -157,7 +158,7 @@ const GameStage = ({ profile, stage, setStage, environments }) => {
   // stageCtrl
   const stageCtrl = (v = 1) => {
     const newValue = (parseInt(stage, 10) + v);
-    setStage(newValue);
+    dispatch({ type: actionTypes.SET_STAGE, payload: newValue });
     localStorage.setItem("stage", newValue);
     // 5의 배수마다 주사위 추가
     if (stage % 5 === 0) {
@@ -203,7 +204,6 @@ const GameStage = ({ profile, stage, setStage, environments }) => {
       localStorage.setItem("hp", maxHp);
     }
     if (newValue <= 0) {
-      console.log("gameover");
       setCurrentPage("gameover");
     }
   };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DialogComponent from "./dialog";
 
-const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl, stageCtrl, diceBuff, enemyCtrl, setLooting, findCtrl, setDiceBuff }) => {
+const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl, diceBuff, enemyCtrl, setLooting, findCtrl, setDiceBuff }) => {
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);

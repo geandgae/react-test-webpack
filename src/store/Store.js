@@ -6,6 +6,19 @@ const AppDispatchContext = createContext();
 
 // 초기 상태 정의
 const initialState = {
+  profile: {
+    name: "test",
+    head: "bald",
+    eyes: "smallEyes",
+    face: "round",
+    job: "none",
+    skill: "swordsmanship",
+    str: 1,
+    vit: 10,
+    inv: 5,
+  },
+  stage: 1,
+  environments: [],
   isProfileSaved: false,
   currentPage: "intro",
   trophy: 1,
@@ -13,9 +26,12 @@ const initialState = {
 
 // 액션 타입 정의
 const actionTypes = {
+  SET_PROFILE: "SET_PROFILE",
+  SET_STAGE: "SET_STAGE",
+  SET_ENVIRONMENTS: "SET_ENVIRONMENTS",
   SET_IS_PROFILE_SAVED: "SET_IS_PROFILE_SAVED",
-  SET_CURRENT_PAGE: 'SET_CURRENT_PAGE',
-  SET_TROPHY: 'SET_TROPHY',
+  SET_CURRENT_PAGE: "SET_CURRENT_PAGE",
+  SET_TROPHY: "SET_TROPHY",
 };
 
 // 리듀서 함수 정의
@@ -28,9 +44,9 @@ const reducer = (state, action) => {
     case actionTypes.SET_ENVIRONMENTS:
       return { ...state, environments: action.payload };
     case actionTypes.SET_IS_PROFILE_SAVED:
-      return { ...state, isProfileSaved: action.payload };  
+      return { ...state, isProfileSaved: action.payload };
     case actionTypes.SET_CURRENT_PAGE:
-      return { ...state, currentPage: action.payload };  
+      return { ...state, currentPage: action.payload };
     case actionTypes.SET_TROPHY:
       return { ...state, trophy: action.payload };
     default:
@@ -38,41 +54,36 @@ const reducer = (state, action) => {
   }
 };
 
-
 // Context Provider 컴포넌트 생성
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    // // storedProfile
-    // const storedProfile = JSON.parse(localStorage.getItem("user"));
-    // if (storedProfile) {
-    //   dispatch({ type: actionTypes.SET_PROFILE, payload: storedProfile });
-    //   dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
-    // }
+    // 로컬 스토리지에서 데이터 불러오기
 
-    // // savedStage
-    // const savedStage = localStorage.getItem("stage");
-    // if (savedStage) {
-    //   dispatch({ type: actionTypes.SET_STAGE, payload: parseInt(savedStage, 10) });
-    // }
+    // storedProfile
+    const storedProfile = JSON.parse(localStorage.getItem("user"));
+    if (storedProfile) {
+      dispatch({ type: actionTypes.SET_PROFILE, payload: storedProfile });
+      dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
+    }
 
-    // // storedEnvironments
-    // const storedEnvironments = JSON.parse(localStorage.getItem("stageEnvironments"));
-    // if (storedEnvironments) {
-    //   dispatch({ type: actionTypes.SET_ENVIRONMENTS, payload: storedEnvironments });
-    // }
+    // savedStage
+    const savedStage = localStorage.getItem("stage");
+    if (savedStage) {
+      dispatch({ type: actionTypes.SET_STAGE, payload: parseInt(savedStage, 10) });
+    }
+
+    // storedEnvironments
+    const storedEnvironments = JSON.parse(localStorage.getItem("stageEnvironments"));
+    if (storedEnvironments) {
+      dispatch({ type: actionTypes.SET_ENVIRONMENTS, payload: storedEnvironments });
+    }
 
     // savedIsProfileSaved
     const savedIsProfileSaved = localStorage.getItem("isProfileSaved");
     if (savedIsProfileSaved) {
       dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: JSON.parse(savedIsProfileSaved) });
-    }
-
-    // savedCurrentPage
-    const savedCurrentPage = localStorage.getItem("currentPage");
-    if (savedCurrentPage) {
-      dispatch({ type: actionTypes.SET_CURRENT_PAGE, payload: savedCurrentPage });
     }
 
     // savedTrophy
@@ -84,21 +95,21 @@ const AppProvider = ({ children }) => {
 
   // 모든 상태 업데이트 시 로컬 스토리지에 저장
   useEffect(() => {
-    // localStorage.setItem("user", JSON.stringify(state.profile));
-    // localStorage.setItem("stage", state.stage);
-    // localStorage.setItem("stageEnvironments", JSON.stringify(state.environments));
+    localStorage.setItem("user", JSON.stringify(state.profile));
+    localStorage.setItem("stage", state.stage);
+    localStorage.setItem("stageEnvironments", JSON.stringify(state.environments));
     localStorage.setItem("isProfileSaved", state.isProfileSaved);
-    localStorage.setItem("currentPage", state.currentPage);
     localStorage.setItem("trophy", state.trophy);
   }, [state]);
 
+  // functions
   const setCurrentPage = (page) => {
     dispatch({ type: actionTypes.SET_CURRENT_PAGE, payload: page });
   };
 
   return (
     <AppStateContext.Provider value={state}>
-      <AppDispatchContext.Provider value={{dispatch, setCurrentPage}}>{children}</AppDispatchContext.Provider>
+      <AppDispatchContext.Provider value={{ dispatch, setCurrentPage, initialState }}>{children}</AppDispatchContext.Provider>
     </AppStateContext.Provider>
   );
 };

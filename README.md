@@ -81,3 +81,6 @@ src/
 * isProfileSaved 변환
 * trophy 변환
 * currentPage 변환
+* environments 변환
+* stage 변환
+* profile 변환
