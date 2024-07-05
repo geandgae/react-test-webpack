@@ -6,6 +6,7 @@ const AppDispatchContext = createContext();
 
 // 초기 상태 정의
 const initialState = {
+  // env set
   profile: {
     name: "test",
     head: "bald",
@@ -22,6 +23,13 @@ const initialState = {
   isProfileSaved: false,
   currentPage: "intro",
   trophy: 1,
+  // dialog
+  dialog: {
+    id: null,
+    message: "",
+    class: "",
+  },
+  confirmed: false,
 };
 
 // 액션 타입 정의
@@ -32,6 +40,8 @@ const actionTypes = {
   SET_IS_PROFILE_SAVED: "SET_IS_PROFILE_SAVED",
   SET_CURRENT_PAGE: "SET_CURRENT_PAGE",
   SET_TROPHY: "SET_TROPHY",
+  SET_DIALOG: "SET_DIALOG",
+  SET_CONFIRMED: "SET_CONFIRMED",
 };
 
 // 리듀서 함수 정의
@@ -49,6 +59,10 @@ const reducer = (state, action) => {
       return { ...state, currentPage: action.payload };
     case actionTypes.SET_TROPHY:
       return { ...state, trophy: action.payload };
+    case actionTypes.SET_DIALOG:
+      return { ...state, dialog: action.payload };
+    case actionTypes.SET_CONFIRMED:
+      return { ...state, confirmed: action.payload };
     default:
       return state;
   }
@@ -66,6 +80,8 @@ const AppProvider = ({ children }) => {
     if (storedProfile) {
       dispatch({ type: actionTypes.SET_PROFILE, payload: storedProfile });
       dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
+      // debug
+      console.log("Stored profile loaded from localStorage:", storedProfile);
     }
 
     // savedStage
@@ -102,14 +118,52 @@ const AppProvider = ({ children }) => {
     localStorage.setItem("trophy", state.trophy);
   }, [state]);
 
-  // functions
+  // setCurrentPage
   const setCurrentPage = (page) => {
     dispatch({ type: actionTypes.SET_CURRENT_PAGE, payload: page });
   };
 
+  // setDialog
+  const setDialog = (dialog) => {
+    dispatch({ type: actionTypes.SET_DIALOG, payload: dialog });
+  };
+  // renderDialog
+  const renderDialog = (state, message) => {
+    if (state === "open") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "open",
+      });
+    } else if (state === "confirm") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "confirm",
+      });
+    } else if (state === "loading") {
+      setDialog({
+        id: Date.now(),
+        message: message,
+        class: "loading",
+      });
+    } else if (state === null) {
+      setDialog({
+        id: null,
+        message: "",
+        class: "",
+      });
+    }
+  };
+
+  // setconfirmed
+  const setConfirmed = (confirm) => {
+    dispatch({ type: actionTypes.SET_CONFIRMED, payload: confirm });
+  };
+
   return (
     <AppStateContext.Provider value={state}>
-      <AppDispatchContext.Provider value={{ dispatch, setCurrentPage, initialState }}>{children}</AppDispatchContext.Provider>
+      <AppDispatchContext.Provider value={{ dispatch, setCurrentPage, setDialog, renderDialog, setConfirmed, initialState }}>{children}</AppDispatchContext.Provider>
     </AppStateContext.Provider>
   );
 };

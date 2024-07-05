@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Dice from "./Dice";
 import Inventory from "./Inventory";
-import DialogComponent from "./dialog";
+import DialogComponent from "./Dialog";
 // store
 import { useAppState, useAppDispatch, actionTypes } from '../store/Store';
 
 const GameStage = () => {
 
   // store
-  const { profile, stage, environments } = useAppState();
-  const { dispatch, setCurrentPage } = useAppDispatch();
+  const { profile, stage, environments, confirmed } = useAppState();
+  const { dispatch, setCurrentPage, renderDialog, setConfirmed } = useAppDispatch();
 
   const [maxHp, setMaxHp] = useState(profile.vit);
   const [hp, setHp] = useState(maxHp);
@@ -19,11 +19,9 @@ const GameStage = () => {
   const [gameResult, setGameResult] = useState("");
   const [enemyStep, setEnemyStep] = useState(0);
   const [looting, setLooting] = useState(false);
-  const [dialog, setDialog] = useState("");
   const [find, setFind] = useState("");
   const [maxItems, setMaxItems] = useState(profile.inv);
   const [rewardChk, setRewardChk] = useState("true");
-  const [confirmed, setConfirmed] = useState("");
 
   const stageCurrent = stage;
   const stageN1 = (parseInt(stage, 10) - 1);
@@ -32,11 +30,6 @@ const GameStage = () => {
   const enemyWalk = `step-${enemyStep}`;
   const hpCurrent = `hp-${hp}`
   
-  // console.log(`enemyStep : ${enemyStep}`);
-  console.log(`find : ${find}`);
-  console.log(`rewardChk : ${rewardChk}`);
-  console.log(`gameResult : ${gameResult}`);
-
   useEffect(() => {
     // HP
     const savedHp = localStorage.getItem("hp");
@@ -279,14 +272,14 @@ const GameStage = () => {
   };
   // activeFind
   useEffect(() => {
-    if (confirmed === "confirmed") {
+    if (confirmed === "confirm") {
       const int = (parseInt(environments[stageCurrent], 10));
       if (hp > (int)) {
         hpCtrl(-int);
         itemCtrl();
-        setConfirmed("");
+        setConfirmed();
       } else {
-        setConfirmed("");
+        setConfirmed();
         renderDialog("open", "체력이 없습니다.");
       }
     }
@@ -330,55 +323,26 @@ const GameStage = () => {
       findCtrl("");
     }
   };
-  // renderDialog 
-  const renderDialog = (state, message) => {
-    setDialog({
-      id: Date.now(),
-      message: message,
-      class: "close"
-    });
-    if (state === "open") {
-      setDialog({
-        id: Date.now(),
-        message: message,
-        class: "open",
-      });
-    } else if (state === "confirm") {
-      setDialog({
-        id: Date.now(),
-        message: message,
-        class: "confirm",
-      });
-    } else if (state === "loading") {
-      setDialog({
-        id: Date.now(),
-        message: message,
-        class: "loading",
-      });
-    }
-  };
-  // onConfirm
-  const onConfirm = (v) => {
-    setConfirmed(v);
-    renderDialog(null);
-  };
+
   // nextStage 
   const nextStage = () => {
     clearCtrl(null);
     rewardCtrl("true");
     stageCtrl();
   };
+
+  // test
+  
+  // console.log(`enemyStep : ${enemyStep}`);
+  // console.log(`find : ${find}`);
+  // console.log(`rewardChk : ${rewardChk}`);
+  // console.log(`gameResult : ${gameResult}`);
   
 
 
   return (
     <div>
-      <DialogComponent
-        dialogMsg={dialog.message}
-        dialogClass={dialog.class}
-        renderDialog={renderDialog}
-        onConfirm={onConfirm}
-      />
+      <DialogComponent/>
       
       <div className={`Avatar-preview only-stage ${profile.head} ${profile.eyes} ${profile.face}`}>
         <div className="Avatar-inner">
@@ -413,9 +377,9 @@ const GameStage = () => {
       {/* <button onClick={() => stageCtrl()}>sttest</button> */}
       {/* <button onClick={() => invenCtrl(1)}>invtest</button> */}
       {/* <button onClick={() => hpCtrl(maxHp)}>restore</button> */}
-      {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
-      {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
-      {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
+      <button onClick={() => renderDialog("open", "open")}>open</button>
+      <button onClick={() => renderDialog("loading", "loading")}>loading</button>
+      <button onClick={() => renderDialog("confirm", "test")}>confirm</button>
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" && gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stageCurrent])}>find</button>
@@ -442,8 +406,6 @@ const GameStage = () => {
       <div className="intro">
         <div className="ground">
           <Dice
-            dialog={dialog}
-            setDialog={setDialog}
             hpCtrl={hpCtrl}
             diceCount={diceCount}
             setDiceCount={setDiceCount}

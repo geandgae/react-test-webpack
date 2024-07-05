@@ -1,28 +1,33 @@
 import React from "react";
-const DialogComponent = ({ dialogMsg, dialogClass, renderDialog, onConfirm }) => {
+// store
+import { useAppState, useAppDispatch } from "../store/Store"; 
+
+const DialogComponent = () => {
+  // store
+  const { dialog } = useAppState();
+  const { setDialog, setConfirmed } = useAppDispatch(); 
 
   const handleCloseDialog = () => {
-    renderDialog(null);
+    setDialog({ id: null, message: "", class: "" });
   };
 
-  // if (dialogClass === "loading") {
-  //   setTimeout(() => {
-  //     renderDialog(null);
-  //   }, 1000);
-  // };
-  
+  const onConfirm = (v) => {
+    setConfirmed(v);
+    handleCloseDialog();
+  };
+
   return (
-    <div className={`dialog-wrap ${dialogClass}`}>
+    <div className={`dialog-wrap ${dialog.class}`}>
       <div className="dialog">
-        <div className="dialog-msg">{dialogMsg}</div>
-        {dialogClass === "open" && 
+        <div className="dialog-msg">{dialog.message}</div>
+        {dialog.class === "open" && 
         <div className="dialog-confirm">
           <button onClick={handleCloseDialog}>확인</button>
         </div>
         }
-        {dialogClass === "confirm" && 
+        {dialog.class === "confirm" && 
         <div className="dialog-confirm">
-          <button onClick={() => onConfirm("confirmed")}>확인</button>
+          <button onClick={() => onConfirm(dialog.class)}>확인</button>
           <button onClick={handleCloseDialog}>취소</button>
         </div>
         }

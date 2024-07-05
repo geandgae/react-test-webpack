@@ -44,10 +44,8 @@ my-react-app/
 
 * html 태그정리
 
-* 스토어 구성 useReducer / Context API 
-<!-- * 스토어 구성 react-redux / @reduxjs/toolkit -->
 
-
+<!-- 스토어 구성 예 폴더 -->
 src/
 │
 ├── components/          # 재사용 가능한 프레젠테이셔널 컴포넌트
@@ -78,9 +76,44 @@ src/
 
 
 
+* 스토어 구성 useReducer / Context API 
+<!-- * 스토어 구성 react-redux / @reduxjs/toolkit -->
+
+<!-- 데이터 연결 부분  -->
+const fetchData = async () => {
+  try {
+    const response = await fetch("https://api.example.com/data");
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    console.log("Fetched data:", data);
+  } catch (error) {
+    console.error("Failed to fetch data:", error);
+  }
+};
+
+
+my-react-app/
+├── src/
+    ├── store/
+    │   ├── Store.js
+    ├── components/
+    │   ├── CreateProfile.js
+    │   ├── Dialog.js
+    │   ├── Dice.js
+    │   ├── GameStage.js
+    │   ├── Inventory.js
+    │   └── ViewProfile.js
+    ├── App.js
+    └── index.js
+
+
 * isProfileSaved 변환
 * trophy 변환
 * currentPage 변환
 * environments 변환
 * stage 변환
 * profile 변환
+* dialog 변환
+* Confirmed 변환

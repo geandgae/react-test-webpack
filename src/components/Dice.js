@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
-import DialogComponent from "./dialog";
+import DialogComponent from "./Dialog";
+// store
+import { useAppDispatch } from "../store/Store"; 
 
-const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl, diceBuff, enemyCtrl, setLooting, findCtrl, setDiceBuff }) => {
+const Dice = ({ diceCount, enemyDiceCount, clearCtrl, hpCtrl, diceBuff, enemyCtrl, setLooting, findCtrl, setDiceBuff }) => {
+  // store
+  const { renderDialog } = useAppDispatch(); 
+
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
   const [diceNumbers, setDiceNumbers] = useState([]);
@@ -31,92 +36,63 @@ const Dice = ({ dialog, setDialog, diceCount, enemyDiceCount, clearCtrl, hpCtrl,
   const rollDice = () => {
     if (!rollingPlayer && !rollingEnemy) {
       setRollingEnemy(true);
-
-      // Roll opponent's dice
-      const newOpponentDiceNumbers = Array(enemyDiceCount)
-        .fill(0)
-        .map(() => Math.floor(Math.random() * 6) + 1);
-      setOpponentDiceNumbers(newOpponentDiceNumbers);
-
-      setTimeout(() => {
-        // Calculate sum of opponent's dice numbers
-        const opponentSum = newOpponentDiceNumbers.reduce((acc, val) => acc + val, 0);
-        setOpponentDiceSum(opponentSum);
-
-        // Roll player's dice after 1 second
-        const newDiceNumbers = Array(totalDice)
+      try {
+        // Roll opponent's dice
+        const newOpponentDiceNumbers = Array(enemyDiceCount)
           .fill(0)
           .map(() => Math.floor(Math.random() * 6) + 1);
-        setDiceNumbers(newDiceNumbers);
-        setRollingEnemy(false);
-        setRollingPlayer(true);
+        setOpponentDiceNumbers(newOpponentDiceNumbers);
 
         setTimeout(() => {
-          // Calculate sum of player's dice numbers
-          const playerSum = newDiceNumbers.reduce((acc, val) => acc + val, 0);
-          setPlayerDiceSum(playerSum);
-          setRollingPlayer(false);
+          // Calculate sum of opponent's dice numbers
+          const opponentSum = newOpponentDiceNumbers.reduce((acc, val) => acc + val, 0);
+          setOpponentDiceSum(opponentSum);
 
-          // Determine game result
-          if (playerSum > opponentSum) {
-            clearCtrl("win");
-            renderDialog("loading", "승리하였습니다. 보상을 얻습니다.");
-            setTimeout(() => {
-              renderDialog(null);
-              setLooting(true);
-              enemyCtrl(-1);
-            }, 1000);
-          } else {
-            clearCtrl("lose");
-            renderDialog("loading", "패배하였습니다. 체력을 잃습니다.");
-            setTimeout(() => {
-              renderDialog(null);
-              hpCtrl(-1);
-              enemyCtrl(1);
-            }, 1000);
-          }
-          findCtrl("");
-          setDiceBuff(0);
-        }, 1000); // Wait 1 second before calculating player's sum
-      }, 1000); // Wait 1 second before calculating opponent's sum
+          // Roll player's dice after 1 second
+          const newDiceNumbers = Array(totalDice)
+            .fill(0)
+            .map(() => Math.floor(Math.random() * 6) + 1);
+          setDiceNumbers(newDiceNumbers);
+          setRollingEnemy(false);
+          setRollingPlayer(true);
+
+          setTimeout(() => {
+            // Calculate sum of player's dice numbers
+            const playerSum = newDiceNumbers.reduce((acc, val) => acc + val, 0);
+            setPlayerDiceSum(playerSum);
+            setRollingPlayer(false);
+
+            // Determine game result
+            if (playerSum > opponentSum) {
+              clearCtrl("win");
+              renderDialog("loading", "승리하였습니다. 보상을 얻습니다.");
+              setTimeout(() => {
+                renderDialog(null);
+                setLooting(true);
+                enemyCtrl(-1);
+              }, 1000);
+            } else {
+              clearCtrl("lose");
+              renderDialog("loading", "패배하였습니다. HP를 잃습니다.");
+              setTimeout(() => {
+                renderDialog(null);
+                hpCtrl(-1);
+                enemyCtrl(1);
+              }, 1000);
+            }
+            findCtrl("");
+            setDiceBuff(0);
+          }, 1000); // Wait 1 second before calculating player's sum
+        }, 1000); // Wait 1 second before calculating opponent's sum
+      } catch (error) {
+        console.error("Failed to roll dice:", error);
+      }
     }
   };
 
-  // renderDialog 
-  const renderDialog = (state, message) => {
-    setDialog({
-      id: Date.now(),
-      message: message,
-      class: "close"
-    });
-    if (state === "open") {
-      setDialog({
-        id: Date.now(),
-        message: message,
-        class: "open",
-      });
-    } else if (state === "confirm") {
-      setDialog({
-        id: Date.now(),
-        message: message,
-        class: "confirm",
-      });
-    } else if (state === "loading") {
-      setDialog({
-        id: Date.now(),
-        message: message,
-        class: "loading",
-      });
-    }
-  }
-
   return (
     <div>
-      <DialogComponent
-        dialogMsg={dialog.message}
-        dialogClass={dialog.class}
-        renderDialog={renderDialog}
-      />
+      <DialogComponent/>
 
       <div>
         <h3>Opponent's Dice Sum: {opponentDiceSum}</h3>

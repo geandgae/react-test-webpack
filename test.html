@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Availability Checker</title>
+    <style>
+      .unavailable {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Website Availability Checker</h1>
+    <div id="result"></div>
+    <div id="summary"></div>
+
+    <script>
+      // 배열에 확인할 사이트 URL을 추가합니다.
+      const sites0 = [
+        "http://uris.chuncheon.go.kr",
+        "http://aps.chuncheon.go.kr",
+        "http://ccbus.chuncheon.go.kr",
+        "http://map.chuncheon.go.kr",
+        "http://youthzone.chuncheon.go.kr",
+        "http://yeyak.chuncheon.go.kr",
+        "http://bwb.chuncheon.go.kr",
+        "http://library.chuncheon.go.kr",
+        "http://cchildcare.or.kr",
+        "http://cclive.chuncheon.go.kr",
+        "http://council.chuncheon.go.kr",
+        "http://ccansikwon.co.kr",
+        "http://photo.namwon.go.kr/index.namwon",
+        "http://umppa.seoul.go.kr",
+        "http://immigration.go.kr",
+        "http://nzine.kpipa.or.kr",
+        "http://bnk.kpipa.or.kr",
+        "http://tour.chungnam.go.kr",
+        "http://cntrade.chungnam.go.kr",
+        "http://elibrary.chungnam.go.kr",
+        "http://media.edus.or.kr",
+        "http://cnuh.co.kr",
+        "http://alldam.chungnam.go.kr",
+        "http://library.chungnam.go.kr",
+        "http://lib.chungnam.go.kr/home/index.php?",
+        "http://safe.chungnam.go.kr",
+        "http://youth.chungnam.go.kr",
+        "http://hsap.cbe.go.kr",
+        "http://cbdc.co.kr",
+        "http://cbgms.chungbuk.go.kr",
+        "http://tour.chungbuk.go.kr",
+        "http://cbnuh.or.kr",
+        "http://cpu.ac.kr",
+        "http://news.chungbuk.go.kr",
+        "http://photo.chungbuk.go.kr",
+        "http://safe119.chungbuk.go.kr/safety/main.do",
+        "http://itv.chungbuk.go.kr",
+        "http://freetour.chungbuk.go.kr",
+        "http://cbchje.go.kr",
+        "http://map.chungju.go.kr",
+        "http://its.chungju.go.kr",
+        "http://goodedu.chungju.go.kr",
+        "http://clean.chungju.go.kr/WB_ChungJu_web",
+        "http://cjcouncil.net",
+        "http://job.chungju.go.kr",
+        "http://chungju.go.kr",
+        "http://cn100.chungnam.go.kr",
+        "http://cnnongup.chungnam.go.kr",
+        "http://chungnam.go.kr",
+        "http://localfood.chungnam.go.kr",
+        "http://art.chungnam.go.kr",
+        "http://keumkang.chungnam.go.kr",
+        "http://safe.cn119.go.kr",
+        "http://cndc.kr",
+        "http://cnpolice.go.kr",
+        "http://cnall.or.kr",
+        "http://home.edus.or.kr",
+        "http://cnbl.cne.go.kr",
+        "http://cnstc.or.kr/gjcamping",
+        "http://cnstc.or.kr",
+        "http://cnstc.or.kr/camping",
+        "http://icec.cne.go.kr",
+        "http://cle.cne.go.kr",
+        "http://ctti.or.kr",
+        "http://chungnam.go.kr",
+        "http://council.chungnam.go.kr",
+        "http://cntae.go.kr",
+        "http://talib.cne.go.kr",
+        "http://balance.chungbuk.go.kr",
+        "http://ares.chungbuk.go.kr",
+        "http://chungbuk.go.kr",
+        "http://lib.chungbuk.go.kr",
+        "http://cb119.chungbuk.go.kr",
+        "http://cbpolice.go.kr",
+        "http://cbec.go.kr",
+        "http://cberi.go.kr",
+        "http://cbe.go.kr",
+        "http://cbiei.go.kr",
+        "http://danjae.go.kr",
+        "http://tv.council.chungbuk.kr",
+        "http://cbnse.go.kr",
+        "http://jinro.cbe.go.kr",
+        "http://sp.cbe.go.kr",
+        "http://job.mpva.go.kr",
+        "http://jpl.gen.go.kr",
+        "http://high-job.sen.go.kr",
+        "http://use.go.kr/jobgo",
+        "http://icl.go.kr",
+        "http://cms.kasm.or.kr:18443",
+        "http://metclub.kriss.re.kr",
+        "http://noisedu.com",
+        "http://wanju.nid.or.kr",
+        "http://psi.police.ac.kr",
+        "http://enviagro.go.kr",
+        "http://chilgok.go.kr",
+        "http://bus.chilgok.go.kr",
+        "http://jaenan.chilgok.go.kr",
+        "http://library.chilgok.go.kr",
+        "http://council.chilgok.go.kr",
+        "http://chilgok1365.kr",
+        "http://700.cha.go.kr",
+        "http://kaz.korean-culture.org",
+        "http://canada.korean-culture.org",
+        "http://gpminwon.kamco.or.kr",
+        "http://gocamping.or.kr",
+        "http://camp.yjcmc.or.kr",
+        "http://champ.seaman.or.kr",
+        "http://chemielove.krict.re.kr",
+        "http://k-foodtrade.or.kr",
+        "http://korailtravel.com",
+        "http://mobile.korailtravel.com",
+        "http://korailnetworks.com",
+        "http://koraillogis.com/htmls/main.jsp",
+        "http://korailretail.com",
+        "http://korailtech.com",
+        "http://corona.daejeon.go.kr",
+        "http://covid19.jeju.go.kr",
+        "http://koreana.or.kr",
+        "http://german.korea.net",
+        "http://russian.korea.net",
+        "http://vietnamese.korea.net",
+        "http://spanish.korea.net",
+        "http://arabic.korea.net",
+        "http://indonesian.korea.net",
+        "http://japanese.korea.net",
+        "http://chinese.korea.net",
+        "http://french.korea.net",
+        "http://korean.net",
+        "http://koshahub.or.kr",
+        "http://kociscenter.kr",
+        "http://kotra.or.kr",
+        "http://csp.kohi.or.kr",
+        "http://assess.kocca.kr",
+        "http://library.kocca.kr",
+        "http://kcdrc.kr",
+        "http://welcon.kocca.kr",
+        "http://edu.kocca.kr",
+        "http://crowdnet.or.kr",
+        "http://clean.kosha.or.kr/main.do",
+        "http://tarangge.gwangju.go.kr",
+        "http://bike.tashu.or.kr",
+        "http://edu.kcarbon.or.kr",
+        "http://carbonet.or.kr",
+        "http://gihoo.or.kr",
+        "http://hub4u.or.kr",
+        "http://tamna.or.kr",
+        "http://thailand.korean-culture.org",
+        "http://tpf.or.kr",
+        "http://tour.taebaek.go.kr/tour",
+        "http://taebaek.go.kr",
+        "http://map.taebaek.go.kr",
+        "http://council.taebaek.go.kr",
+        "http://taean.go.kr",
+        "http://tims.kotsa.or.kr",
+        "http://jigu.go.kr",
+        "http://tocycle.com",
+        "http://luris.molit.go.kr/web/index.jsp",
+        "http://eum.go.kr",
+        "http://lsa.lx.or.kr",
+        "http://lhri.lh.or.kr",
+        "http://talk.daegu.go.kr",
+      ];
+
+      const sites = [
+        "http://sti.kostat.go.kr",
+        "http://sti.kostat.go.kr/coresti/ulearn/mobile/user/main.do",
+        "http://kssc.kostat.go.kr/ksscNew_web/mobile",
+        "http://data.kostat.go.kr",
+        "http://kssc.kostat.go.kr",
+        "http://krs.nrf.re.kr",
+        "http://sgis.kostat.go.kr",
+        "http://kostat.go.kr",
+        "http://tong.kostat.go.kr",
+        "http://sportspark.ttdc.kr",
+        "http://corp.ttdc.kr",
+        "http://muse.ttdc.kr",
+        "http://gyeyak.tongyeong.go.kr",
+        "http://tongyeonglib.or.kr",
+        "http://museum.tongyeong.go.kr",
+        "http://unitv.unikorea.go.kr",
+        "http://unilaw.go.kr",
+        "http://m.unilaw.go.kr",
+        "http://udbs.unikorea.go.kr",
+        "http://tongjin.or.kr",
+        "http://bigdata-map.kr",
+        "http://use.go.kr/job",
+        "http://data.mois.go.kr/mois/visual/statMain.do",
+        "http://inhealth.kohi.or.kr",
+        "http://award.kidp.or.kr",
+        "http://lic.kotsa.or.kr",
+        "http://mnuri.kr/main/main.do",
+        "http://seis.or.kr",
+        "http://use.go.kr/booking",
+        "http://rsvn.science.go.kr",
+        "http://yeyak.guc.or.kr",
+        "http://sportsapp.shsi.or.kr",
+        "http://reserve.busan.go.kr",
+        "http://reserv.bucheon.go.kr",
+        "http://reservation.phsisul.org",
+        "http://lims.gijangcmc.or.kr",
+        "http://pool.kice.re.kr",
+        "http://ipss.go.kr",
+        "http://libs.mofa.go.kr",
+        "http://qiaminwon.qia.go.kr/minwon",
+        "http://k-medi.or.kr",
+        "http://ebid.kier.re.kr",
+        "http://park.isdc.co.kr",
+        "http://parking.bpss.or.kr",
+        "http://u-haksa.or.kr",
+        "http://goeay.kr",
+        "http://ibk.co.kr",
+        "http://pension.comwel.or.kr",
+        "http://tourdekorea.kspo.or.kr",
+        "http://pass.knto.or.kr",
+        "http://tr.korean-culture.org",
+        "http://duribal.co.kr",
+        "http://hijob.pen.go.kr/dajobgo",
+        "http://sesc.gen.go.kr",
+        "http://sedu.sen.go.kr/sedu/main.do",
+        "http://cfl.niied.go.kr/main",
+        "http://dge.sc.kr",
+        "http://wems.nier.go.kr/swems",
+        "http://patent.go.kr",
+        "http://smart.kipa.org",
+        "http://koipa.re.kr/ipalert",
+        "http://kopd.kipo.go.kr",
+        "http://kipris.or.kr",
+        "http://m.kipris.or.kr",
+        "http://kipo.go.kr",
+        "http://pharming.kisa.or.kr",
+        "http://pajuutc.or.kr",
+        "http://traffic.paju.go.kr",
+        "http://lib2.paju.go.kr",
+        "http://parkingsms.paju.go.kr",
+        "http://stat.paju.go.kr",
+        "http://lib.paju.go.kr",
+        "http://pajucouncil.go.kr",
+        "http://kopis.koica.go.kr",
+        "http://kbig.kr",
+        "http://museum.seongnam.go.kr/pangyo",
+        "http://ppark.seongnam.go.kr",
+        "http://biz.debc.or.kr",
+        "http://panmuntour.go.kr",
+        "http://fanfandaero.kr",
+        "http://paldal.suwon.go.kr",
+        "http://kopack.re.kr",
+        "http://funground.or.kr/jj/295",
+        "http://nego.g2b.go.kr",
+        "http://lllcard.kr",
+        "http://lledu.nile.or.kr",
+        "http://educity.geochang.go.kr",
+        "http://wm.ansan.go.kr",
+        "http://lll.paju.go.kr",
+        "http://lll.yw.go.kr",
+        "http://jp.go.kr/lll.do",
+        "http://all.go.kr",
+        "http://okjcedu.jecheon.go.kr",
+        "http://lll.cheongju.go.kr",
+        "http://clc.chuncheon.go.kr",
+        "http://dokseodang.sd.go.kr",
+        "http://cyberedu.gunsan.go.kr",
+        "http://80edu.dong.daegu.kr",
+        "http://lll.bsgangseo.go.kr",
+        "http://lll.gunsan.go.kr",
+        "http://sll.seoul.go.kr",
+        "http://dasanedu.nyj.go.kr",
+        "http://everlearning.sen.go.kr",
+        "http://lll.namgu.gwangju.kr",
+        "http://lib.happy700.or.kr",
+        "http://cl.happy700.or.kr",
+        "http://tour.pc.go.kr",
+        "http://its.pyeongtaek.go.kr",
+        "http://ptlib.go.kr",
+        "http://pyeongtaek.go.kr",
+        "http://pyeongtaek.mof.go.kr",
+        "http://unilibrary.unikorea.go.kr",
+        "http://portal.u-haksa.or.kr",
+        "http://dream-ics.slc.or.kr",
+        "http://pocheon.go.kr",
+        "http://lib.pocheon.go.kr",
+        "http://council.pocheon.go.kr",
+        "http://edu.pocheon.go.kr",
+        "http://kribb.re.kr",
+        "http://sciencecenter.go.kr",
+        "http://liveinkorea.kr",
+        "http://koroad.or.kr",
+        "http://photo.geumjeong.go.kr",
+        "http://photo.suwon.go.kr",
+        "http://photo.ulsan.go.kr",
+        "http://phoko.visitkorea.or.kr",
+        "http://utis.pohang.go.kr",
+        "http://pohangmarket.cyso.co.kr",
+        "http://market.pohang.go.kr",
+        "http://lifetimeedu.pohang.go.kr",
+        "http://phlib.pohang.go.kr",
+        "http://poma.pohang.go.kr",
+        "http://watercontract.pohang.go.kr",
+        "http://council.pohang.go.kr",
+        "http://councildata.pohang.go.kr",
+        "http://pohang.go.kr",
+        "http://innerharbor.pohang.go.kr",
+        "http://pohang.mof.go.kr",
+        "http://pl.korean-culture.org",
+      ];
+
+      const resultDiv = document.getElementById("result");
+      const summaryDiv = document.getElementById("summary");
+      let availableCount = 0;
+      let unavailableCount = 0;
+
+      // // 사이트의 접속 여부를 확인하는 함수입니다.
+      // async function checkSiteAvailability(url) {
+      //     try {
+      //         const response = await fetch(url, { mode: 'no-cors' });
+      //         // no-cors 모드는 CORS 문제를 피하기 위해 사용합니다.
+      //         // 이 모드에서는 응답 객체의 상태를 알 수 없기 때문에 예외가 발생하지 않으면 성공으로 간주합니다.
+      //         if (response) {
+      //             return { url, status: 'Available' };
+      //         } else {
+      //             return { url, status: 'Unavailable' };
+      //         }
+      //     } catch (error) {
+      //         return { url, status: 'Unavailable' };
+      //     }
+      // }
+
+      // // 모든 사이트를 확인하고 결과를 출력하는 함수입니다.
+      // async function checkAllSites() {
+      //     const resultsDiv = document.getElementById('result');
+      //     resultsDiv.innerHTML = "<ul></ul>";
+      //     const list = resultsDiv.querySelector('ul');
+
+      //     const promises = sites.map(site => checkSiteAvailability(site));
+      //     const results = await Promise.all(promises);
+
+      //     results.forEach(result => {
+      //         const listItem = document.createElement('li');
+      //         listItem.textContent = `${result.url} is ${result.status}`;
+      //         list.appendChild(listItem);
+      //     });
+      // }
+
+      // // 페이지 로드 시 사이트를 확인합니다.
+      // window.onload = checkAllSites;
+
+      // 각 사이트의 가용성을 확인합니다.
+      // sites.forEach(site => {
+      //     fetch(site, { method: 'GET' })
+      //         .then(response => {
+      //             if (response.ok) {
+      //                 resultDiv.innerHTML += `<p>${site} - Available</p>`;
+      //                 availableCount++;
+      //             } else {
+      //                 resultDiv.innerHTML += `<p class="unavailable">${site} - Unavailable</p>`;
+      //                 unavailableCount++;
+      //             }
+      //             updateSummary();
+      //         })
+      //         .catch(error => {
+      //             resultDiv.innerHTML += `<p class="unavailable">${site} - Unavailable</p>`;
+      //             unavailableCount++;
+      //             updateSummary();
+      //         });
+      // });
+
+      // function updateSummary() {
+      //     summaryDiv.innerHTML = `<p>Available: ${availableCount}</p><p class="unavailable">Unavailable: ${unavailableCount}</p>`;
+      // }
+
+      // 프록시 서버 주소
+      // const proxy = "https://cors-anywhere.herokuapp.com/";
+
+      // sites.forEach((site) => {
+      //   fetch(proxy + site)
+      //     .then((response) => {
+      //       if (response.ok) {
+      //         resultDiv.innerHTML += `<p>${site} - Available</p>`;
+      //         availableCount++;
+      //       } else {
+      //         resultDiv.innerHTML += `<p class="unavailable">${site} - Unavailable</p>`;
+      //         unavailableCount++;
+      //       }
+      //       updateSummary();
+      //     })
+      //     .catch((error) => {
+      //       resultDiv.innerHTML += `<p class="unavailable">${site} - Unavailable</p>`;
+      //       unavailableCount++;
+      //       updateSummary();
+      //     });
+      // });
+
+      // function updateSummary() {
+      //   summaryDiv.innerHTML = `<p>Available: ${availableCount}</p><p class="unavailable">Unavailable: ${unavailableCount}</p>`;
+      // }
+
+      async function checkSiteAvailability(url) {
+        try {
+          const response = await fetch(url, { mode: "no-cors" });
+          // no-cors 모드는 CORS 문제를 피하기 위해 사용합니다.
+          // 이 모드에서는 응답 객체의 상태를 알 수 없기 때문에 예외가 발생하지 않으면 성공으로 간주합니다.
+          if (response) {
+            return { url, status: "Available" };
+          } else {
+            return { url, status: "Unavailable" };
+          }
+        } catch (error) {
+          return { url, status: "Unavailable" };
+        }
+      }
+
+      async function checkSites() {
+        for (let site of sites) {
+          const result = await checkSiteAvailability(site);
+          if (result.status === "Available") {
+            resultDiv.innerHTML += `<p>${result.url} - Available</p>`;
+            availableCount++;
+          } else {
+            resultDiv.innerHTML += `<p class="unavailable">${result.url} - Unavailable</p>`;
+            unavailableCount++;
+          }
+          updateSummary();
+        }
+      }
+
+      function updateSummary() {
+        summaryDiv.innerHTML = `<p>Available: ${availableCount}</p><p class="unavailable">Unavailable: ${unavailableCount}</p>`;
+      }
+
+      // 페이지 로드 후 사이트 가용성을 확인합니다.
+      checkSites();
+    </script>
+  </body>
+</html>

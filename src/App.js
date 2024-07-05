@@ -7,7 +7,7 @@ import { useAppState, useAppDispatch, actionTypes } from "./store/Store";
 
 const App = () => {
   // store
-  const { stage, environments, isProfileSaved, currentPage, trophy } = useAppState();
+  const { stage, isProfileSaved, currentPage, trophy } = useAppState();
   const { dispatch, setCurrentPage, initialState } = useAppDispatch();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const App = () => {
     }
   }, []);
 
-  // 이부분 작동 안됨 테스트
+  // trophy 기록
   useEffect(() => {
     if (stage > trophy) {
       localStorage.setItem("trophy", stage);
@@ -66,7 +66,6 @@ const App = () => {
   };
 
   // test
-  console.log(environments);
   console.log(stage);
   console.log(currentPage);
 
