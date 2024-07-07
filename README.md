@@ -108,6 +108,7 @@ my-react-app/
     ├── App.js
     └── index.js
 
+변환 완료
 
 * isProfileSaved 변환
 * trophy 변환
@@ -117,3 +118,5 @@ my-react-app/
 * profile 변환
 * dialog 변환
 * Confirmed 변환
+
+변환 예정
