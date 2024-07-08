@@ -120,3 +120,29 @@ my-react-app/
 * Confirmed 변환
 
 변환 예정
+* gameStage
+  - const [maxHp, setMaxHp] = useState(profile.vit);
+  - const [hp, setHp] = useState(maxHp);
+  - const [diceCount, setDiceCount] = useState(profile.str);
+  - const [diceBuff, setDiceBuff] = useState(0);
+  - const [enemyDiceCount, setEnemyDiceCount] = useState(1);
+  - const [gameResult, setGameResult] = useState("");
+  - const [enemyStep, setEnemyStep] = useState(0);
+  - const [looting, setLooting] = useState(false);
+  - const [find, setFind] = useState("");
+  - const [maxItems, setMaxItems] = useState(profile.inv);
+  - const [rewardChk, setRewardChk] = useState("true");
+
+* dice
+  - const [rollingPlayer, setRollingPlayer] = useState(false);
+  - const [rollingEnemy, setRollingEnemy] = useState(false);
+  - const [diceNumbers, setDiceNumbers] = useState([]);
+  - const [opponentDiceNumbers, setOpponentDiceNumbers] = useState([]);
+  - const [playerDiceSum, setPlayerDiceSum] = useState(0);
+  - const [opponentDiceSum, setOpponentDiceSum] = useState(0); 
+
+* inventory
+  - const [items, setItems] = useState([]);
+  - const [itemsMsg, setItemsMsg] = useState();
+  - const [itemsIcon, setItemsIcon] = useState();
+  - const [equippedItems, setEquippedItems] = useState()
