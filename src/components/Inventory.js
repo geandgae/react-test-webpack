@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
+// store
+import { useAppState, useAppDispatch } from '../store/Store';
 
-const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting, maxItems }) => {
+const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
+  // store
+  const { looting } = useAppState();
+  const { setLooting } = useAppDispatch();
+
   const [items, setItems] = useState([]);
   const [itemsMsg, setItemsMsg] = useState();
   const [itemsIcon, setItemsIcon] = useState();
@@ -97,22 +103,22 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting, maxItems })
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
     if (name === "AAA") {
-      hpCtrl(1, "use");
+      ctrlHp(1, "use");
     }
     if (name === "BBB") {
-      hpCtrl(2, "use");
+      ctrlHp(2, "use");
     }
     if (name === "CCC") {
-      hpCtrl(3, "use");
+      ctrlHp(3, "use");
     }
     if (name === "DDD") {
-      diceUp(1);
+      buffDiceUp(1);
     }
     if (name === "EEE") {
-      diceUp(2);
+      buffDiceUp(2);
     }
     if (name === "FFF") {
-      diceUp(3);
+      buffDiceUp(3);
     }
   };
 
@@ -122,25 +128,25 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting, maxItems })
       setEquippedItems(prev => prev.filter(item => item !== id));
       // unequipItem(id) 함수를 호출하여 해당 아이템을 해제하는 로직 추가
       if (name === "EA00") {
-        diceEquip(-1);
+        equipDice(-1);
       }
       if (name === "EB00") {
-        diceEquip(-2);
+        equipDice(-2);
       }
     } else {
       // 장착되지 않은 아이템이면 장착합니다.
       setEquippedItems(prev => [...prev, id]);
       // equipItem(id) 함수를 호출하여 해당 아이템을 장착하는 로직 추가
       if (name === "EA00") {
-        diceEquip(1);
+        equipDice(1);
       }
       if (name === "EB00") {
-        diceEquip(2);
+        equipDice(2);
       }
     }
   }
 
-  const test = () => {
+  const CloseBox = () => {
     setItemsMsg(false);
     setLooting(false);
   }
@@ -154,7 +160,7 @@ const Inventory = ({ hpCtrl, diceUp, diceEquip, looting, setLooting, maxItems })
         <div>
           <div className={itemsIcon}></div>
           <div>{itemsMsg}</div>
-          <button onClick={test}>닫기</button>
+          <button onClick={CloseBox}>닫기</button>
         </div>
         ) : (
         <button onClick={addItem}>Looting Item</button>

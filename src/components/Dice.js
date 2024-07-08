@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import DialogComponent from "./Dialog";
 // store
-import { useAppDispatch } from "../store/Store"; 
+import { useAppDispatch } from "../store/Store";
 
-const Dice = ({ diceCount, enemyDiceCount, clearCtrl, hpCtrl, diceBuff, enemyCtrl, setLooting, findCtrl, setDiceBuff }) => {
+const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEnemy, ctrlFind }) => {
   // store
-  const { renderDialog } = useAppDispatch(); 
+  const { renderDialog, setLooting, setGameResult } = useAppDispatch();
 
   const [rollingPlayer, setRollingPlayer] = useState(false);
   const [rollingEnemy, setRollingEnemy] = useState(false);
@@ -25,20 +25,19 @@ const Dice = ({ diceCount, enemyDiceCount, clearCtrl, hpCtrl, diceBuff, enemyCtr
   }, [totalDice]);
 
   useEffect(() => {
-    // Initialize opponent's dice numbers array based on enemyDiceCount
-    const storedEnemyDiceCount = localStorage.getItem("enemyDiceCount");
+    const storedDiceCountEnemy= localStorage.getItem("diceCountEnemy");
     const initialOpponentDiceNumbers = Array(
-      storedEnemyDiceCount ? parseInt(storedEnemyDiceCount, 10) : 1
+      storedDiceCountEnemy ? parseInt(storedDiceCountEnemy, 10) : 1
     ).fill(0);
     setOpponentDiceNumbers(initialOpponentDiceNumbers);
-  }, [enemyDiceCount]);
+  }, [diceCountEnemy]);
 
   const rollDice = () => {
     if (!rollingPlayer && !rollingEnemy) {
       setRollingEnemy(true);
       try {
         // Roll opponent's dice
-        const newOpponentDiceNumbers = Array(enemyDiceCount)
+        const newOpponentDiceNumbers = Array(diceCountEnemy)
           .fill(0)
           .map(() => Math.floor(Math.random() * 6) + 1);
         setOpponentDiceNumbers(newOpponentDiceNumbers);
@@ -64,23 +63,23 @@ const Dice = ({ diceCount, enemyDiceCount, clearCtrl, hpCtrl, diceBuff, enemyCtr
 
             // Determine game result
             if (playerSum > opponentSum) {
-              clearCtrl("win");
+              setGameResult("win");
               renderDialog("loading", "승리하였습니다. 보상을 얻습니다.");
               setTimeout(() => {
                 renderDialog(null);
                 setLooting(true);
-                enemyCtrl(-1);
+                ctrlEnemy(-1);
               }, 1000);
             } else {
-              clearCtrl("lose");
+              setGameResult("lose");
               renderDialog("loading", "패배하였습니다. HP를 잃습니다.");
               setTimeout(() => {
                 renderDialog(null);
-                hpCtrl(-1);
-                enemyCtrl(1);
+                ctrlHp(-1);
+                ctrlEnemy(1);
               }, 1000);
             }
-            findCtrl("");
+            ctrlFind("");
             setDiceBuff(0);
           }, 1000); // Wait 1 second before calculating player's sum
         }, 1000); // Wait 1 second before calculating opponent's sum

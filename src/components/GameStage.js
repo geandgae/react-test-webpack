@@ -8,22 +8,23 @@ import { useAppState, useAppDispatch, actionTypes } from '../store/Store';
 const GameStage = () => {
 
   // store
-  const { profile, stage, environments, confirmed } = useAppState();
-  const { dispatch, setCurrentPage, renderDialog, setConfirmed } = useAppDispatch();
+  const { profile, stage, environments, confirmed, gameResult } = useAppState();
+  const { dispatch, setCurrentPage, renderDialog, setConfirmed, setLooting, setGameResult } = useAppDispatch();
 
+  // GameStage prop
   const [maxHp, setMaxHp] = useState(profile.vit);
   const [hp, setHp] = useState(maxHp);
   const [diceCount, setDiceCount] = useState(profile.str);
+  const [diceCountEnemy, setDiceCountEnemy] = useState(1);
   const [diceBuff, setDiceBuff] = useState(0);
-  const [enemyDiceCount, setEnemyDiceCount] = useState(1);
-  const [gameResult, setGameResult] = useState("");
-  const [enemyStep, setEnemyStep] = useState(0);
-  const [looting, setLooting] = useState(false);
-  const [find, setFind] = useState("");
   const [maxItems, setMaxItems] = useState(profile.inv);
+  
+  // GameStage only
+  const [enemyStep, setEnemyStep] = useState(0);
+  const [find, setFind] = useState("");
   const [rewardChk, setRewardChk] = useState("true");
 
-  const stageCurrent = stage;
+  // ui 상태 class
   const stageN1 = (parseInt(stage, 10) - 1);
   const stageP1 = (parseInt(stage, 10) + 1);
   const stageP2 = (parseInt(stage, 10) + 2);
@@ -49,10 +50,10 @@ const GameStage = () => {
       setDiceCount(parseInt(savedDiceCount, 10));
     }
 
-    // enemyDiceCount
-    const savedEnemyDiceCount = localStorage.getItem("enemyDiceCount");
-    if (savedEnemyDiceCount) {
-      setEnemyDiceCount(parseInt(savedEnemyDiceCount, 10));
+    // diceCountEnemy
+    const savedDiceCountEnemy = localStorage.getItem("diceCountEnemy");
+    if (savedDiceCountEnemy) {
+      setDiceCountEnemy(parseInt(savedDiceCountEnemy, 10));
     }
 
     // maxItems
@@ -78,57 +79,36 @@ const GameStage = () => {
     if (savedRewardChk) {
       setRewardChk(savedRewardChk);
     }
-
-    // gameResult
-    const savedGameResult = localStorage.getItem("gameResult");
-    if (savedGameResult) {
-      setGameResult(savedGameResult);
-    }
   }, []);
-
-  // 버그 확인
-  useEffect(() => {
-    if (enemyStep === 3) {
-      hpCtrl(-3);
-      setTimeout(() => {
-        enemyCtrl(-3);
-      }, 2000);
-      console.log("attack");
-    } else if (enemyStep >= 4) {
-      setTimeout(() => {
-        enemyCtrl(-3);
-      }, 2000);
-    }
-  }, [enemyStep]);
 
   // stage 안내
   useEffect(() => {
     const replaceEnv = () => {
-      if (environments[stageCurrent] === 0) {
+      if (environments[stage] === 0) {
         return "환경0에 진입했습니다.(find 체력소모 없음)"
       }
-      if (environments[stageCurrent] === 1) {
+      if (environments[stage] === 1) {
         return "환경1에 진입했습니다.(find 체력소모 -1)"
       }
-      if (environments[stageCurrent] === 2) {
+      if (environments[stage] === 2) {
         return "환경2에 진입했습니다.(find 체력소모 -2)"
       }
-      if (environments[stageCurrent] === 3) {
+      if (environments[stage] === 3) {
         return "환경3에 진입했습니다.(find 체력소모 -3)"
       }
-      if (environments[stageCurrent] === 4) {
+      if (environments[stage] === 4) {
         return "환경4에 진입했습니다.(find 체력소모 -4)"
       }
-      if (environments[stageCurrent] === 5) {
+      if (environments[stage] === 5) {
         return "환경5에 진입했습니다.(find 체력소모 -5)"
       }
-      if (environments[stageCurrent] === 6) {
+      if (environments[stage] === 6) {
         return "환경6에 진입했습니다.(find 체력소모 -6)"
       }
     }
     switch (true) { 
       case stage % 5 === 0:
-        findCtrl("reward");
+        ctrlFind("reward");
         renderDialog("open", "보상단계에 진입했습니다.");
         break;
       default:
@@ -136,20 +116,54 @@ const GameStage = () => {
     }
   }, [stage]);
 
-  // clearCtrl
-  const clearCtrl = (v) => {
-    const newValue = v;
-    setGameResult(newValue);
-    localStorage.setItem("gameResult", newValue);
+  // dialog confirm
+  useEffect(() => {
+    if (confirmed === "confirm") {
+      const int = (parseInt(environments[stage], 10));
+      if (hp > (int)) {
+        ctrlHp(-int);
+        ctrlItem();
+        setConfirmed();
+      } else {
+        setConfirmed();
+        renderDialog("open", "체력이 없습니다.");
+      }
+    }
+  }, [confirmed]);
+
+  // enemy 버그 확인
+  useEffect(() => {
+    if (enemyStep === 3) {
+      ctrlHp(-3);
+      setTimeout(() => {
+        ctrlEnemy(-3);
+      }, 2000);
+      console.log("attack");
+    } else if (enemyStep >= 4) {
+      setTimeout(() => {
+        ctrlEnemy(-3);
+      }, 2000);
+    }
+  }, [enemyStep]);
+
+  // ctrlEnemy
+  const ctrlEnemy = (v) => {
+    const newValue = (parseInt(enemyStep, 10) + v);
+    if (newValue <= 0) {
+      setEnemyStep(0);
+    } else {
+      setEnemyStep(newValue);
+    }
+    localStorage.setItem("enemyStep", newValue);
   };
-  // rewardCtrl
-  const rewardCtrl = (v) => {
+  // ctrlReward
+  const ctrlReward = (v) => {
     const newValue = v;
     setRewardChk(newValue);
     localStorage.setItem("rewardChk", newValue);
   };
-  // stageCtrl
-  const stageCtrl = (v = 1) => {
+  // ctrlStage
+  const ctrlStage = (v = 1) => {
     const newValue = (parseInt(stage, 10) + v);
     dispatch({ type: actionTypes.SET_STAGE, payload: newValue });
     localStorage.setItem("stage", newValue);
@@ -175,16 +189,16 @@ const GameStage = () => {
     //     break;
     // }
   };
-  // maxHp
-  const maxHpCtrl = (v) => {
+  // ctrlMaxHp
+  const ctrlMaxHp = (v) => {
     const newValue = (parseInt(maxHp, 10) + v);
     setHp(newValue);
     setMaxHp(newValue)
     localStorage.setItem("hp", newValue);
     localStorage.setItem("maxHp", newValue);
   };
-  // hpCtrl
-  const hpCtrl = (v , use) => {
+  // ctrlHp
+  const ctrlHp = (v , use) => {
     if (use === "use") {
       renderDialog("open", `체력을 ${v} 회복합니다.`);
     }
@@ -200,8 +214,47 @@ const GameStage = () => {
       setCurrentPage("gameover");
     }
   };
-  // diceUp
-  const diceUp = (v) => {
+  // ctrlInven
+  const ctrlInven = (v) => {
+    const newValue = (parseInt(maxItems, 10) + v);
+    setMaxItems(newValue);
+    localStorage.setItem("maxItems", newValue);
+  };
+  // ctrlItem
+  const ctrlItem = () => {
+    const dice = Math.floor(Math.random() * 100) + 1;
+    renderDialog("loading", "아이템을 찾는중입니다.");
+    setTimeout(() => {
+      renderDialog(null);
+      switch (true) {
+        case dice <= 30:
+          renderDialog("loading", "적과 마주칩니다.");
+          setTimeout(() => {
+            renderDialog(null);
+            ctrlFind("enemy");
+          }, 1000);
+          break;
+        case dice <= 50:
+          setLooting(true);
+          break;
+        default:
+          renderDialog("open", "아이템을 찾지 못했습니다.");
+          break;
+      }
+    }, 1000);
+  };
+  // ctrlFind
+  const ctrlFind = (v) => {
+    setFind(v);
+    localStorage.setItem("find", v);
+  };
+  // activeFind
+  const activeFind = (v) => {
+    renderDialog("confirm", `탐색에는 체력을 ${v}만큼 잃습니다. 괜찮습니까?`);
+  };
+
+  // buffDiceUp
+  const buffDiceUp = (v) => {
     renderDialog("open", "1턴 동안 주사위를 늘립니다.");
     const newValue = (parseInt(diceBuff, 10) + v);
     if (newValue <= 5) {
@@ -211,134 +264,50 @@ const GameStage = () => {
       renderDialog("open", "최대치입니다.");
     }
   };
-  // diceEquip 
-  const diceEquip = (v) => {
+   // enemyDiceUp
+   const enemyDiceUp = (v) => {
+    const newValue = diceCountEnemy + v;
+    setDiceCountEnemy(newValue);
+    localStorage.setItem("diceCountEnemy", newValue);
+  };
+  // equipDice
+  const equipDice = (v) => {
     const newValue = (parseInt(diceCount, 10) + v);
     setDiceCount(newValue);
     localStorage.setItem("diceCount", newValue);
   };
-  // invenCtrl
-  const invenCtrl = (v) => {
-    const newValue = (parseInt(maxItems, 10) + v);
-    setMaxItems(newValue);
-    localStorage.setItem("maxItems", newValue);
-  };
-  // enemyDiceUp
-  const enemyDiceUp = (v) => {
-    const newValue = enemyDiceCount + v;
-    setEnemyDiceCount(newValue);
-    localStorage.setItem("enemyDiceCount", newValue);
-  };
-  // itemCtrl
-  const itemCtrl = () => {
-    const dice = Math.floor(Math.random() * 100) + 1;
-    renderDialog("loading", "아이템을 찾는중입니다.");
-    setTimeout(() => {
-      renderDialog(null);
-      switch (true) {
-        case dice <= 30:
-          setLooting(false);
-          renderDialog("loading", "적과 마주칩니다.");
-          setTimeout(() => {
-            renderDialog(null);
-            findCtrl("enemy");
-          }, 1000);
-          break;
-        case dice <= 50:
-          setLooting(true);
-          break;
-        default:
-          setLooting(false);
-          renderDialog("open", "아이템을 찾지 못했습니다.");
-          break;
-      }
-    }, 1000);
-  };
-  // enemyCtrl
-  const enemyCtrl = (v) => {
-    const newValue = (parseInt(enemyStep, 10) + v);
-    if (newValue <= 0) {
-      setEnemyStep(0);
-    } else {
-      setEnemyStep(newValue);
-    }
-    localStorage.setItem("enemyStep", newValue);
-  };
-  // findCtrl
-  const findCtrl = (v) => {
-    const newValue = v;
-    setFind(newValue);
-    localStorage.setItem("find", newValue);
-  };
-  // activeFind
-  useEffect(() => {
-    if (confirmed === "confirm") {
-      const int = (parseInt(environments[stageCurrent], 10));
-      if (hp > (int)) {
-        hpCtrl(-int);
-        itemCtrl();
-        setConfirmed();
-      } else {
-        setConfirmed();
-        renderDialog("open", "체력이 없습니다.");
-      }
-    }
-  }, [confirmed]);
-  const activeFind = (v) => {
-    renderDialog("confirm", `탐색에는 체력을 ${v}만큼 잃습니다. 괜찮습니까?`);
-  };
   
   // reward
   const reward = () => {
-    const dice = Math.floor(Math.random() * 100) + 1;
     if (rewardChk === "true") {
-      switch (true) {
-        case dice <= 10:
-          renderDialog("open", "주사위를 얻습니다.");
-          rewardCtrl("false");
-          findCtrl("");
-          diceEquip(1);
-          break;
-        case dice <= 25:
-          renderDialog("open", "최대체력이 1 증가합니다.");
-          rewardCtrl("false");
-          findCtrl("");
-          maxHpCtrl(1);
-          break;
-        case dice <= 45:
-          renderDialog("open", "가방을 얻습니다.");
-          rewardCtrl("false");
-          findCtrl("");
-          invenCtrl(1);
-          break;
-        default:
-          renderDialog("open", "체력을 모두 회복합니다.");
-          rewardCtrl("false");
-          findCtrl("");
-          hpCtrl(maxHp);
-          break;
+      const dice = Math.floor(Math.random() * 100) + 1;
+      if (dice <= 10) {
+        renderDialog("open", "주사위를 얻습니다.");
+        equipDice(1);
+      } else if (dice <= 25) {
+        renderDialog("open", "최대체력이 1 증가합니다.");
+        ctrlMaxHp(1);
+      } else if (dice <= 45) {
+        renderDialog("open", "가방을 얻습니다.");
+        ctrlInven(1);
+      } else {
+        renderDialog("open", "체력을 모두 회복합니다.");
+        ctrlHp(maxHp);
       }
+      setRewardChk("false");
+      localStorage.setItem("rewardChk", "false");
     } else {
       renderDialog("open", "이미 보상을 얻었습니다.");
-      findCtrl("");
     }
+    ctrlFind("");
   };
 
   // nextStage 
   const nextStage = () => {
-    clearCtrl(null);
-    rewardCtrl("true");
-    stageCtrl();
+    setGameResult(null);
+    ctrlReward("true");
+    ctrlStage();
   };
-
-  // test
-  
-  // console.log(`enemyStep : ${enemyStep}`);
-  // console.log(`find : ${find}`);
-  // console.log(`rewardChk : ${rewardChk}`);
-  // console.log(`gameResult : ${gameResult}`);
-  
-
 
   return (
     <div>
@@ -356,7 +325,7 @@ const GameStage = () => {
         <div className="stage">
           <div className={`enemy ${enemyWalk}`}></div>
           <div className={`before stage-${stageN1} env-${environments[stageN1]}`}>stage-{stageN1} env-{environments[stageN1]}</div>
-          <div className={`current stage-${stageCurrent} env-${environments[stageCurrent]}`}>stage-{stageCurrent} env-{environments[stageCurrent]}</div>
+          <div className={`current stage-${stage} env-${environments[stage]}`}>stage-{stage} env-{environments[stage]}</div>
           <div className={`stage-${stageP1} env-${environments[stageP1]}`}>stage-{stageP1} env-{environments[stageP1]}</div>
           <div className={`stage-${stageP2} env-${environments[stageP2]}`}>stage-{stageP2} env-{environments[stageP2]}</div>
         </div>
@@ -371,21 +340,21 @@ const GameStage = () => {
         <div>stage: {stage}</div>
         <div>hp: {hp} / {maxHp}</div>
         <div>dice: {diceCount}</div>
-        <div>enemy: {enemyDiceCount}</div>
+        <div>enemy: {diceCountEnemy}</div>
       </div>
       {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
-      {/* <button onClick={() => stageCtrl()}>sttest</button> */}
-      {/* <button onClick={() => invenCtrl(1)}>invtest</button> */}
-      {/* <button onClick={() => hpCtrl(maxHp)}>restore</button> */}
-      <button onClick={() => renderDialog("open", "open")}>open</button>
-      <button onClick={() => renderDialog("loading", "loading")}>loading</button>
-      <button onClick={() => renderDialog("confirm", "test")}>confirm</button>
+      <button onClick={() => ctrlStage()}>sttest</button>
+      {/* <button onClick={() => ctrlInven(1)}>invtest</button> */}
+      {/* <button onClick={() => ctrlHp(maxHp)}>restore</button> */}
+      {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
+      {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
+      {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" && gameResult !== "win" &&
-      <button onClick={() => activeFind(environments[stageCurrent])}>find</button>
+      <button onClick={() => activeFind(environments[stage])}>find</button>
       }
       {find === "" && gameResult !== "win" &&
-      <button onClick={() => findCtrl("enemy")}>battle</button>
+      <button onClick={() => ctrlFind("enemy")}>battle</button>
       }
       {gameResult === "win" && 
       <button onClick={nextStage}>next</button>
@@ -394,11 +363,9 @@ const GameStage = () => {
       <button onClick={reward}>reward</button>
       }
       <Inventory
-        hpCtrl={hpCtrl}
-        diceUp={diceUp}
-        diceEquip={diceEquip}
-        looting={looting}
-        setLooting={setLooting}
+        ctrlHp={ctrlHp}
+        buffDiceUp={buffDiceUp}
+        equipDice={equipDice}
         maxItems={maxItems}
       />
       {/* dice */}
@@ -406,16 +373,13 @@ const GameStage = () => {
       <div className="intro">
         <div className="ground">
           <Dice
-            hpCtrl={hpCtrl}
+            ctrlHp={ctrlHp}
             diceCount={diceCount}
             setDiceCount={setDiceCount}
-            enemyDiceCount={enemyDiceCount}
-            stageCtrl={stageCtrl}
+            diceCountEnemy={diceCountEnemy}
             diceBuff={diceBuff}
-            enemyCtrl={enemyCtrl}
-            setLooting={setLooting}
-            findCtrl={findCtrl}
-            clearCtrl={clearCtrl}
+            ctrlEnemy={ctrlEnemy}
+            ctrlFind={ctrlFind}
             setDiceBuff={setDiceBuff}
           />
         </div>

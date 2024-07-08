@@ -20,12 +20,27 @@ const App = () => {
     }
   }, []);
 
-  // trophy 기록
+  // trophy 값 설정 및 업데이트
   useEffect(() => {
-    if (stage > trophy) {
-      localStorage.setItem("trophy", stage);
+    const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
+
+    // 초기 로딩 시 trophy 값 설정
+    if (storedTrophy === 0) {
+      localStorage.setItem("trophy", JSON.stringify(0));
+      dispatch({ type: actionTypes.SET_TROPHY, payload: 0 });
+    } else {
+      dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
     }
-  }, [stage]);
+
+    // trophy 값 업데이트 및 동기화
+    if (stage > storedTrophy) {
+      localStorage.setItem("trophy", JSON.stringify(stage));
+      dispatch({ type: actionTypes.SET_TROPHY, payload: stage });
+    }
+
+    
+  }, [stage, dispatch]);
+
 
   // 새로운 환경 데이터 생성 및 저장
   const generateAndStoreEnvironments = () => {
@@ -38,7 +53,7 @@ const App = () => {
   };
 
   const handleNewButtonClick = () => {
-    generateAndStoreEnvironments(); // new만 클릭해도 환경변수 재설정 된 버그 악용?? 원래는 저장 단계에서 해야하지만 귀찮다
+    generateAndStoreEnvironments();
     setCurrentPage("new");
   };
 
@@ -50,13 +65,19 @@ const App = () => {
 
   // 로컬 스토리지 전체 삭제
   const removeFromLocalStorage = () => {
-    let excludeKeys = trophy;
+    const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
+
+    console.log(`stage: ${stage}`);
+    console.log(`storedTrophy: ${storedTrophy}`);
+
     localStorage.clear();
+    localStorage.setItem("trophy", JSON.stringify(storedTrophy));
+
     dispatch({ type: actionTypes.SET_PROFILE, payload: initialState.profile });
     dispatch({ type: actionTypes.SET_STAGE, payload: 1 });
     dispatch({ type: actionTypes.SET_ENVIRONMENTS, payload: [] });
     dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: false });
-    dispatch({ type: actionTypes.SET_TROPHY, payload: excludeKeys });
+    dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
   };
 
   // 게임 오버 처리
@@ -66,8 +87,9 @@ const App = () => {
   };
 
   // test
-  console.log(stage);
-  console.log(currentPage);
+  
+  // console.log(currentPage);
+  // console.log(maxHp);
 
   return (
     <>

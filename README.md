@@ -118,20 +118,19 @@ my-react-app/
 * profile 변환
 * dialog 변환
 * Confirmed 변환
+* looting 변환
+* gameResult 변환
 
 변환 예정
 * gameStage
+  - ctrlEnemy(enemyStep) > dice 
+  - maxHp / hp / ctrlHp / ctrlMaxHp
   - const [maxHp, setMaxHp] = useState(profile.vit);
   - const [hp, setHp] = useState(maxHp);
   - const [diceCount, setDiceCount] = useState(profile.str);
   - const [diceBuff, setDiceBuff] = useState(0);
-  - const [enemyDiceCount, setEnemyDiceCount] = useState(1);
+  - const [diceCountEnemy, setDiceCountEnemy] = useState(1);
   - const [gameResult, setGameResult] = useState("");
-  - const [enemyStep, setEnemyStep] = useState(0);
-  - const [looting, setLooting] = useState(false);
-  - const [find, setFind] = useState("");
-  - const [maxItems, setMaxItems] = useState(profile.inv);
-  - const [rewardChk, setRewardChk] = useState("true");
 
 * dice
   - const [rollingPlayer, setRollingPlayer] = useState(false);

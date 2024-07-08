@@ -30,6 +30,9 @@ const initialState = {
     class: "",
   },
   confirmed: false,
+  // gamestage
+  looting: false,
+  gameResult: null,
 };
 
 // 액션 타입 정의
@@ -42,6 +45,8 @@ const actionTypes = {
   SET_TROPHY: "SET_TROPHY",
   SET_DIALOG: "SET_DIALOG",
   SET_CONFIRMED: "SET_CONFIRMED",
+  SET_LOOTING: "SET_LOOTING",
+  SET_RESULT: "SET_RESULT",
 };
 
 // 리듀서 함수 정의
@@ -63,6 +68,10 @@ const reducer = (state, action) => {
       return { ...state, dialog: action.payload };
     case actionTypes.SET_CONFIRMED:
       return { ...state, confirmed: action.payload };
+    case actionTypes.SET_LOOTING:
+      return { ...state, looting: action.payload };
+    case actionTypes.SET_RESULT:
+      return { ...state, gameResult: action.payload };
     default:
       return state;
   }
@@ -81,7 +90,7 @@ const AppProvider = ({ children }) => {
       dispatch({ type: actionTypes.SET_PROFILE, payload: storedProfile });
       dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
       // debug
-      console.log("Stored profile loaded from localStorage:", storedProfile);
+      // console.log("Stored profile loaded from localStorage:", storedProfile);
     }
 
     // savedStage
@@ -107,6 +116,18 @@ const AppProvider = ({ children }) => {
     if (savedTrophy) {
       dispatch({ type: actionTypes.SET_TROPHY, payload: parseInt(savedTrophy, 10) });
     }
+
+    // savedLooting
+    const savedLooting = localStorage.getItem("looting");
+    if (savedLooting) {
+      dispatch({ type: actionTypes.SET_LOOTING, payload: JSON.parse(savedLooting) });
+    }
+
+    // savedGameResult
+    const savedGameResult = localStorage.getItem("gameResult");
+    if (savedGameResult) {
+      dispatch({ type: actionTypes.SET_RESULT, payload: JSON.parse(savedGameResult) });
+    }
   }, []);
 
   // 모든 상태 업데이트 시 로컬 스토리지에 저장
@@ -116,13 +137,14 @@ const AppProvider = ({ children }) => {
     localStorage.setItem("stageEnvironments", JSON.stringify(state.environments));
     localStorage.setItem("isProfileSaved", state.isProfileSaved);
     localStorage.setItem("trophy", state.trophy);
+    localStorage.setItem("looting", JSON.stringify(state.looting));
+    localStorage.setItem("gameResult", JSON.stringify(state.gameResult));
   }, [state]);
 
   // setCurrentPage
   const setCurrentPage = (page) => {
     dispatch({ type: actionTypes.SET_CURRENT_PAGE, payload: page });
   };
-
   // setDialog
   const setDialog = (dialog) => {
     dispatch({ type: actionTypes.SET_DIALOG, payload: dialog });
@@ -155,15 +177,22 @@ const AppProvider = ({ children }) => {
       });
     }
   };
-
   // setconfirmed
   const setConfirmed = (confirm) => {
     dispatch({ type: actionTypes.SET_CONFIRMED, payload: confirm });
   };
+  // setLooting
+  const setLooting = (v) => {
+    dispatch({ type: actionTypes.SET_LOOTING, payload: v });
+  }
+  // setGameResult
+  const setGameResult = (v) => {
+    dispatch({ type: actionTypes.SET_RESULT, payload: v });
+  };
 
   return (
     <AppStateContext.Provider value={state}>
-      <AppDispatchContext.Provider value={{ dispatch, setCurrentPage, setDialog, renderDialog, setConfirmed, initialState }}>{children}</AppDispatchContext.Provider>
+      <AppDispatchContext.Provider value={{ initialState, dispatch, setCurrentPage, setDialog, renderDialog, setConfirmed, setLooting, setGameResult }}>{children}</AppDispatchContext.Provider>
     </AppStateContext.Provider>
   );
 };
