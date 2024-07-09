@@ -237,6 +237,7 @@ const GameStage = () => {
         case dice <= 15:
           renderDialog("open", "신단을 발견했습니다 보정값이 1 오릅니다.");
           setBless(1);
+          ctrlFind("finded");
           break;
         case dice <= 45:
           renderDialog("loading", "적과 마주칩니다.");
@@ -250,6 +251,7 @@ const GameStage = () => {
           setTimeout(() => {
             renderDialog(null);
             setLooting(true);
+            ctrlFind("finded");
           }, 1000);
           break;
         default:
@@ -377,10 +379,10 @@ const GameStage = () => {
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {find === "" && gameResult !== "win" &&
+      {find === "" || gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
-      {find === "" && gameResult !== "win" &&
+      {gameResult !== "win" &&
       <button onClick={battleStage}>battle</button>
       }
       {gameResult === "win" && 
