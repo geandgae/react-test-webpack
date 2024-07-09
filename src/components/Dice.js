@@ -89,7 +89,7 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
       }
     }
   };
-  console.log(gameResult);
+  
   const resetBattle = () => {
     ctrlFind("");
     setDiceBuff(0);

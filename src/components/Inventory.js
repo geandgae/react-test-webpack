@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import DialogComponent from "./Dialog";
 // store
 import { useAppState, useAppDispatch } from '../store/Store';
 
 const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   // store
   const { looting } = useAppState();
-  const { setLooting } = useAppDispatch();
+  const { setLooting, renderDialog } = useAppDispatch();
 
   const [items, setItems] = useState([]);
   const [itemsMsg, setItemsMsg] = useState();
@@ -14,8 +15,6 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     const saved = localStorage.getItem('equippedItems');
     return saved ? JSON.parse(saved) : [];
   });
-
-  console.log(`equippedItems : ${equippedItems}`);
 
   useEffect(() => {
     const storedItems = JSON.parse(localStorage.getItem("inventory")) || [];
@@ -52,11 +51,10 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   };
 
   const generateUniqueName = () => {
-    
     // 아이템 타입 결정 
     let itemType;
     const diceType = Math.floor(Math.random() * 100) + 1;
-    itemType = (diceType <= 100) ? "equipment" : "normal";
+    itemType = (diceType <= 10) ? "equipment" : "normal";
     console.log(`diceType : ${diceType} ${itemType}`);
 
     // 아이템 테이블 결정
@@ -122,25 +120,52 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     }
   };
 
-  const equipItem = (id, name) => {
-    if (equippedItems.includes(id)) {
+  // 아이템 장착/해제 함수
+  const equipItem = (item) => {
+    // const item = { id, name, description, type, icon };
+
+    if (equippedItems.some(equippedItem => equippedItem.id === item.id)) {
       // 이미 장착된 아이템이면 해제합니다.
-      setEquippedItems(prev => prev.filter(item => item !== id));
+      // setEquippedItems(prev => prev.filter(equippedItem => equippedItem.id !== id));
+
+      if (items.length >= maxItems) {
+        renderDialog("open", `인벤토리에는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
+        return;
+      }
+      
+      const updatedEquippedItems = equippedItems.filter(equippedItem => equippedItem.id !== item.id);
+      setEquippedItems(updatedEquippedItems);
+      setItems(prev => [...prev, item]);
+      localStorage.setItem("equippedItems", JSON.stringify(updatedEquippedItems));
+      localStorage.setItem("inventory", JSON.stringify([...items, item]));
+
       // unequipItem(id) 함수를 호출하여 해당 아이템을 해제하는 로직 추가
-      if (name === "EA00") {
+      if (item.name === "EA00") {
         equipDice(-1);
       }
-      if (name === "EB00") {
+      if (item.name === "EB00") {
         equipDice(-2);
       }
     } else {
       // 장착되지 않은 아이템이면 장착합니다.
-      setEquippedItems(prev => [...prev, id]);
+      // setEquippedItems(prev => [...prev, item]);
+
+      if (equippedItems.length >= maxItems) {
+        renderDialog("open", `장비는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
+        return;
+      }
+      
+      const updatedItems = items.filter(i => i.id !== item.id);
+      setItems(updatedItems);
+      setEquippedItems(prev => [...prev, item]);
+      localStorage.setItem("equippedItems", JSON.stringify([...equippedItems, item]));
+      localStorage.setItem("inventory", JSON.stringify(updatedItems));
+
       // equipItem(id) 함수를 호출하여 해당 아이템을 장착하는 로직 추가
-      if (name === "EA00") {
+      if (item.name === "EA00") {
         equipDice(1);
       }
-      if (name === "EB00") {
+      if (item.name === "EB00") {
         equipDice(2);
       }
     }
@@ -151,8 +176,29 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     setLooting(false);
   }
 
+  // drag
+  const handleDragStart = (e, item) => {
+    e.dataTransfer.setData("application/json", JSON.stringify(item));
+    console.log(e)
+  };
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const item = JSON.parse(e.dataTransfer.getData("application/json"));
+    equipItem(item);
+  };
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+
+  // test
+  console.log(equippedItems);
+  console.log(`items : ${items.length}`);
+
   return (
     <div>
+      <DialogComponent/>
+
       {/* looting */}
       {looting === true && 
       <div className="intro">
@@ -168,34 +214,54 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       </div>
       }
       {/* equipment */}
-      <div className="equipment">
-        <h2>equipment</h2>
-        <div className="equipment-box"></div>
+      <div className="equipment" onDrop={handleDrop} onDragOver={handleDragOver}>
+        <h2>equipment {equippedItems.length} / {maxItems}</h2>
+        <div className="equipment-box">
+          <ul>
+            {equippedItems.map((item) => (
+            <li key={item.id}>
+              <div className="d-flex">
+                <span className={item.icon}></span>
+                <strong>{item.name} : {item.id}</strong>
+                <div>
+                  <span onClick={() => equipItem(item)}>해제</span>
+                </div>
+              </div>
+              <div>{item.description}</div>
+            </li>
+            ))}
+          </ul>
+        </div>
       </div>
       {/* inventory */}
       <div className="inventory">
         <h2>Inventory {items.length} / {maxItems}</h2>
         <ul className="item-box">
           {items.map((item) => (
-            <li key={item.id} className={equippedItems.includes(item.id) ? "equip-item" : ""} draggable={`${item.type === "equipment" ? "true" : ""}`}>
-              <div className="d-flex">
-                <span className={item.icon}></span>
-                <strong>{item.name} : {item.id} : {item.type}</strong>
-                {item.type === "equipment" ? (
-                <div>
-                  <span onClick={() => equipItem(item.id, item.name)}>
-                    {equippedItems.includes(item.id) ? '해제' : '장착'}
-                  </span>
-                  {!equippedItems.includes(item.id) &&
-                  <span onClick={() => useItem(item.id, item.name)}>삭제</span>
-                  }
-                </div>
-                ) : (
-                <span onClick={() => useItem(item.id, item.name)}>사용</span>
-                )}
+          <li 
+            key={item.id} 
+            className={item.type === "equipment" ? "equip-item" : ""} 
+            draggable={item.type === "equipment" ? "true" : "false"}
+            onDragStart={(e) => handleDragStart(e, item)}
+          >
+            <div className="d-flex">
+              <span className={item.icon}></span>
+              <strong>{item.name} : {item.id} : {item.type}</strong>
+              {item.type === "equipment" ? (
+              <div>
+                <span onClick={() => equipItem(item)}>
+                  {equippedItems.some(equippedItem => equippedItem.id === item.id) ? '해제' : '장착'}
+                </span>
+                {!equippedItems.some(equippedItem => equippedItem.id === item.id) &&
+                <span onClick={() => useItem(item.id, item.name)}>삭제</span>
+                }
               </div>
-              <div>{item.description}</div>
-            </li>
+              ) : (
+              <span onClick={() => useItem(item.id, item.name)}>사용</span>
+              )}
+            </div>
+            <div>{item.description}</div>
+          </li>
           ))}
         </ul>
       </div>

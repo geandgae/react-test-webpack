@@ -669,11 +669,14 @@ h2, h3 {
   overflow-y: auto;
   li {
     border: 1px solid #e7e7e7;
+    // &.equip-item {
+    //   display: none;
+    // }
   }
 }
 
 .equip-item {
-  background-color: #e7e7e7;
+  background-color: #fefff0;
 }
 
 .stage-wrap {
@@ -781,7 +784,7 @@ h2, h3 {
   display: flex;
   align-items: center;
 
-  @for $i from 0 through 20 {
+  @for $i from 0 through 100 {
     &.hp-#{$i} {
       & > span {
         width: 10px;
@@ -792,7 +795,7 @@ h2, h3 {
       }
 
       // Set background color of spans based on hp level
-      @for $j from 20 through 1 {
+      @for $j from 100 through 1 {
         & span:nth-child(#{$j}) {
           @if $j > $i {
             background-color: #fff;
@@ -898,7 +901,9 @@ h2, h3 {
 }
 
 .align-center {
+  display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .equipment {
@@ -906,7 +911,13 @@ h2, h3 {
 }
 .equipment-box {
   border: 1px solid #eee;
-  min-height: 50px;
-  display: flex;
-  align-items: center;
+  min-height: 100px;
+  max-height: 300px;
+  overflow-y: auto;
+  // & ul li {
+  //   display: none;
+  //   &.equip-item {
+  //     display: block;
+  //   }
+  // }
 }

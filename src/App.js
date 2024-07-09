@@ -22,26 +22,15 @@ const App = () => {
 
   // trophy 값 설정 및 업데이트
   useEffect(() => {
-    // const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
-
-    // // 초기 로딩 시 trophy 값 설정
-    // if (storedTrophy === 0) {
-    //   localStorage.setItem("trophy", JSON.stringify(0));
-    //   dispatch({ type: actionTypes.SET_TROPHY, payload: 0 });
-    // } else {
-    //   dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
-    // }
-
-    // trophy 값 업데이트 및 동기화
-    if (stage > trophy) {
+    const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
+    if (stage > storedTrophy) {
       localStorage.setItem("trophy", JSON.stringify(stage));
       dispatch({ type: actionTypes.SET_TROPHY, payload: stage });
+    } else {
+      dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
     }
-
     console.log(`stage: ${stage}`);
     console.log(`trophy: ${trophy}`);
-
-    
   }, [stage, dispatch]);
 
 
@@ -71,6 +60,10 @@ const App = () => {
   const removeFromLocalStorage = () => {
     const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
 
+    console.log("gameover");
+    console.log(`storedTrophy: ${storedTrophy}`);
+    console.log(`trophy: ${trophy}`);
+    
     localStorage.clear();
     localStorage.setItem("trophy", JSON.stringify(storedTrophy));
 
@@ -108,7 +101,7 @@ const App = () => {
           {isProfileSaved ? <button disabled>new</button> : <button onClick={handleNewButtonClick}>new</button>}
           {isProfileSaved ? <button onClick={() => setCurrentPage("load")}>load</button> : <button disabled>load</button>}
           {isProfileSaved ? <button onClick={removeFromLocalStorage}>remove</button> : <button disabled>remove</button>}
-          <span>trophy : {trophy}</span>
+          <button onClick={() => setCurrentPage("trophy")}>trophy</button>
         </nav>
       )}
       {/* gameover */}
@@ -126,6 +119,13 @@ const App = () => {
       {/* gamestage */}
       {currentPage === "gamestage" && (
         <GameStage/>
+      )}
+      {/* gamestage */}
+      {currentPage === "trophy" && (
+        <nav className="main-menu">
+          <button onClick={() => setCurrentPage("main")}>main</button>
+          <span>trophy : {trophy}</span>
+        </nav>
       )}
     </>
   );

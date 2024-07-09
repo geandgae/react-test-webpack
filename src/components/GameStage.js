@@ -225,21 +225,26 @@ const GameStage = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
     renderDialog("loading", "아이템을 찾는중입니다.");
     setTimeout(() => {
+      console.log(dice);
       renderDialog(null);
       switch (true) {
-        case dice <= 100:
+        case dice <= 15:
           renderDialog("open", "신단을 발견했습니다 보정값이 1 오릅니다.");
           setBless(1);
           break;
-        case dice <= 0:
+        case dice <= 45:
           renderDialog("loading", "적과 마주칩니다.");
           setTimeout(() => {
             renderDialog(null);
             ctrlFind("enemy");
           }, 1000);
           break;
-        case dice <= 0:
-          setLooting(true);
+        case dice <= 75:
+          renderDialog("loading", "아이템을 발견했습니다.");
+          setTimeout(() => {
+            renderDialog(null);
+            setLooting(true);
+          }, 1000);
           break;
         default:
           renderDialog("open", "아이템을 찾지 못했습니다.");
@@ -254,6 +259,7 @@ const GameStage = () => {
   };
   // activeFind
   const activeFind = (v) => {
+    setGameResult(null);
     renderDialog("confirm", `탐색에는 체력을 ${v}만큼 잃습니다. 괜찮습니까?`);
   };
 
@@ -318,6 +324,9 @@ const GameStage = () => {
     ctrlStage();
   };
 
+  // test
+  console.log(`gameResult: ${gameResult}`);
+
   return (
     <div>
       <DialogComponent/>
@@ -352,13 +361,15 @@ const GameStage = () => {
         <div>bless: {bless}</div>
         <div>enemy: {diceCountEnemy}</div>
       </div>
-      {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
-      <button onClick={() => ctrlStage()}>sttest</button>
       {/* <button onClick={() => ctrlInven(1)}>invtest</button> */}
       {/* <button onClick={() => ctrlHp(maxHp)}>restore</button> */}
       {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
       {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
       {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
+      {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
+      {/* <button onClick={() => setLooting(true)}>loot</button> */}
+      {/* <button onClick={() => ctrlStage()}>sttest</button> */}
+      {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
       {find === "" && gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
