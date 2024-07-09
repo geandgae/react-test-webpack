@@ -384,7 +384,7 @@ const GameStage = () => {
       {find !== "reward" && find !== "finded" && gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
-      {gameResult !== "win" &&
+      {find !== "reward" && gameResult !== "win" &&
       <button onClick={battleStage}>battle</button>
       }
       {gameResult === "win" && 
