@@ -169,7 +169,13 @@ const GameStage = () => {
     localStorage.setItem("stage", newValue);
     // 5의 배수마다 주사위 추가
     if (stage % 5 === 0) {
-      enemyDiceUp(1);
+      if (stage >= 100) {
+          enemyDiceUp(3);
+      } else if (stage >= 50) {
+          enemyDiceUp(2);
+      } else {
+          enemyDiceUp(1);
+      }
     }
     // 특정구간 표현은 스위치로
     // switch (stage) {
@@ -228,22 +234,24 @@ const GameStage = () => {
       console.log(dice);
       renderDialog(null);
       switch (true) {
-        case dice <= 15:
+        case dice <= 25:
           renderDialog("open", "신단을 발견했습니다 보정값이 1 오릅니다.");
           setBless(1);
+          ctrlFind("finded");
           break;
-        case dice <= 45:
+        case dice <= 50:
           renderDialog("loading", "적과 마주칩니다.");
           setTimeout(() => {
             renderDialog(null);
             ctrlFind("enemy");
           }, 1000);
           break;
-        case dice <= 75:
+        case dice <= 80:
           renderDialog("loading", "아이템을 발견했습니다.");
           setTimeout(() => {
             renderDialog(null);
             setLooting(true);
+            ctrlFind("finded");
           }, 1000);
           break;
         default:
@@ -291,13 +299,13 @@ const GameStage = () => {
   const reward = () => {
     if (rewardChk === "true") {
       const dice = Math.floor(Math.random() * 100) + 1;
-      if (dice <= 10) {
+      if (dice <= 20) {
         renderDialog("open", "주사위를 얻습니다.");
         equipDice(1);
-      } else if (dice <= 25) {
+      } else if (dice <= 45) {
         renderDialog("open", "최대체력이 1 증가합니다.");
         ctrlMaxHp(1);
-      } else if (dice <= 45) {
+      } else if (dice <= 70) {
         renderDialog("open", "가방을 얻습니다.");
         ctrlInven(1);
       } else {
@@ -324,8 +332,10 @@ const GameStage = () => {
     ctrlStage();
   };
 
+  
   // test
   console.log(`gameResult: ${gameResult}`);
+  console.log(find);
 
   return (
     <div>
@@ -371,10 +381,10 @@ const GameStage = () => {
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {find === "" && gameResult !== "win" &&
+      {find !== "reward" && find !== "finded" && gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
-      {find === "" && gameResult !== "win" &&
+      {find !== "reward" && gameResult !== "win" &&
       <button onClick={battleStage}>battle</button>
       }
       {gameResult === "win" && 
