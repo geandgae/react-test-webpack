@@ -234,7 +234,7 @@ const GameStage = () => {
       console.log(dice);
       renderDialog(null);
       switch (true) {
-        case dice <= 20:
+        case dice <= 25:
           renderDialog("open", "신단을 발견했습니다 보정값이 1 오릅니다.");
           setBless(1);
           ctrlFind("finded");
@@ -381,7 +381,7 @@ const GameStage = () => {
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {find !== "finded" && gameResult !== "win" &&
+      {find !== "reward" && find !== "finded" && gameResult !== "win" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
       {gameResult !== "win" &&
