@@ -33,6 +33,7 @@ const initialState = {
   // gamestage
   looting: false,
   gameResult: null,
+  bless: 0,
 };
 
 // 액션 타입 정의
@@ -47,6 +48,9 @@ const actionTypes = {
   SET_CONFIRMED: "SET_CONFIRMED",
   SET_LOOTING: "SET_LOOTING",
   SET_RESULT: "SET_RESULT",
+  SET_BLESS: "SET_BLESS",
+  INCREMENT_BLESS: "INCREMENT_BLESS",
+  DECREMENT_BLESS: "DECREMENT_BLESS",
 };
 
 // 리듀서 함수 정의
@@ -72,6 +76,12 @@ const reducer = (state, action) => {
       return { ...state, looting: action.payload };
     case actionTypes.SET_RESULT:
       return { ...state, gameResult: action.payload };
+    case actionTypes.SET_BLESS:
+      return { ...state, bless: action.payload };
+    case actionTypes.INCREMENT_BLESS:
+      return { ...state, bless: state.bless + action.payload };
+    case actionTypes.DECREMENT_BLESS:
+      return { ...state, bless: state.bless - action.payload };
     default:
       return state;
   }
@@ -128,6 +138,12 @@ const AppProvider = ({ children }) => {
     if (savedGameResult) {
       dispatch({ type: actionTypes.SET_RESULT, payload: JSON.parse(savedGameResult) });
     }
+
+    // savedBless
+    const savedBless = localStorage.getItem("bless");
+    if (savedBless) {
+      dispatch({ type: actionTypes.SET_BLESS, payload: JSON.parse(savedBless) });
+    }
   }, []);
 
   // 모든 상태 업데이트 시 로컬 스토리지에 저장
@@ -136,19 +152,12 @@ const AppProvider = ({ children }) => {
     localStorage.setItem("stage", state.stage);
     localStorage.setItem("stageEnvironments", JSON.stringify(state.environments));
     localStorage.setItem("isProfileSaved", state.isProfileSaved);
-    localStorage.setItem("trophy", state.trophy);
+    // localStorage.setItem("trophy", state.trophy);
     localStorage.setItem("looting", JSON.stringify(state.looting));
     localStorage.setItem("gameResult", JSON.stringify(state.gameResult));
+    localStorage.setItem("bless", JSON.stringify(state.bless));
   }, [state]);
 
-  // setCurrentPage
-  const setCurrentPage = (page) => {
-    dispatch({ type: actionTypes.SET_CURRENT_PAGE, payload: page });
-  };
-  // setDialog
-  const setDialog = (dialog) => {
-    dispatch({ type: actionTypes.SET_DIALOG, payload: dialog });
-  };
   // renderDialog
   const renderDialog = (state, message) => {
     if (state === "open") {
@@ -177,9 +186,17 @@ const AppProvider = ({ children }) => {
       });
     }
   };
+  // setCurrentPage
+  const setCurrentPage = (v) => {
+    dispatch({ type: actionTypes.SET_CURRENT_PAGE, payload: v });
+  };
+  // setDialog
+  const setDialog = (v) => {
+    dispatch({ type: actionTypes.SET_DIALOG, payload: v });
+  };
   // setconfirmed
-  const setConfirmed = (confirm) => {
-    dispatch({ type: actionTypes.SET_CONFIRMED, payload: confirm });
+  const setConfirmed = (v) => {
+    dispatch({ type: actionTypes.SET_CONFIRMED, payload: v });
   };
   // setLooting
   const setLooting = (v) => {
@@ -189,10 +206,19 @@ const AppProvider = ({ children }) => {
   const setGameResult = (v) => {
     dispatch({ type: actionTypes.SET_RESULT, payload: v });
   };
+  // setBless
+  const setBless = (v) => {
+    // dispatch({ type: actionTypes.SET_BLESS, payload: v });
+    if (v > 0) {
+      dispatch({ type: actionTypes.INCREMENT_BLESS, payload: v });
+    } else {
+      dispatch({ type: actionTypes.DECREMENT_BLESS, payload: Math.abs(v) });
+    }
+  };
 
   return (
     <AppStateContext.Provider value={state}>
-      <AppDispatchContext.Provider value={{ initialState, dispatch, setCurrentPage, setDialog, renderDialog, setConfirmed, setLooting, setGameResult }}>{children}</AppDispatchContext.Provider>
+      <AppDispatchContext.Provider value={{ initialState, dispatch, setCurrentPage, setDialog, renderDialog, setConfirmed, setLooting, setGameResult, setBless }}>{children}</AppDispatchContext.Provider>
     </AppStateContext.Provider>
   );
 };

@@ -44,6 +44,9 @@ my-react-app/
 
 * html 태그정리
 
+* 영구적인 버프 / 디버프(find 조건)
+* 장비는 한개만 또는 장비 슬롯 존재
+
 
 <!-- 스토어 구성 예 폴더 -->
 src/
@@ -108,8 +111,7 @@ my-react-app/
     ├── App.js
     └── index.js
 
-변환 완료
-
+stroe 변환
 * isProfileSaved 변환
 * trophy 변환
 * currentPage 변환
@@ -120,28 +122,3 @@ my-react-app/
 * Confirmed 변환
 * looting 변환
 * gameResult 변환
-
-변환 예정
-* gameStage
-  - ctrlEnemy(enemyStep) > dice 
-  - maxHp / hp / ctrlHp / ctrlMaxHp
-  - const [maxHp, setMaxHp] = useState(profile.vit);
-  - const [hp, setHp] = useState(maxHp);
-  - const [diceCount, setDiceCount] = useState(profile.str);
-  - const [diceBuff, setDiceBuff] = useState(0);
-  - const [diceCountEnemy, setDiceCountEnemy] = useState(1);
-  - const [gameResult, setGameResult] = useState("");
-
-* dice
-  - const [rollingPlayer, setRollingPlayer] = useState(false);
-  - const [rollingEnemy, setRollingEnemy] = useState(false);
-  - const [diceNumbers, setDiceNumbers] = useState([]);
-  - const [opponentDiceNumbers, setOpponentDiceNumbers] = useState([]);
-  - const [playerDiceSum, setPlayerDiceSum] = useState(0);
-  - const [opponentDiceSum, setOpponentDiceSum] = useState(0); 
-
-* inventory
-  - const [items, setItems] = useState([]);
-  - const [itemsMsg, setItemsMsg] = useState();
-  - const [itemsIcon, setItemsIcon] = useState();
-  - const [equippedItems, setEquippedItems] = useState()

@@ -8,8 +8,8 @@ import { useAppState, useAppDispatch, actionTypes } from '../store/Store';
 const GameStage = () => {
 
   // store
-  const { profile, stage, environments, confirmed, gameResult } = useAppState();
-  const { dispatch, setCurrentPage, renderDialog, setConfirmed, setLooting, setGameResult } = useAppDispatch();
+  const { profile, stage, environments, confirmed, gameResult, bless } = useAppState();
+  const { dispatch, setCurrentPage, renderDialog, setConfirmed, setLooting, setGameResult, setBless } = useAppDispatch();
 
   // GameStage prop
   const [maxHp, setMaxHp] = useState(profile.vit);
@@ -227,14 +227,18 @@ const GameStage = () => {
     setTimeout(() => {
       renderDialog(null);
       switch (true) {
-        case dice <= 30:
+        case dice <= 100:
+          renderDialog("open", "신단을 발견했습니다 보정값이 1 오릅니다.");
+          setBless(1);
+          break;
+        case dice <= 0:
           renderDialog("loading", "적과 마주칩니다.");
           setTimeout(() => {
             renderDialog(null);
             ctrlFind("enemy");
           }, 1000);
           break;
-        case dice <= 50:
+        case dice <= 0:
           setLooting(true);
           break;
         default:
@@ -264,8 +268,8 @@ const GameStage = () => {
       renderDialog("open", "최대치입니다.");
     }
   };
-   // enemyDiceUp
-   const enemyDiceUp = (v) => {
+  // enemyDiceUp
+  const enemyDiceUp = (v) => {
     const newValue = diceCountEnemy + v;
     setDiceCountEnemy(newValue);
     localStorage.setItem("diceCountEnemy", newValue);
@@ -300,6 +304,11 @@ const GameStage = () => {
       renderDialog("open", "이미 보상을 얻었습니다.");
     }
     ctrlFind("");
+  };
+
+  const battleStage = () => {
+    setGameResult(null);
+    ctrlFind("enemy");
   };
 
   // nextStage 
@@ -340,6 +349,7 @@ const GameStage = () => {
         <div>stage: {stage}</div>
         <div>hp: {hp} / {maxHp}</div>
         <div>dice: {diceCount}</div>
+        <div>bless: {bless}</div>
         <div>enemy: {diceCountEnemy}</div>
       </div>
       {/* <button onClick={() => renderDialog("open", `Open Dialog Test`)}>Open Dialog</button> */}
@@ -354,7 +364,7 @@ const GameStage = () => {
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
       {find === "" && gameResult !== "win" &&
-      <button onClick={() => ctrlFind("enemy")}>battle</button>
+      <button onClick={battleStage}>battle</button>
       }
       {gameResult === "win" && 
       <button onClick={nextStage}>next</button>

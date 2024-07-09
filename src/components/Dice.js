@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import DialogComponent from "./Dialog";
 // store
-import { useAppDispatch } from "../store/Store";
+import { useAppState, useAppDispatch } from "../store/Store";
 
 const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEnemy, ctrlFind }) => {
   // store
+  const { gameResult, bless } = useAppState();
   const { renderDialog, setLooting, setGameResult } = useAppDispatch();
 
   const [rollingPlayer, setRollingPlayer] = useState(false);
@@ -57,10 +58,12 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
 
           setTimeout(() => {
             // Calculate sum of player's dice numbers
-            const playerSum = newDiceNumbers.reduce((acc, val) => acc + val, 0);
+            const diceSum = (newDiceNumbers.reduce((acc, val) => acc + val, 0));
+            const playerSum = diceSum + bless;
             setPlayerDiceSum(playerSum);
             setRollingPlayer(false);
-
+            console.log(`opponentSum: ${opponentSum}`);
+            console.log(`playerSum: ${playerSum}`);
             // Determine game result
             if (playerSum > opponentSum) {
               setGameResult("win");
@@ -79,8 +82,6 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
                 ctrlEnemy(1);
               }, 1000);
             }
-            ctrlFind("");
-            setDiceBuff(0);
           }, 1000); // Wait 1 second before calculating player's sum
         }, 1000); // Wait 1 second before calculating opponent's sum
       } catch (error) {
@@ -88,6 +89,11 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
       }
     }
   };
+  console.log(gameResult);
+  const resetBattle = () => {
+    ctrlFind("");
+    setDiceBuff(0);
+  }
 
   return (
     <div>
@@ -134,9 +140,17 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
         ))}
       </div>
       <div className="align-center">
+        {!gameResult &&
         <button onClick={rollDice} disabled={rollingPlayer || rollingEnemy}>
           {rollingPlayer || rollingEnemy ? "Rolling..." : "Roll Dice"}
         </button>
+        }
+        {gameResult === "win" &&
+          <button onClick={resetBattle}>보상획득</button>
+        }
+        {gameResult === "lose" &&
+          <button onClick={resetBattle}>돌아가기</button>
+        }
       </div>
       <br />
     </div>

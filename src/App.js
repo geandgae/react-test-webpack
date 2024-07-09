@@ -22,21 +22,24 @@ const App = () => {
 
   // trophy 값 설정 및 업데이트
   useEffect(() => {
-    const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
+    // const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
 
-    // 초기 로딩 시 trophy 값 설정
-    if (storedTrophy === 0) {
-      localStorage.setItem("trophy", JSON.stringify(0));
-      dispatch({ type: actionTypes.SET_TROPHY, payload: 0 });
-    } else {
-      dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
-    }
+    // // 초기 로딩 시 trophy 값 설정
+    // if (storedTrophy === 0) {
+    //   localStorage.setItem("trophy", JSON.stringify(0));
+    //   dispatch({ type: actionTypes.SET_TROPHY, payload: 0 });
+    // } else {
+    //   dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
+    // }
 
     // trophy 값 업데이트 및 동기화
-    if (stage > storedTrophy) {
+    if (stage > trophy) {
       localStorage.setItem("trophy", JSON.stringify(stage));
       dispatch({ type: actionTypes.SET_TROPHY, payload: stage });
     }
+
+    console.log(`stage: ${stage}`);
+    console.log(`trophy: ${trophy}`);
 
     
   }, [stage, dispatch]);
@@ -52,6 +55,7 @@ const App = () => {
     dispatch({ type: actionTypes.SET_ENVIRONMENTS, payload: environments });
   };
 
+  // handleNewButtonClick
   const handleNewButtonClick = () => {
     generateAndStoreEnvironments();
     setCurrentPage("new");
@@ -67,9 +71,6 @@ const App = () => {
   const removeFromLocalStorage = () => {
     const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
 
-    console.log(`stage: ${stage}`);
-    console.log(`storedTrophy: ${storedTrophy}`);
-
     localStorage.clear();
     localStorage.setItem("trophy", JSON.stringify(storedTrophy));
 
@@ -78,6 +79,8 @@ const App = () => {
     dispatch({ type: actionTypes.SET_ENVIRONMENTS, payload: [] });
     dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: false });
     dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
+    dispatch({ type: actionTypes.SET_RESULT, payload: null });
+    dispatch({ type: actionTypes.SET_BLESS, payload: 0 });
   };
 
   // 게임 오버 처리
