@@ -379,7 +379,7 @@ const GameStage = () => {
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {find === "" || gameResult !== "win" &&
+      {(find !== "finded" || gameResult !== "win") &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
       {gameResult !== "win" &&
