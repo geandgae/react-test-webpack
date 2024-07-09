@@ -900,3 +900,13 @@ h2, h3 {
 .align-center {
   align-items: center;
 }
+
+.equipment {
+  margin: 20px 0;
+}
+.equipment-box {
+  border: 1px solid #eee;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+}

@@ -56,7 +56,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     // 아이템 타입 결정 
     let itemType;
     const diceType = Math.floor(Math.random() * 100) + 1;
-    itemType = (diceType <= 10) ? "equipment" : "normal";
+    itemType = (diceType <= 100) ? "equipment" : "normal";
     console.log(`diceType : ${diceType} ${itemType}`);
 
     // 아이템 테이블 결정
@@ -167,11 +167,17 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
         )}
       </div>
       }
+      {/* equipment */}
+      <div className="equipment">
+        <h2>equipment</h2>
+        <div className="equipment-box"></div>
+      </div>
+      {/* inventory */}
       <div className="inventory">
         <h2>Inventory {items.length} / {maxItems}</h2>
         <ul className="item-box">
           {items.map((item) => (
-            <li key={item.id} className={equippedItems.includes(item.id) ? 'equip-item' : ''}>
+            <li key={item.id} className={equippedItems.includes(item.id) ? "equip-item" : ""} draggable={`${item.type === "equipment" ? "true" : ""}`}>
               <div className="d-flex">
                 <span className={item.icon}></span>
                 <strong>{item.name} : {item.id} : {item.type}</strong>
