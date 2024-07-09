@@ -169,7 +169,13 @@ const GameStage = () => {
     localStorage.setItem("stage", newValue);
     // 5의 배수마다 주사위 추가
     if (stage % 5 === 0) {
-      enemyDiceUp(1);
+      if (stage >= 100) {
+          enemyDiceUp(3);
+      } else if (stage >= 50) {
+          enemyDiceUp(2);
+      } else {
+          enemyDiceUp(1);
+      }
     }
     // 특정구간 표현은 스위치로
     // switch (stage) {
