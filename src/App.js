@@ -60,7 +60,6 @@ const App = () => {
   const removeFromLocalStorage = () => {
     const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
 
-    console.log("gameover");
     console.log(`storedTrophy: ${storedTrophy}`);
     console.log(`trophy: ${trophy}`);
     
