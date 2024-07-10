@@ -169,3 +169,15 @@ floor / 7 / 결정
 4 : -2
 5 : -1
 6 : -1
+
+
+find 조건
+
+- 전투가 끝나면 find는 초기화 find=""
+- 전투는 find=enemy 상태
+- 보상은 find=reward 상태
+- find 버튼의 활성 조건 find !== "reward" && find !== "finded" && gameResult !== "win"
+- find 를 한번이라도 성공 find=finded
+
+* 버그 find=finded 상태에서 전투 > 패배(전투가 끝나면 find="") find를 또 할 수 있다
+* find 분리 / find에서 전투 이벤트 삭제
