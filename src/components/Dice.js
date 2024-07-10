@@ -3,9 +3,9 @@ import DialogComponent from "./Dialog";
 // store
 import { useAppState, useAppDispatch } from "../store/Store";
 
-const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEnemy, ctrlFind }) => {
+const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlFind }) => {
   // store
-  const { gameResult, bless } = useAppState();
+  const { stage, environments, gameResult, bless, rword } = useAppState();
   const { renderDialog, setLooting, setGameResult } = useAppDispatch();
 
   const [rollingPlayer, setRollingPlayer] = useState(false);
@@ -18,7 +18,6 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
   const totalDice = diceCount + diceBuff;
 
   useEffect(() => {
-    // Initialize player's dice numbers array based on totalDice
     const initialDiceNumbers = Array(totalDice).fill(0);
     setDiceNumbers(initialDiceNumbers);
   }, [totalDice]);
@@ -34,6 +33,10 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
   const rollDice = () => {
     if (!rollingPlayer && !rollingEnemy) {
       setRollingEnemy(true);
+      // dmg
+      const dmg = Math.floor((environments[stage] - 7) / 2);
+      // debug
+      console.log(`${stage} : ${environments[stage]} : ${dmg}`);
       try {
         // Roll opponent's dice
         const newOpponentDiceNumbers = Array(diceCountEnemy)
@@ -63,19 +66,17 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
             // Determine game result
             if (playerSum > opponentSum) {
               setGameResult("win");
-              renderDialog("loading", "승리하였습니다. 보상을 얻습니다.");
+              renderDialog("loading", `승리하였습니다. ${rword.reward}을 얻습니다.`);
               setTimeout(() => {
                 renderDialog(null);
                 setLooting(true);
-                ctrlEnemy(-1);
               }, 1000);
             } else {
               setGameResult("lose");
-              renderDialog("loading", "패배하였습니다. HP를 잃습니다.");
+              renderDialog("loading", `패배하였습니다. ${rword.hp}을 ${dmg}`);
               setTimeout(() => {
                 renderDialog(null);
-                ctrlHp(-1);
-                ctrlEnemy(1);
+                ctrlHp(dmg);
               }, 1000);
             }
           }, 1000); // Wait 1 second before calculating player's sum
@@ -93,7 +94,8 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
   }
 
   // debug
-  console.log(`totalDice: ${totalDice}`);
+  // console.log(`totalDice: ${totalDice}`);
+  // console.log(environments[stage]);
 
   return (
     <div>
@@ -146,7 +148,7 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
         </button>
         }
         {gameResult === "win" &&
-          <button onClick={resetBattle}>보상획득</button>
+          <button onClick={resetBattle}>{rword.reward}획득</button>
         }
         {gameResult === "lose" &&
           <button onClick={resetBattle}>돌아가기</button>

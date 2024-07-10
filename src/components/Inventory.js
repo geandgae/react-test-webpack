@@ -5,7 +5,7 @@ import { useAppState, useAppDispatch } from '../store/Store';
 
 const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   // store
-  const { looting } = useAppState();
+  const { looting, rword } = useAppState();
   const { setLooting, renderDialog } = useAppDispatch();
 
   const [items, setItems] = useState([]);
@@ -22,7 +22,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   }, []);
 
   useEffect(() => {
-    // 장착된 아이템이 변경될 때마다 로컬 스토리지에 저장합니다.
+    // equippedItems이 변경될 때마다 로컬 스토리지에 저장합니다.
     localStorage.setItem('equippedItems', JSON.stringify(equippedItems));
   }, [equippedItems]);
 
@@ -30,7 +30,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   const addItem = () => {
     if (items.length >= maxItems) {
       setItemsIcon("item-icon item-max");
-      setItemsMsg(`인벤토리에는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
+      setItemsMsg(`인벤토리에는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
       return;
     }
 
@@ -57,7 +57,6 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     // 아이템 타입 결정 
     const diceType = Math.floor(Math.random() * 100) + 1;
     const type = diceType <= 10 ? "equipment" : "normal";
-    
     
     console.log(`diceType: ${diceType}, type:${type}`);
 
@@ -123,23 +122,23 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
 
     const itemDetails = {
       // HEAL
-      "HEAL001": { name: "heal1", description: "hp 1 회복", icon: "item-icon item-heal001" },
-      "HEAL002": { name: "heal2", description: "hp 2 회복", icon: "item-icon item-heal002" },
-      "HEAL003": { name: "heal3", description: "hp 3 회복", icon: "item-icon item-heal003" },
-      "HEAL004": { name: "heal4", description: "hp 4 회복", icon: "item-icon item-heal004" },
-      "HEAL005": { name: "heal5", description: "hp 5 회복", icon: "item-icon item-heal005" },
+      "HEAL001": { name: "heal1", description: `${rword.hp} 1 ${rword.heal}`, icon: "item-icon item-heal001" },
+      "HEAL002": { name: "heal2", description: `${rword.hp} 2 ${rword.heal}`, icon: "item-icon item-heal002" },
+      "HEAL003": { name: "heal3", description: `${rword.hp} 3 ${rword.heal}`, icon: "item-icon item-heal003" },
+      "HEAL004": { name: "heal4", description: `${rword.hp} 4 ${rword.heal}`, icon: "item-icon item-heal004" },
+      "HEAL005": { name: "heal5", description: `${rword.hp} 5 ${rword.heal}`, icon: "item-icon item-heal005" },
       // BUFF
-      "BUFF001": { name: "buff1", description: "1턴 동안 주사위 + 1", icon: "item-icon item-buff001" },
-      "BUFF002": { name: "buff2", description: "1턴 동안 주사위 + 2", icon: "item-icon item-buff002" },
-      "BUFF003": { name: "buff3", description: "1턴 동안 주사위 + 3", icon: "item-icon item-buff003" },
-      "BUFF004": { name: "buff4", description: "1턴 동안 주사위 + 4", icon: "item-icon item-buff004" },
-      "BUFF005": { name: "buff5", description: "1턴 동안 주사위 + 5", icon: "item-icon item-buff005" },
+      "BUFF001": { name: "buff1", description: `1턴 동안 ${rword.dice} + 1`, icon: "item-icon item-buff001" },
+      "BUFF002": { name: "buff2", description: `1턴 동안 ${rword.dice} + 2`, icon: "item-icon item-buff002" },
+      "BUFF003": { name: "buff3", description: `1턴 동안 ${rword.dice} + 3`, icon: "item-icon item-buff003" },
+      "BUFF004": { name: "buff4", description: `1턴 동안 ${rword.dice} + 4`, icon: "item-icon item-buff004" },
+      "BUFF005": { name: "buff5", description: `1턴 동안 ${rword.dice} + 5`, icon: "item-icon item-buff005" },
       // DICE
-      "DICE001": { name: "dice1", description: "장비하면 주사위 + 1", icon: "item-icon item-dice001" },
-      "DICE002": { name: "dice2", description: "장비하면 주사위 + 2", icon: "item-icon item-dice002" },
-      "DICE003": { name: "dice3", description: "장비하면 주사위 + 3", icon: "item-icon item-dice003" },
-      "DICE004": { name: "dice4", description: "장비하면 주사위 + 4", icon: "item-icon item-dice004" },
-      "DICE005": { name: "dice5", description: "장비하면 주사위 + 5", icon: "item-icon item-dice005" },
+      "DICE001": { name: "dice1", description: `${rword.equip}하면 ${rword.dice} + 1`, icon: "item-icon item-dice001" },
+      "DICE002": { name: "dice2", description: `${rword.equip}하면 ${rword.dice} + 2`, icon: "item-icon item-dice002" },
+      "DICE003": { name: "dice3", description: `${rword.equip}하면 ${rword.dice} + 3`, icon: "item-icon item-dice003" },
+      "DICE004": { name: "dice4", description: `${rword.equip}하면 ${rword.dice} + 4`, icon: "item-icon item-dice004" },
+      "DICE005": { name: "dice5", description: `${rword.equip}하면 ${rword.dice} + 5`, icon: "item-icon item-dice005" },
     };
     // debug
     console.log(`diceItem: ${diceItem}, itemList: ${itemList}`);
@@ -175,16 +174,16 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     }
   };
 
-  // 아이템 장착/해제
+  // equippedItems 저장/삭제
   const equipItem = (item) => {
     // const item = { id, name, description, type, icon };
 
     if (equippedItems.some(equippedItem => equippedItem.id === item.id)) {
-      // 이미 장착된 아이템이면 해제합니다.
+      // equippedItem.id가 이미 있으면 삭제
       // setEquippedItems(prev => prev.filter(equippedItem => equippedItem.id !== id));
 
       if (items.length >= maxItems) {
-        renderDialog("open", `인벤토리에는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
+        renderDialog("open", `인벤토리에는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
         return;
       }
       
@@ -194,28 +193,32 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       localStorage.setItem("equippedItems", JSON.stringify(updatedEquippedItems));
       localStorage.setItem("inventory", JSON.stringify([...items, item]));
 
-      // unequipItem(id) 함수를 호출하여 해당 아이템을 해제하는 로직 추가
       if (item.code === "DICE001") {
+        renderDialog("open", `${item.name} ${rword.clear}합니다.`);
         equipDice(-1);
       }
       if (item.code === "DICE002") {
+        renderDialog("open", `${item.name} ${rword.clear}합니다.`);
         equipDice(-2);
       }
       if (item.code === "DICE003") {
+        renderDialog("open", `${item.name} ${rword.clear}합니다.`);
         equipDice(-3);
       }
       if (item.code === "DICE004") {
+        renderDialog("open", `${item.name} ${rword.clear}합니다.`);
         equipDice(-4);
       }
       if (item.code === "DICE005") {
+        renderDialog("open", `${item.name} ${rword.clear}합니다.`);
         equipDice(-5);
       }
     } else {
-      // 장착되지 않은 아이템이면 장착합니다.
+      // equippedItem.id기 이미 있으면 저장
       // setEquippedItems(prev => [...prev, item]);
 
       if (equippedItems.length >= maxItems) {
-        renderDialog("open", `장비는 최대 ${maxItems}개의 아이템만 저장할 수 있습니다.`);
+        renderDialog("open", `${rword.equip}는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
         return;
       }
       
@@ -225,20 +228,24 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       localStorage.setItem("equippedItems", JSON.stringify([...equippedItems, item]));
       localStorage.setItem("inventory", JSON.stringify(updatedItems));
 
-      // equipItem(id) 함수를 호출하여 해당 아이템을 장착하는 로직 추가
       if (item.code === "DICE001") {
+        renderDialog("open", `${item.name} ${rword.equip}합니다.`);
         equipDice(1);
       }
       if (item.code === "DICE002") {
+        renderDialog("open", `${item.name} ${rword.equip}합니다.`);
         equipDice(2);
       }
       if (item.code === "DICE003") {
+        renderDialog("open", `${item.name} ${rword.equipp}합니다.`);
         equipDice(3);
       }
       if (item.code === "DICE004") {
+        renderDialog("open", `${item.name} ${rword.equip}합니다.`);
         equipDice(4);
       }
       if (item.code === "DICE005") {
+        renderDialog("open", `${item.name} ${rword.equip}합니다.`);
         equipDice(5);
       }
     }
@@ -296,7 +303,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
                 <span className={item.icon}></span>
                 <strong>{item.name} : {item.id}</strong>
                 <div>
-                  <span onClick={() => equipItem(item)}>해제</span>
+                  <span onClick={() => equipItem(item)}>{rword.clear}</span>
                 </div>
               </div>
               <div>{item.description}</div>
@@ -322,7 +329,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
               {item.type === "equipment" ? (
               <div>
                 <span onClick={() => equipItem(item)}>
-                  {equippedItems.some(equippedItem => equippedItem.id === item.id) ? '해제' : '장착'}
+                  {equippedItems.some(equippedItem => equippedItem.id === item.id) ? rword.clear : rword.equip}
                 </span>
                 {!equippedItems.some(equippedItem => equippedItem.id === item.id) &&
                 <span onClick={() => useItem(item.id, item.code)}>삭제</span>

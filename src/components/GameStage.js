@@ -8,7 +8,7 @@ import { useAppState, useAppDispatch, actionTypes } from '../store/Store';
 const GameStage = () => {
 
   // store
-  const { profile, stage, environments, confirmed, gameResult, bless } = useAppState();
+  const { profile, stage, environments, confirmed, gameResult, bless, rword } = useAppState();
   const { dispatch, setCurrentPage, renderDialog, setConfirmed, setLooting, setGameResult, setBless } = useAppDispatch();
 
   // GameStage prop
@@ -20,7 +20,6 @@ const GameStage = () => {
   const [maxItems, setMaxItems] = useState(profile.inv);
   
   // GameStage only
-  const [enemyStep, setEnemyStep] = useState(0);
   const [find, setFind] = useState("");
   const [rewardChk, setRewardChk] = useState("true");
 
@@ -28,7 +27,6 @@ const GameStage = () => {
   const stageN1 = (parseInt(stage, 10) - 1);
   const stageP1 = (parseInt(stage, 10) + 1);
   const stageP2 = (parseInt(stage, 10) + 2);
-  const enemyWalk = `step-${enemyStep}`;
   const hpCurrent = `hp-${hp}`
   
   useEffect(() => {
@@ -62,12 +60,6 @@ const GameStage = () => {
       setMaxItems(parseInt(savedMaxItems, 10));
     }
 
-    // enemyStep
-    const savedEnemyStep = localStorage.getItem("enemyStep");
-    if (savedEnemyStep) {
-      setEnemyStep(parseInt(savedEnemyStep, 10));
-    }
-
     // find
     const savedFind = localStorage.getItem("find");
     if (savedFind) {
@@ -85,31 +77,31 @@ const GameStage = () => {
   useEffect(() => {
     const replaceEnv = () => {
       if (environments[stage] === 0) {
-        return "환경0에 진입했습니다.(find 체력소모 없음)"
+        return `${rword.env0}에 진입했습니다.(find ${rword.hp}소모 -0)`
       }
       if (environments[stage] === 1) {
-        return "환경1에 진입했습니다.(find 체력소모 -1)"
+        return `${rword.env1}에 진입했습니다.(find ${rword.hp}소모 -1)`
       }
       if (environments[stage] === 2) {
-        return "환경2에 진입했습니다.(find 체력소모 -2)"
+        return `${rword.env2}에 진입했습니다.(find ${rword.hp}소모 -2)`
       }
       if (environments[stage] === 3) {
-        return "환경3에 진입했습니다.(find 체력소모 -3)"
+        return `${rword.env3}에 진입했습니다.(find ${rword.hp}소모 -3)`
       }
       if (environments[stage] === 4) {
-        return "환경4에 진입했습니다.(find 체력소모 -4)"
+        return `${rword.env4}에 진입했습니다.(find ${rword.hp}소모 -4)`
       }
       if (environments[stage] === 5) {
-        return "환경5에 진입했습니다.(find 체력소모 -5)"
+        return `${rword.env5}에 진입했습니다.(find ${rword.hp}소모 -5)`
       }
       if (environments[stage] === 6) {
-        return "환경6에 진입했습니다.(find 체력소모 -6)"
+        return `${rword.env6}에 진입했습니다.(find ${rword.hp}소모 -6)`
       }
     }
     switch (true) { 
       case stage % 5 === 0:
         ctrlFind("reward");
-        renderDialog("open", "보상단계에 진입했습니다.");
+        renderDialog("open", `${rword.reward}단계에 진입했습니다.`);
         break;
       default:
         renderDialog("open", replaceEnv());
@@ -126,35 +118,11 @@ const GameStage = () => {
         setConfirmed();
       } else {
         setConfirmed();
-        renderDialog("open", "체력이 없습니다.");
+        renderDialog("open", `${rword.hp}이 없습니다.`);
       }
     }
   }, [confirmed]);
 
-  // enemy 버그 확인
-  useEffect(() => {
-    if (enemyStep === 3) {
-      ctrlHp(-3);
-      setTimeout(() => {
-        ctrlEnemy(-3);
-      }, 2000);
-    } else if (enemyStep >= 4) {
-      setTimeout(() => {
-        ctrlEnemy(-3);
-      }, 2000);
-    }
-  }, [enemyStep]);
-
-  // ctrlEnemy
-  const ctrlEnemy = (v) => {
-    const newValue = (parseInt(enemyStep, 10) + v);
-    if (newValue <= 0) {
-      setEnemyStep(0);
-    } else {
-      setEnemyStep(newValue);
-    }
-    localStorage.setItem("enemyStep", newValue);
-  };
   // ctrlReward
   const ctrlReward = (v) => {
     const newValue = v;
@@ -168,31 +136,18 @@ const GameStage = () => {
     localStorage.setItem("stage", newValue);
     // 5의 배수마다 주사위 추가
     if (stage % 5 === 0) {
-      if (stage >= 100) {
-          enemyDiceUp(3);
+      if (stage >= 300) {
+        enemyDiceUp(5);
+      } else if (stage >= 200) {
+        enemyDiceUp(4);
+      } else if (stage >= 100) {
+        enemyDiceUp(3);
       } else if (stage >= 50) {
-          enemyDiceUp(2);
+        enemyDiceUp(2);
       } else {
-          enemyDiceUp(1);
+        enemyDiceUp(1);
       }
     }
-    // 특정구간 표현은 스위치로
-    // switch (stage) {
-    //   case 5:
-    //   case 10:
-    //   case 15:
-    //   case 20:
-    //   case 25:
-    //   case 30:
-    //   case 35:
-    //   case 40:
-    //   case 45:
-    //   case 50:
-    //     enemyDiceUp(1);
-    //     break;
-    //   default:
-    //     break;
-    // }
   };
   // ctrlMaxHp
   const ctrlMaxHp = (v) => {
@@ -203,9 +158,9 @@ const GameStage = () => {
     localStorage.setItem("maxHp", newValue);
   };
   // ctrlHp
-  const ctrlHp = (v , use) => {
+  const ctrlHp = (v, use) => {
     if (use === "use") {
-      renderDialog("open", `체력을 ${v} 회복합니다.`);
+      renderDialog("open", `${rword.hp}을 ${v} ${rword.heal}합니다.`);
     }
     const newValue = (parseInt(hp, 10) + v);
     if (newValue <= maxHp) {
@@ -228,7 +183,7 @@ const GameStage = () => {
   // ctrlItem
   const ctrlItem = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
-    renderDialog("loading", "아이템을 찾는중입니다.");
+    renderDialog("loading", `${rword.item}을 찾는중입니다.`);
     setTimeout(() => {
       renderDialog(null);
       switch (true) {
@@ -245,7 +200,7 @@ const GameStage = () => {
           }, 1000);
           break;
         case dice <= 80:
-          renderDialog("loading", "아이템을 발견했습니다.");
+          renderDialog("loading", `${rword.item}을 발견했습니다.`);
           setTimeout(() => {
             renderDialog(null);
             setLooting(true);
@@ -253,7 +208,7 @@ const GameStage = () => {
           }, 1000);
           break;
         default:
-          renderDialog("open", "아이템을 찾지 못했습니다.");
+          renderDialog("open", `${rword.item}을 찾지 못했습니다.`);
           break;
       }
     }, 1000);
@@ -266,18 +221,18 @@ const GameStage = () => {
   // activeFind
   const activeFind = (v) => {
     setGameResult(null);
-    renderDialog("confirm", `탐색에는 체력을 ${v}만큼 잃습니다. 괜찮습니까?`);
+    renderDialog("confirm", `탐색에는 ${rword.hp}을 ${v}만큼 잃습니다. 괜찮습니까?`);
   };
 
   // buffDiceUp
   const buffDiceUp = (v) => {
-    renderDialog("open", `1턴 동안 주사위를 ${v}만큼늘립니다.`);
+    renderDialog("open", `1턴 동안 ${rword.dice}를 ${v}만큼늘립니다.`);
     const newValue = (parseInt(diceBuff, 10) + v);
     if (newValue <= 10) {
       setDiceBuff(newValue);
     } else {
       setDiceBuff(10);
-      renderDialog("open", "1턴 동안 늘릴 수 있는 주사위가 최대치입니다.");
+      renderDialog("open", `1턴 동안 늘릴 수 있는 ${rword.dice}가 최대치입니다.`);
     }
   };
   // enemyDiceUp
@@ -298,22 +253,22 @@ const GameStage = () => {
     if (rewardChk === "true") {
       const dice = Math.floor(Math.random() * 100) + 1;
       if (dice <= 20) {
-        renderDialog("open", "주사위를 얻습니다.");
+        renderDialog("open", `${rword.dice}를 얻습니다.`);
         equipDice(1);
       } else if (dice <= 45) {
-        renderDialog("open", "최대체력이 1 증가합니다.");
+        renderDialog("open", `최대${rword.hp}이 1 증가합니다.`);
         ctrlMaxHp(1);
       } else if (dice <= 70) {
         renderDialog("open", "가방을 얻습니다.");
         ctrlInven(1);
       } else {
-        renderDialog("open", "체력을 모두 회복합니다.");
+        renderDialog("open", `${rword.hp}을 모두 ${rword.heal}합니다.`);
         ctrlHp(maxHp);
       }
       setRewardChk("false");
       localStorage.setItem("rewardChk", "false");
     } else {
-      renderDialog("open", "이미 보상을 얻었습니다.");
+      renderDialog("open", `이미 ${rword.reward}을 얻었습니다.`);
     }
     ctrlFind("");
   };
@@ -348,7 +303,7 @@ const GameStage = () => {
 
       <div className="stage-wrap">
         <div className="stage">
-          <div className={`enemy ${enemyWalk}`}></div>
+          <div className="stay"></div>
           <div className={`before stage-${stageN1} env-${environments[stageN1]}`}>stage-{stageN1} env-{environments[stageN1]}</div>
           <div className={`current stage-${stage} env-${environments[stage]}`}>stage-{stage} env-{environments[stage]}</div>
           <div className={`stage-${stageP1} env-${environments[stageP1]}`}>stage-{stageP1} env-{environments[stageP1]}</div>
@@ -363,11 +318,11 @@ const GameStage = () => {
       </div>
       <div className="d-flex">
         <div>stage: {stage}</div>
-        <div>hp: {hp} / {maxHp}</div>
+        <div>{rword.hp}: {hp} / {maxHp}</div>
         <div>enemy: {diceCountEnemy}</div>
       </div>
       <div className="d-flex">
-        <div>dice: {diceCount}</div>
+        <div>{rword.dice}: {diceCount}</div>
         <div>buff: {diceBuff}</div>
         <div>bless: {bless}</div>
       </div>
@@ -376,8 +331,7 @@ const GameStage = () => {
       {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
       {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
       {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
-      {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
-      <button onClick={() => setLooting(true)}>loot</button>
+      {/* <button onClick={() => setLooting(true)}>loot</button> */}
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
@@ -409,7 +363,6 @@ const GameStage = () => {
             setDiceCount={setDiceCount}
             diceCountEnemy={diceCountEnemy}
             diceBuff={diceBuff}
-            ctrlEnemy={ctrlEnemy}
             ctrlFind={ctrlFind}
             setDiceBuff={setDiceBuff}
           />

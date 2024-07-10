@@ -34,6 +34,23 @@ const initialState = {
   looting: false,
   gameResult: null,
   bless: 0,
+  // reserved word
+  rword: {
+    equip: "장비",
+    clear: "해제",
+    hp: "체력",
+    heal: "회복",
+    reward: "보상",
+    item: "아이템",
+    dice: "주사위",
+    env0: "!!환경0",
+    env1: "!!환경1",
+    env2: "!!환경2",
+    env3: "!!환경3",
+    env4: "!!환경4",
+    env5: "!!환경5",
+    env6: "!!환경6",
+  },
 };
 
 // 액션 타입 정의
