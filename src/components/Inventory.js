@@ -3,10 +3,10 @@ import DialogComponent from "./Dialog";
 // store
 import { useAppState, useAppDispatch } from '../store/Store';
 
-const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
+const Inventory = ({ ctrlHp, ctrlMaxHp, ctrlInven, buffDiceUp, equipDice, maxItems }) => {
   // store
   const { looting, rword } = useAppState();
-  const { setLooting, renderDialog } = useAppDispatch();
+  const { setLooting, renderDialog, setBless } = useAppDispatch();
 
   const [items, setItems] = useState([]);
   const [itemsMsg, setItemsMsg] = useState();
@@ -30,7 +30,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   const addItem = () => {
     if (items.length >= maxItems) {
       setItemsIcon("item-icon item-max");
-      setItemsMsg(`인벤토리에는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
+      setItemsMsg(`${rword.inven}에는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
       return;
     }
 
@@ -57,6 +57,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     // 아이템 타입 결정 
     const diceType = Math.floor(Math.random() * 100) + 1;
     const type = diceType <= 10 ? "equipment" : "normal";
+    // const type = diceType <= 1 ? "elixir" : diceType <= 11 ? "equipment" : "normal";
     
     console.log(`diceType: ${diceType}, type:${type}`);
 
@@ -88,16 +89,19 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
         case "normal":
           switch (true) {
             case diceItem <= 60:
-              itemList = ["HEAL001", "HEAL002", "HEAL003"];
+              itemList = ["HEAL001", "HEAL002", "BUFF001"];
               break;
-            case diceItem <= 70:
-              itemList = ["HEAL004", "HEAL005"];
+            case diceItem <= 83:
+              itemList = ["HEAL003", "HEAL004", "BUFF002"];
               break;
-            case diceItem <= 95:
-              itemList = ["BUFF001", "BUFF002", "BUFF003"];
+            case diceItem <= 93:
+              itemList = ["HEAL005", "BUFF003"];
+              break;
+            case diceItem <= 98:
+              itemList = ["BUFF004", "BUFF005"];
               break;
             default:
-              itemList = ["BUFF004", "BUFF005"];
+              itemList = ["ELIX001", "ELIX002", "ELIX003"];
               break;
           }
           break;
@@ -128,11 +132,15 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       "HEAL004": { name: "heal4", description: `${rword.hp} 4 ${rword.heal}`, icon: "item-icon item-heal004" },
       "HEAL005": { name: "heal5", description: `${rword.hp} 5 ${rword.heal}`, icon: "item-icon item-heal005" },
       // BUFF
-      "BUFF001": { name: "buff1", description: `1턴 동안 ${rword.dice} + 1`, icon: "item-icon item-buff001" },
-      "BUFF002": { name: "buff2", description: `1턴 동안 ${rword.dice} + 2`, icon: "item-icon item-buff002" },
-      "BUFF003": { name: "buff3", description: `1턴 동안 ${rword.dice} + 3`, icon: "item-icon item-buff003" },
-      "BUFF004": { name: "buff4", description: `1턴 동안 ${rword.dice} + 4`, icon: "item-icon item-buff004" },
-      "BUFF005": { name: "buff5", description: `1턴 동안 ${rword.dice} + 5`, icon: "item-icon item-buff005" },
+      "BUFF001": { name: "buff1", description: `${rword.turn} ${rword.dice} + 1`, icon: "item-icon item-buff001" },
+      "BUFF002": { name: "buff2", description: `${rword.turn} ${rword.dice} + 2`, icon: "item-icon item-buff002" },
+      "BUFF003": { name: "buff3", description: `${rword.turn} ${rword.dice} + 3`, icon: "item-icon item-buff003" },
+      "BUFF004": { name: "buff4", description: `${rword.turn} ${rword.dice} + 4`, icon: "item-icon item-buff004" },
+      "BUFF005": { name: "buff5", description: `${rword.turn} ${rword.dice} + 5`, icon: "item-icon item-buff005" },
+      // ELIX
+      "ELIX001": { name: "elix1", description: `사용하면 최대${rword.hp} + 1`, icon: "item-icon item-elix001" },
+      "ELIX002": { name: "elix2", description: `사용하면 ${rword.inven} + 1`, icon: "item-icon item-elix002" },
+      "ELIX003": { name: "elix3", description: `사용하면 축복 + 1`, icon: "item-icon item-elix003" },
       // DICE
       "DICE001": { name: "dice1", description: `${rword.equip}하면 ${rword.dice} + 1`, icon: "item-icon item-dice001" },
       "DICE002": { name: "dice2", description: `${rword.equip}하면 ${rword.dice} + 2`, icon: "item-icon item-dice002" },
@@ -167,6 +175,13 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       "BUFF003": () => buffDiceUp(3),
       "BUFF004": () => buffDiceUp(4),
       "BUFF005": () => buffDiceUp(5),
+      // ELIX
+      "ELIX001": () => ctrlMaxHp(1),
+      "ELIX002": () => ctrlInven(1),
+      "ELIX003": () => {
+        renderDialog("open", `축복을 받아 보정값이 1 오릅니다.`);
+        setBless(1);
+      },
     };
     // 아이템 효과 적용
     if (itemEffects[code]) {
@@ -183,7 +198,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       // setEquippedItems(prev => prev.filter(equippedItem => equippedItem.id !== id));
 
       if (items.length >= maxItems) {
-        renderDialog("open", `인벤토리에는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
+        renderDialog("open", `${rword.equip}에는 최대 ${maxItems}개의 ${rword.item}만 저장할 수 있습니다.`);
         return;
       }
       
@@ -237,7 +252,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
         equipDice(2);
       }
       if (item.code === "DICE003") {
-        renderDialog("open", `${item.name} ${rword.equipp}합니다.`);
+        renderDialog("open", `${item.name} ${rword.equip}합니다.`);
         equipDice(3);
       }
       if (item.code === "DICE004") {
@@ -325,7 +340,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
           >
             <div className="d-flex">
               <span className={item.icon}></span>
-              <strong>{item.name} : {item.id} : {item.type}</strong>
+              <strong>{item.name} : {item.type}</strong>
               {item.type === "equipment" ? (
               <div>
                 <span onClick={() => equipItem(item)}>

@@ -151,6 +151,7 @@ const GameStage = () => {
   };
   // ctrlMaxHp
   const ctrlMaxHp = (v) => {
+    renderDialog("open", `최대${rword.hp}이 ${v} 증가합니다.`);
     const newValue = (parseInt(maxHp, 10) + v);
     setHp(newValue);
     setMaxHp(newValue)
@@ -176,6 +177,7 @@ const GameStage = () => {
   };
   // ctrlInven
   const ctrlInven = (v) => {
+    renderDialog("open", `${rword.inven}이 ${v} 증가합니다.`);
     const newValue = (parseInt(maxItems, 10) + v);
     setMaxItems(newValue);
     localStorage.setItem("maxItems", newValue);
@@ -188,7 +190,7 @@ const GameStage = () => {
       renderDialog(null);
       switch (true) {
         case dice <= 25:
-          renderDialog("open", "신단을 발견했습니다 보정값이 1 오릅니다.");
+          renderDialog("open", `${rword.bless}을 발견했습니다 보정값이 1 오릅니다.`);
           setBless(1);
           ctrlFind("finded");
           break;
@@ -226,13 +228,13 @@ const GameStage = () => {
 
   // buffDiceUp
   const buffDiceUp = (v) => {
-    renderDialog("open", `1턴 동안 ${rword.dice}를 ${v}만큼늘립니다.`);
+    renderDialog("open", `${rword.turn} ${rword.dice}를 ${v}만큼늘립니다.`);
     const newValue = (parseInt(diceBuff, 10) + v);
     if (newValue <= 10) {
       setDiceBuff(newValue);
     } else {
       setDiceBuff(10);
-      renderDialog("open", `1턴 동안 늘릴 수 있는 ${rword.dice}가 최대치입니다.`);
+      renderDialog("open", `${rword.turn} 늘릴 수 있는 ${rword.dice}가 최대치입니다.`);
     }
   };
   // enemyDiceUp
@@ -256,10 +258,8 @@ const GameStage = () => {
         renderDialog("open", `${rword.dice}를 얻습니다.`);
         equipDice(1);
       } else if (dice <= 45) {
-        renderDialog("open", `최대${rword.hp}이 1 증가합니다.`);
         ctrlMaxHp(1);
       } else if (dice <= 70) {
-        renderDialog("open", "가방을 얻습니다.");
         ctrlInven(1);
       } else {
         renderDialog("open", `${rword.hp}을 모두 ${rword.heal}합니다.`);
@@ -331,7 +331,7 @@ const GameStage = () => {
       {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
       {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
       {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
-      {/* <button onClick={() => setLooting(true)}>loot</button> */}
+      <button onClick={() => setLooting(true)}>loot</button>
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
@@ -349,6 +349,8 @@ const GameStage = () => {
       }
       <Inventory
         ctrlHp={ctrlHp}
+        ctrlMaxHp={ctrlMaxHp}
+        ctrlInven={ctrlInven}
         buffDiceUp={buffDiceUp}
         equipDice={equipDice}
         maxItems={maxItems}

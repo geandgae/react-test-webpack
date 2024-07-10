@@ -51,6 +51,9 @@ my-react-app/
 * enemyStep 삭제 / 환경변수에 따른 랜덤 수치 적용
 
 * 자주쓰는 용어 함수처리
+* 확률에 따른 확정신단
+
+* 영약 추가?? (영구적 스탯증가) ctrlMaxHp / setBless / ctrlInven
 
 
 <!-- 스토어 구성 예 폴더 -->
@@ -156,9 +159,6 @@ trunc / 8
 6 : -1
 
 
-
-
-00
 
 
 floor / 7 / 결정
