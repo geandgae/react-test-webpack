@@ -91,8 +91,8 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
     setDiceBuff(0);
   }
 
-  // test
-  console.log(`totalDice : ${totalDice}`);
+  // debug
+  console.log(`totalDice: ${totalDice}`);
 
   return (
     <div>

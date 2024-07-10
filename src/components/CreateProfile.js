@@ -8,7 +8,7 @@ const CreateProfile = ({ saveUserToLocalStorage }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     // debug
-    console.log(`Input changed - Name: ${name}, Value: ${value}`);
+    console.log(`changedName: ${name}, changedValue: ${value}`);
     dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, [name]: value } });
   };
 

@@ -29,8 +29,8 @@ const App = () => {
     } else {
       dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
     }
-    console.log(`stage: ${stage}`);
-    console.log(`trophy: ${trophy}`);
+    // debug
+    console.log(`stage: ${stage}, trophy: ${trophy}`);
   }, [stage, dispatch]);
 
 
@@ -60,8 +60,8 @@ const App = () => {
   const removeFromLocalStorage = () => {
     const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
 
-    console.log(`storedTrophy: ${storedTrophy}`);
-    console.log(`trophy: ${trophy}`);
+    // debug
+    console.log(`trophy: ${trophy}, toredTrophy: ${storedTrophy}`);
     
     localStorage.clear();
     localStorage.setItem("trophy", JSON.stringify(storedTrophy));
@@ -80,10 +80,6 @@ const App = () => {
     removeFromLocalStorage();
     setCurrentPage("main");
   };
-
-  // test
-  // console.log(currentPage);
-  // console.log(maxHp);
 
   return (
     <>

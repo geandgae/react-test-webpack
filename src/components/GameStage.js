@@ -273,10 +273,10 @@ const GameStage = () => {
   const buffDiceUp = (v) => {
     renderDialog("open", "1턴 동안 주사위를 늘립니다.");
     const newValue = (parseInt(diceBuff, 10) + v);
-    if (newValue <= 5) {
+    if (newValue <= 10) {
       setDiceBuff(newValue);
     } else {
-      setDiceBuff(5);
+      setDiceBuff(10);
       renderDialog("open", "최대치입니다.");
     }
   };
@@ -331,9 +331,8 @@ const GameStage = () => {
   };
 
   
-  // test
-  console.log(`gameResult: ${gameResult}`);
-  console.log(find);
+  // debug
+  console.log(`gameResult: ${gameResult}, find: ${find}`);
 
   return (
     <div>
