@@ -26,6 +26,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     localStorage.setItem('equippedItems', JSON.stringify(equippedItems));
   }, [equippedItems]);
 
+  // 아이템 저장
   const addItem = () => {
     if (items.length >= maxItems) {
       setItemsIcon("item-icon item-max");
@@ -33,16 +34,15 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       return;
     }
 
-    const { randomItem, itemName, description, itemType, itemIcon } = generateUniqueName();
+    const { randomItem, name, description, type, icon } = generateUniqueName();
 
     const newItem = {
       id: Date.now(),
       code: randomItem,
-      name: itemName,
+      name: name,
       description: description,
-      type: itemType,
-      icon: itemIcon,
-      // use: itemUse,
+      type: type,
+      icon: icon,
     };
 
     const updatedItems = [...items, newItem];
@@ -52,11 +52,12 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     setItemsMsg(`${newItem.name}을 얻었습니다.`);
   };
 
+  // 이아템 테이블 생성
   const generateUniqueName = () => {
     // 아이템 타입 결정 
     const diceType = Math.floor(Math.random() * 100) + 1;
-    const itemType = diceType <= 10 ? "equipment" : "normal";
-    console.log(`diceType : ${diceType} ${itemType}`);
+    const type = diceType <= 10 ? "equipment" : "normal";
+    console.log(`diceType : ${diceType} ${type}`);
 
     // 아이템 테이블 결정
     const diceItem = Math.floor(Math.random() * 100) + 1;
@@ -64,65 +65,8 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       equipment: diceItem <= 70 ? ["EA00"] : diceItem <= 90 ? ["EB00"] : ["EC00"],
       normal: diceItem <= 65 ? ["AAA", "BBB", "CCC"] : ["DDD", "EEE", "FFF"]
     };
-    const itemList = itemTables[itemType];
+    const itemList = itemTables[type];
     
-    // 구버전
-    // let itemList;
-    // const itemTableA = ["AAA", "BBB", "CCC"];
-    // const itemTableB = ["DDD", "EEE", "FFF"];
-    // const itemTableEA = ["EA00"];
-    // const itemTableEB = ["EB00"];
-    // const itemTableCB = ["EC00"];
-    // if (itemType === "equipment") {
-    //   // 7 : 2 : 1
-    //   itemList = (diceItem <= 70) ? itemTableEA : (diceItem <= 90) ? itemTableEB : itemTableCB;
-    // } else { // itemType === "normal"
-    //   itemList = (diceItem <= 65) ? itemTableA : itemTableB;
-    // }
-
-    // 아이템 설명 구 버전
-    // const itemName = 
-    //   randomItem === "AAA" ? "111" : 
-    //   randomItem === "BBB" ? "222" : 
-    //   randomItem === "CCC" ? "333" :
-    //   randomItem === "DDD" ? "444" :
-    //   randomItem === "EEE" ? "555" :
-    //   randomItem === "FFF" ? "666" :
-    //   randomItem === "EA00" ? "777" :
-    //   randomItem === "EB00" ? "888" :
-    //   randomItem === "EC00" ? "999" : "---";
-    // const description = 
-    //   randomItem === "AAA" ? "hp 1 회복" : 
-    //   randomItem === "BBB" ? "hp 2 회복" : 
-    //   randomItem === "CCC" ? "hp 3 회복" :
-    //   randomItem === "DDD" ? "1턴 동안 주사위 + 1" :
-    //   randomItem === "EEE" ? "1턴 동안 주사위 + 2" :
-    //   randomItem === "FFF" ? "1턴 동안 주사위 + 3" :
-    //   randomItem === "EA00" ? "장비하면 주사위를 한개 늘려준다" :
-    //   randomItem === "EB00" ? "장비하면 주사위를 두개 늘려준다" :
-    //   randomItem === "EC00" ? "장비하면 주사위를 세개 늘려준다" : "---";
-    // const itemIcon = 
-    //   randomItem === "AAA" ? "item-icon item-aaa" : 
-    //   randomItem === "BBB" ? "item-icon item-bbb" : 
-    //   randomItem === "CCC" ? "item-icon item-ccc" :
-    //   randomItem === "DDD" ? "item-icon item-ddd" :
-    //   randomItem === "EEE" ? "item-icon item-eee" :
-    //   randomItem === "FFF" ? "item-icon item-fff" :
-    //   randomItem === "EA00" ? "item-icon item-ea00" :
-    //   randomItem === "EB00" ? "item-icon item-eb00" :
-    //   randomItem === "EC00" ? "item-icon item-ec00" : "item-icon";
-    // const itemUse = 
-    //   randomItem === "AAA" ? "item-icon item-aaa" : 
-    //   randomItem === "BBB" ? "item-icon item-bbb" : 
-    //   randomItem === "CCC" ? "item-icon item-ccc" :
-    //   randomItem === "DDD" ? "item-icon item-ddd" :
-    //   randomItem === "EEE" ? "item-icon item-eee" :
-    //   randomItem === "FFF" ? "item-icon item-fff" :
-    //   randomItem === "EA00" ? "item-icon item-ea00" :
-    //   randomItem === "EB00" ? "item-icon item-eb00" :
-    //   randomItem === "EC00" ? "item-icon item-ec00" : "item-icon";
-
-
     // 아이템 설명, 이름, 아이콘 매핑
     const randomIndex = Math.floor(Math.random() * itemList.length);
     const randomItem = itemList[randomIndex];
@@ -140,35 +84,32 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     };
     console.log(`diceItem  : ${diceItem} ${itemList}`);
 
-    const { name: itemName, description, icon: itemIcon } = itemDetails[randomItem] || { name: "---", description: "---", icon: "item-icon" };
-    return { randomItem, itemName, description, itemType, itemIcon };
+    const { name, description, icon } = itemDetails[randomItem] || { name: "---", description: "---", icon: "item-icon" };
+    return { randomItem, name, description, type, icon };
   };
 
+  // 아이템 사용
   const useItem = (id, code) => {
+    // 아이템 목록 업데이트
     const updatedItems = items.filter((item) => item.id !== id);
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
-    if (code === "AAA") {
-      ctrlHp(1, "use");
-    }
-    if (code === "BBB") {
-      ctrlHp(2, "use");
-    }
-    if (code === "CCC") {
-      ctrlHp(3, "use");
-    }
-    if (code === "DDD") {
-      buffDiceUp(1);
-    }
-    if (code === "EEE") {
-      buffDiceUp(2);
-    }
-    if (code === "FFF") {
-      buffDiceUp(3);
+    // 아이템 효과 매핑
+    const itemEffects = {
+      "AAA": () => ctrlHp(1, "use"),
+      "BBB": () => ctrlHp(2, "use"),
+      "CCC": () => ctrlHp(3, "use"),
+      "DDD": () => buffDiceUp(1),
+      "EEE": () => buffDiceUp(2),
+      "FFF": () => buffDiceUp(3),
+    };
+    // 아이템 효과 적용
+    if (itemEffects[code]) {
+      itemEffects[code]();
     }
   };
 
-  // 아이템 장착/해제 함수
+  // 아이템 장착/해제
   const equipItem = (item) => {
     // const item = { id, name, description, type, icon };
 
@@ -225,6 +166,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     }
   }
 
+  // 루팅 닫기
   const CloseBox = () => {
     setItemsMsg(false);
     setLooting(false);
