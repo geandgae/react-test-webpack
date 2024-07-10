@@ -100,7 +100,7 @@ const AppProvider = ({ children }) => {
       dispatch({ type: actionTypes.SET_PROFILE, payload: storedProfile });
       dispatch({ type: actionTypes.SET_IS_PROFILE_SAVED, payload: true });
       // debug
-      // console.log("Stored profile loaded from localStorage:", storedProfile);
+      console.log("Stored profile loaded from localStorage:", storedProfile);
     }
 
     // savedStage

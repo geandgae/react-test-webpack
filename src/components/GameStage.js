@@ -138,7 +138,6 @@ const GameStage = () => {
       setTimeout(() => {
         ctrlEnemy(-3);
       }, 2000);
-      console.log("attack");
     } else if (enemyStep >= 4) {
       setTimeout(() => {
         ctrlEnemy(-3);
@@ -231,7 +230,6 @@ const GameStage = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
     renderDialog("loading", "아이템을 찾는중입니다.");
     setTimeout(() => {
-      console.log(dice);
       renderDialog(null);
       switch (true) {
         case dice <= 25:
@@ -367,9 +365,12 @@ const GameStage = () => {
       <div className="d-flex">
         <div>stage: {stage}</div>
         <div>hp: {hp} / {maxHp}</div>
-        <div>dice: {diceCount}</div>
-        <div>bless: {bless}</div>
         <div>enemy: {diceCountEnemy}</div>
+      </div>
+      <div className="d-flex">
+        <div>dice: {diceCount}</div>
+        <div>buff: {diceBuff}</div>
+        <div>bless: {bless}</div>
       </div>
       {/* <button onClick={() => ctrlInven(1)}>invtest</button> */}
       {/* <button onClick={() => ctrlHp(maxHp)}>restore</button> */}
@@ -377,7 +378,7 @@ const GameStage = () => {
       {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
       {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
       {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
-      {/* <button onClick={() => setLooting(true)}>loot</button> */}
+      <button onClick={() => setLooting(true)}>loot</button>
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>

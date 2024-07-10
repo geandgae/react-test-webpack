@@ -33,14 +33,16 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       return;
     }
 
-    const { randomItem, description, itemType, itemIcon } = generateUniqueName();
+    const { randomItem, itemName, description, itemType, itemIcon } = generateUniqueName();
 
     const newItem = {
       id: Date.now(),
-      name: randomItem,
+      code: randomItem,
+      name: itemName,
       description: description,
       type: itemType,
       icon: itemIcon,
+      // use: itemUse,
     };
 
     const updatedItems = [...items, newItem];
@@ -52,70 +54,116 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
 
   const generateUniqueName = () => {
     // 아이템 타입 결정 
-    let itemType;
     const diceType = Math.floor(Math.random() * 100) + 1;
-    itemType = (diceType <= 10) ? "equipment" : "normal";
+    const itemType = diceType <= 10 ? "equipment" : "normal";
     console.log(`diceType : ${diceType} ${itemType}`);
 
     // 아이템 테이블 결정
-    let itemList;
     const diceItem = Math.floor(Math.random() * 100) + 1;
-    const itemTableA = ["AAA", "BBB", "CCC"];
-    const itemTableB = ["DDD", "EEE", "FFF"];
-    const itemTableEA = ["EA00"];
-    const itemTableEB = ["EB00"];
+    const itemTables = {
+      equipment: diceItem <= 70 ? ["EA00"] : diceItem <= 90 ? ["EB00"] : ["EC00"],
+      normal: diceItem <= 65 ? ["AAA", "BBB", "CCC"] : ["DDD", "EEE", "FFF"]
+    };
+    const itemList = itemTables[itemType];
+    
+    // 구버전
+    // let itemList;
+    // const itemTableA = ["AAA", "BBB", "CCC"];
+    // const itemTableB = ["DDD", "EEE", "FFF"];
+    // const itemTableEA = ["EA00"];
+    // const itemTableEB = ["EB00"];
+    // const itemTableCB = ["EC00"];
+    // if (itemType === "equipment") {
+    //   // 7 : 2 : 1
+    //   itemList = (diceItem <= 70) ? itemTableEA : (diceItem <= 90) ? itemTableEB : itemTableCB;
+    // } else { // itemType === "normal"
+    //   itemList = (diceItem <= 65) ? itemTableA : itemTableB;
+    // }
 
-    if (itemType === "equipment") {
-      itemList = (diceItem <= 80) ? itemTableEA : itemTableEB;
-    } else { // itemType === "normal"
-      itemList = (diceItem <= 50) ? itemTableA : itemTableB;
-    }
+    // 아이템 설명 구 버전
+    // const itemName = 
+    //   randomItem === "AAA" ? "111" : 
+    //   randomItem === "BBB" ? "222" : 
+    //   randomItem === "CCC" ? "333" :
+    //   randomItem === "DDD" ? "444" :
+    //   randomItem === "EEE" ? "555" :
+    //   randomItem === "FFF" ? "666" :
+    //   randomItem === "EA00" ? "777" :
+    //   randomItem === "EB00" ? "888" :
+    //   randomItem === "EC00" ? "999" : "---";
+    // const description = 
+    //   randomItem === "AAA" ? "hp 1 회복" : 
+    //   randomItem === "BBB" ? "hp 2 회복" : 
+    //   randomItem === "CCC" ? "hp 3 회복" :
+    //   randomItem === "DDD" ? "1턴 동안 주사위 + 1" :
+    //   randomItem === "EEE" ? "1턴 동안 주사위 + 2" :
+    //   randomItem === "FFF" ? "1턴 동안 주사위 + 3" :
+    //   randomItem === "EA00" ? "장비하면 주사위를 한개 늘려준다" :
+    //   randomItem === "EB00" ? "장비하면 주사위를 두개 늘려준다" :
+    //   randomItem === "EC00" ? "장비하면 주사위를 세개 늘려준다" : "---";
+    // const itemIcon = 
+    //   randomItem === "AAA" ? "item-icon item-aaa" : 
+    //   randomItem === "BBB" ? "item-icon item-bbb" : 
+    //   randomItem === "CCC" ? "item-icon item-ccc" :
+    //   randomItem === "DDD" ? "item-icon item-ddd" :
+    //   randomItem === "EEE" ? "item-icon item-eee" :
+    //   randomItem === "FFF" ? "item-icon item-fff" :
+    //   randomItem === "EA00" ? "item-icon item-ea00" :
+    //   randomItem === "EB00" ? "item-icon item-eb00" :
+    //   randomItem === "EC00" ? "item-icon item-ec00" : "item-icon";
+    // const itemUse = 
+    //   randomItem === "AAA" ? "item-icon item-aaa" : 
+    //   randomItem === "BBB" ? "item-icon item-bbb" : 
+    //   randomItem === "CCC" ? "item-icon item-ccc" :
+    //   randomItem === "DDD" ? "item-icon item-ddd" :
+    //   randomItem === "EEE" ? "item-icon item-eee" :
+    //   randomItem === "FFF" ? "item-icon item-fff" :
+    //   randomItem === "EA00" ? "item-icon item-ea00" :
+    //   randomItem === "EB00" ? "item-icon item-eb00" :
+    //   randomItem === "EC00" ? "item-icon item-ec00" : "item-icon";
 
-    // 아이템 설명
+
+    // 아이템 설명, 이름, 아이콘 매핑
     const randomIndex = Math.floor(Math.random() * itemList.length);
     const randomItem = itemList[randomIndex];
-    const description = 
-      randomItem === "AAA" ? "hp 1 회복" : 
-      randomItem === "BBB" ? "hp 2 회복" : 
-      randomItem === "CCC" ? "hp 3 회복" :
-      randomItem === "DDD" ? "1턴 동안 주사위 + 1" :
-      randomItem === "EEE" ? "1턴 동안 주사위 + 2" :
-      randomItem === "FFF" ? "1턴 동안 주사위 + 3" :
-      randomItem === "EA00" ? "장비하면 주사위를 한개 늘려준다" :
-      randomItem === "EB00" ? "장비하면 주사위를 두개 늘려준다" : "---";
-    const itemIcon = 
-      randomItem === "AAA" ? "item-icon item-aaa" : 
-      randomItem === "BBB" ? "item-icon item-bbb" : 
-      randomItem === "CCC" ? "item-icon item-ccc" :
-      randomItem === "DDD" ? "item-icon item-ddd" :
-      randomItem === "EEE" ? "item-icon item-eee" :
-      randomItem === "FFF" ? "item-icon item-fff" :
-      randomItem === "EA00" ? "item-icon item-ea00" :
-      randomItem === "EB00" ? "item-icon item-eb00" : "item-icon";
-    console.log(`diceItem  : ${diceItem} ${itemList}`);  
-    return { randomItem, description, itemType, itemIcon};
+
+    const itemDetails = {
+      "AAA": { name: "111", description: "hp 1 회복", icon: "item-icon item-aaa" },
+      "BBB": { name: "222", description: "hp 2 회복", icon: "item-icon item-bbb" },
+      "CCC": { name: "333", description: "hp 3 회복", icon: "item-icon item-bbb" },
+      "DDD": { name: "444", description: "1턴 동안 주사위 + 1", icon: "item-icon item-ddd" },
+      "EEE": { name: "555", description: "1턴 동안 주사위 + 1", icon: "item-icon item-eee" },
+      "FFF": { name: "666", description: "1턴 동안 주사위 + 1", icon: "item-icon item-fff" },
+      "EA00": { name: "777", description: "장비하면 주사위를 한개 늘려준다", icon: "item-icon item-ea00" },
+      "EB00": { name: "888", description: "장비하면 주사위를 두개 늘려준다", icon: "item-icon item-eb00" },
+      "EC00": { name: "999", description: "장비하면 주사위를 세개 늘려준다", icon: "item-icon item-ec00" }
+    };
+    console.log(`diceItem  : ${diceItem} ${itemList}`);
+
+    const { name: itemName, description, icon: itemIcon } = itemDetails[randomItem] || { name: "---", description: "---", icon: "item-icon" };
+    return { randomItem, itemName, description, itemType, itemIcon };
   };
 
-  const useItem = (id, name) => {
+  const useItem = (id, code) => {
     const updatedItems = items.filter((item) => item.id !== id);
     setItems(updatedItems);
     localStorage.setItem("inventory", JSON.stringify(updatedItems));
-    if (name === "AAA") {
+    if (code === "AAA") {
       ctrlHp(1, "use");
     }
-    if (name === "BBB") {
+    if (code === "BBB") {
       ctrlHp(2, "use");
     }
-    if (name === "CCC") {
+    if (code === "CCC") {
       ctrlHp(3, "use");
     }
-    if (name === "DDD") {
+    if (code === "DDD") {
       buffDiceUp(1);
     }
-    if (name === "EEE") {
+    if (code === "EEE") {
       buffDiceUp(2);
     }
-    if (name === "FFF") {
+    if (code === "FFF") {
       buffDiceUp(3);
     }
   };
@@ -140,11 +188,14 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       localStorage.setItem("inventory", JSON.stringify([...items, item]));
 
       // unequipItem(id) 함수를 호출하여 해당 아이템을 해제하는 로직 추가
-      if (item.name === "EA00") {
+      if (item.code === "EA00") {
         equipDice(-1);
       }
-      if (item.name === "EB00") {
+      if (item.code === "EB00") {
         equipDice(-2);
+      }
+      if (item.code === "EC00") {
+        equipDice(-3);
       }
     } else {
       // 장착되지 않은 아이템이면 장착합니다.
@@ -162,11 +213,14 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       localStorage.setItem("inventory", JSON.stringify(updatedItems));
 
       // equipItem(id) 함수를 호출하여 해당 아이템을 장착하는 로직 추가
-      if (item.name === "EA00") {
+      if (item.code === "EA00") {
         equipDice(1);
       }
-      if (item.name === "EB00") {
+      if (item.code === "EB00") {
         equipDice(2);
+      }
+      if (item.code === "EC00") {
+        equipDice(3);
       }
     }
   }
@@ -179,7 +233,6 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
   // drag
   const handleDragStart = (e, item) => {
     e.dataTransfer.setData("application/json", JSON.stringify(item));
-    console.log(e)
   };
   const handleDrop = (e) => {
     e.preventDefault();
@@ -253,11 +306,11 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
                   {equippedItems.some(equippedItem => equippedItem.id === item.id) ? '해제' : '장착'}
                 </span>
                 {!equippedItems.some(equippedItem => equippedItem.id === item.id) &&
-                <span onClick={() => useItem(item.id, item.name)}>삭제</span>
+                <span onClick={() => useItem(item.id, item.code)}>삭제</span>
                 }
               </div>
               ) : (
-              <span onClick={() => useItem(item.id, item.name)}>사용</span>
+              <span onClick={() => useItem(item.id, item.code)}>사용</span>
               )}
             </div>
             <div>{item.description}</div>

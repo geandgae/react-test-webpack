@@ -82,7 +82,6 @@ const App = () => {
   };
 
   // test
-  
   // console.log(currentPage);
   // console.log(maxHp);
 

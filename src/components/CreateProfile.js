@@ -16,13 +16,13 @@ const CreateProfile = ({ saveUserToLocalStorage }) => {
   useEffect(() => {
     switch (profile.skill) {
       case "swordsmanship":
-        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 20, inv: 7 } });
+        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 25, inv: 8 } });
         break;
       case "magic":
-        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 3, vit: 3, inv: 5 } });
+        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 5, vit: 3, inv: 5 } });
         break;
       case "archery":
-        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 10, inv: 10 } });
+        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 10, inv: 12 } });
         break;
       default:
         break;

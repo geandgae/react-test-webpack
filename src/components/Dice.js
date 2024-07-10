@@ -17,8 +17,6 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
 
   const totalDice = diceCount + diceBuff;
 
-  console.log(`totalDice : ${totalDice}`);
-
   useEffect(() => {
     // Initialize player's dice numbers array based on totalDice
     const initialDiceNumbers = Array(totalDice).fill(0);
@@ -62,8 +60,6 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
             const playerSum = diceSum + bless;
             setPlayerDiceSum(playerSum);
             setRollingPlayer(false);
-            console.log(`opponentSum: ${opponentSum}`);
-            console.log(`playerSum: ${playerSum}`);
             // Determine game result
             if (playerSum > opponentSum) {
               setGameResult("win");
@@ -94,6 +90,9 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
     ctrlFind("");
     setDiceBuff(0);
   }
+
+  // test
+  console.log(`totalDice : ${totalDice}`);
 
   return (
     <div>
