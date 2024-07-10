@@ -58,15 +58,64 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
     const diceType = Math.floor(Math.random() * 100) + 1;
     const type = diceType <= 10 ? "equipment" : "normal";
     
+    
     console.log(`diceType: ${diceType}, type:${type}`);
 
     // 아이템 테이블 결정
-    const diceItem = Math.floor(Math.random() * 100) + 1;
-    const itemTables = {
-      equipment: diceItem <= 70 ? ["DICE001"] : diceItem <= 90 ? ["DICE002"] : ["DICE003"],
-      normal: diceItem <= 65 ? ["HEAL001", "HEAL002", "HEAL003"] : ["BUFF001", "BUFF002", "BUFF003"]
+    const getItemList = (type, diceItem) => {
+      let itemList;
+      switch (type) {
+        // equipment
+        case "equipment":
+          switch (true) {
+            case diceItem <= 50:
+              itemList = ["DICE001"];
+              break;
+            case diceItem <= 70:
+              itemList = ["DICE002"];
+              break;
+            case diceItem <= 85:
+              itemList = ["DICE003"];
+              break;
+            case diceItem <= 95:
+              itemList = ["DICE004"];
+              break;  
+            default:
+              itemList = ["DICE005"];
+              break;
+          }
+          break;
+        // normal
+        case "normal":
+          switch (true) {
+            case diceItem <= 60:
+              itemList = ["HEAL001", "HEAL002", "HEAL003"];
+              break;
+            case diceItem <= 70:
+              itemList = ["HEAL004", "HEAL005"];
+              break;
+            case diceItem <= 95:
+              itemList = ["BUFF001", "BUFF002", "BUFF003"];
+              break;
+            default:
+              itemList = ["BUFF004", "BUFF005"];
+              break;
+          }
+          break;
+        // default
+        default:
+          itemList = [];
+          break;
+      }
+      return itemList;
     };
-    const itemList = itemTables[type];
+    const diceItem = Math.floor(Math.random() * 100) + 1;
+    const itemList = getItemList(type, diceItem);
+    // const itemTables = {
+    //   equipment: diceItem <= 70 ? ["DICE001"] : diceItem <= 90 ? ["DICE002"] : ["DICE003"],
+    //   normal: diceItem <= 65 ? ["HEAL001", "HEAL002", "HEAL003"] : ["BUFF001", "BUFF002", "BUFF003"],
+    // };
+    // const itemList = itemTables[type];
     
     // 아이템 설명, 이름, 아이콘 매핑
     const randomIndex = Math.floor(Math.random() * itemList.length);
@@ -77,14 +126,20 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       "HEAL001": { name: "heal1", description: "hp 1 회복", icon: "item-icon item-heal001" },
       "HEAL002": { name: "heal2", description: "hp 2 회복", icon: "item-icon item-heal002" },
       "HEAL003": { name: "heal3", description: "hp 3 회복", icon: "item-icon item-heal003" },
+      "HEAL004": { name: "heal4", description: "hp 4 회복", icon: "item-icon item-heal004" },
+      "HEAL005": { name: "heal5", description: "hp 5 회복", icon: "item-icon item-heal005" },
       // BUFF
       "BUFF001": { name: "buff1", description: "1턴 동안 주사위 + 1", icon: "item-icon item-buff001" },
-      "BUFF002": { name: "buff2", description: "1턴 동안 주사위 + 1", icon: "item-icon item-buff002" },
-      "BUFF003": { name: "buff3", description: "1턴 동안 주사위 + 1", icon: "item-icon item-buff003" },
+      "BUFF002": { name: "buff2", description: "1턴 동안 주사위 + 2", icon: "item-icon item-buff002" },
+      "BUFF003": { name: "buff3", description: "1턴 동안 주사위 + 3", icon: "item-icon item-buff003" },
+      "BUFF004": { name: "buff4", description: "1턴 동안 주사위 + 4", icon: "item-icon item-buff004" },
+      "BUFF005": { name: "buff5", description: "1턴 동안 주사위 + 5", icon: "item-icon item-buff005" },
       // DICE
-      "DICE001": { name: "dice1", description: "장비하면 주사위를 한개 늘려준다", icon: "item-icon item-dice001" },
-      "DICE002": { name: "dice2", description: "장비하면 주사위를 두개 늘려준다", icon: "item-icon item-dice002" },
-      "DICE003": { name: "dice3", description: "장비하면 주사위를 세개 늘려준다", icon: "item-icon item-dice003" }
+      "DICE001": { name: "dice1", description: "장비하면 주사위 + 1", icon: "item-icon item-dice001" },
+      "DICE002": { name: "dice2", description: "장비하면 주사위 + 2", icon: "item-icon item-dice002" },
+      "DICE003": { name: "dice3", description: "장비하면 주사위 + 3", icon: "item-icon item-dice003" },
+      "DICE004": { name: "dice4", description: "장비하면 주사위 + 4", icon: "item-icon item-dice004" },
+      "DICE005": { name: "dice5", description: "장비하면 주사위 + 5", icon: "item-icon item-dice005" },
     };
     // debug
     console.log(`diceItem: ${diceItem}, itemList: ${itemList}`);
@@ -105,10 +160,14 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       "HEAL001": () => ctrlHp(1, "use"),
       "HEAL002": () => ctrlHp(2, "use"),
       "HEAL003": () => ctrlHp(3, "use"),
+      "HEAL004": () => ctrlHp(4, "use"),
+      "HEAL005": () => ctrlHp(5, "use"),
       // BUFF000
       "BUFF001": () => buffDiceUp(1),
       "BUFF002": () => buffDiceUp(2),
       "BUFF003": () => buffDiceUp(3),
+      "BUFF004": () => buffDiceUp(4),
+      "BUFF005": () => buffDiceUp(5),
     };
     // 아이템 효과 적용
     if (itemEffects[code]) {
@@ -145,6 +204,12 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       if (item.code === "DICE003") {
         equipDice(-3);
       }
+      if (item.code === "DICE004") {
+        equipDice(-4);
+      }
+      if (item.code === "DICE005") {
+        equipDice(-5);
+      }
     } else {
       // 장착되지 않은 아이템이면 장착합니다.
       // setEquippedItems(prev => [...prev, item]);
@@ -170,6 +235,12 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
       if (item.code === "DICE003") {
         equipDice(3);
       }
+      if (item.code === "DICE004") {
+        equipDice(4);
+      }
+      if (item.code === "DICE005") {
+        equipDice(5);
+      }
     }
   }
 
@@ -194,7 +265,7 @@ const Inventory = ({ ctrlHp, buffDiceUp, equipDice, maxItems }) => {
 
 
   // debug
-  console.log(equippedItems);
+  // console.log(equippedItems);
 
   return (
     <div>

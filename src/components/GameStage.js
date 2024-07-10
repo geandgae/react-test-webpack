@@ -271,13 +271,13 @@ const GameStage = () => {
 
   // buffDiceUp
   const buffDiceUp = (v) => {
-    renderDialog("open", "1턴 동안 주사위를 늘립니다.");
+    renderDialog("open", `1턴 동안 주사위를 ${v}만큼늘립니다.`);
     const newValue = (parseInt(diceBuff, 10) + v);
     if (newValue <= 10) {
       setDiceBuff(newValue);
     } else {
       setDiceBuff(10);
-      renderDialog("open", "최대치입니다.");
+      renderDialog("open", "1턴 동안 늘릴 수 있는 주사위가 최대치입니다.");
     }
   };
   // enemyDiceUp
@@ -332,7 +332,7 @@ const GameStage = () => {
 
   
   // debug
-  console.log(`gameResult: ${gameResult}, find: ${find}`);
+  // console.log(`gameResult: ${gameResult}, find: ${find}`);
 
   return (
     <div>

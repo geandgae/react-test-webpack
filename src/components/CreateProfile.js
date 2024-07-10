@@ -8,7 +8,7 @@ const CreateProfile = ({ saveUserToLocalStorage }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     // debug
-    console.log(`changedName: ${name}, changedValue: ${value}`);
+    // console.log(`changedName: ${name}, changedValue: ${value}`);
     dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, [name]: value } });
   };
 
@@ -16,7 +16,7 @@ const CreateProfile = ({ saveUserToLocalStorage }) => {
   useEffect(() => {
     switch (profile.skill) {
       case "swordsmanship":
-        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 25, inv: 8 } });
+        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 25, inv: 80 } });
         break;
       case "magic":
         dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 5, vit: 3, inv: 5 } });

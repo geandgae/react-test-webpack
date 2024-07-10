@@ -30,7 +30,7 @@ const App = () => {
       dispatch({ type: actionTypes.SET_TROPHY, payload: storedTrophy });
     }
     // debug
-    console.log(`stage: ${stage}, trophy: ${trophy}`);
+    // console.log(`stage: ${stage}, trophy: ${trophy}`);
   }, [stage, dispatch]);
 
 
@@ -61,7 +61,7 @@ const App = () => {
     const storedTrophy = JSON.parse(localStorage.getItem("trophy")) || 0;
 
     // debug
-    console.log(`trophy: ${trophy}, toredTrophy: ${storedTrophy}`);
+    // console.log(`trophy: ${trophy}, toredTrophy: ${storedTrophy}`);
     
     localStorage.clear();
     localStorage.setItem("trophy", JSON.stringify(storedTrophy));

@@ -81,6 +81,7 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlEn
           }, 1000); // Wait 1 second before calculating player's sum
         }, 1000); // Wait 1 second before calculating opponent's sum
       } catch (error) {
+        // debug
         console.error("Failed to roll dice:", error);
       }
     }

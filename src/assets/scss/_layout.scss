@@ -865,6 +865,12 @@ h2, h3 {
   &.item-heal003 {
     background-color: #0ed43f;
   }
+  &.item-heal004 {
+    background-color: #08a51d;
+  }
+  &.item-heal005 {
+    background-color: #026e0b;
+  }
   &.item-buff001 {
     background-color: #b3fff9;
   }
@@ -873,6 +879,12 @@ h2, h3 {
   }
   &.item-buff003 {
     background-color: #1eb3f8;
+  }
+  &.item-buff004 {
+    background-color: #1092ce;
+  }
+  &.item-buff005 {
+    background-color: #0560aa;
   }
   &.item-dice001 {
     background-color: #ffde21;
@@ -883,8 +895,14 @@ h2, h3 {
   &.item-dice003 {
     background-color: #ff4517;
   }
+  &.item-dice004 {
+    background-color: #ff4517;
+  }
+  &.item-dice005 {
+    background-color: #ff18ba;
+  }
   &.item-max {
-    background-color: #ff0000;
+    background-color: #000000;
   }
 }
 
@@ -923,4 +941,8 @@ h2, h3 {
   //     display: block;
   //   }
   // }
+  & li {
+    border: 1px solid #e7e7e7;
+    background-color: #fefff0;
+  }
 }
