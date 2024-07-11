@@ -21,6 +21,7 @@ const GameStage = () => {
   
   // GameStage only
   const [find, setFind] = useState("");
+  const [stageState, setStageState] = useState("");
   const [rewardChk, setRewardChk] = useState("true");
 
   // ui 상태 class
@@ -66,6 +67,12 @@ const GameStage = () => {
       setFind(savedFind);
     }
 
+    // stageState
+    const savedStageState = localStorage.getItem("stageState");
+    if (savedStageState) {
+      setStageState(savedStageState);
+    }
+
     // rewardChk
     const savedRewardChk = localStorage.getItem("rewardChk");
     if (savedRewardChk) {
@@ -77,30 +84,30 @@ const GameStage = () => {
   useEffect(() => {
     const replaceEnv = () => {
       if (environments[stage] === 0) {
-        return `${rword.env0}에 진입했습니다.(find ${rword.hp}소모 -0)`
+        return `${rword.env0}에 진입했습니다.(탐색 ${rword.hp}소모 -0)`
       }
       if (environments[stage] === 1) {
-        return `${rword.env1}에 진입했습니다.(find ${rword.hp}소모 -1)`
+        return `${rword.env1}에 진입했습니다.(탐색 ${rword.hp}소모 -1)`
       }
       if (environments[stage] === 2) {
-        return `${rword.env2}에 진입했습니다.(find ${rword.hp}소모 -2)`
+        return `${rword.env2}에 진입했습니다.(탐색 ${rword.hp}소모 -2)`
       }
       if (environments[stage] === 3) {
-        return `${rword.env3}에 진입했습니다.(find ${rword.hp}소모 -3)`
+        return `${rword.env3}에 진입했습니다.(탐색 ${rword.hp}소모 -3)`
       }
       if (environments[stage] === 4) {
-        return `${rword.env4}에 진입했습니다.(find ${rword.hp}소모 -4)`
+        return `${rword.env4}에 진입했습니다.(탐색 ${rword.hp}소모 -4)`
       }
       if (environments[stage] === 5) {
-        return `${rword.env5}에 진입했습니다.(find ${rword.hp}소모 -5)`
+        return `${rword.env5}에 진입했습니다.(탐색 ${rword.hp}소모 -5)`
       }
       if (environments[stage] === 6) {
-        return `${rword.env6}에 진입했습니다.(find ${rword.hp}소모 -6)`
+        return `${rword.env6}에 진입했습니다.(탐색 ${rword.hp}소모 -6)`
       }
     }
     switch (true) { 
       case stage % 5 === 0:
-        ctrlFind("reward");
+        ctrlStageState("reward");
         renderDialog("open", `${rword.reward}단계에 진입했습니다.`);
         break;
       default:
@@ -182,6 +189,16 @@ const GameStage = () => {
     setMaxItems(newValue);
     localStorage.setItem("maxItems", newValue);
   };
+  // ctrlFind
+  const ctrlFind = (v) => {
+    setFind(v);
+    localStorage.setItem("find", v);
+  };
+  // ctrlStageState
+  const ctrlStageState = (v) => {
+    setStageState(v);
+    localStorage.setItem("stageState", v);
+  };
   // ctrlItem
   const ctrlItem = () => {
     const dice = Math.floor(Math.random() * 100) + 1;
@@ -189,19 +206,12 @@ const GameStage = () => {
     setTimeout(() => {
       renderDialog(null);
       switch (true) {
-        case dice <= 25:
-          renderDialog("open", `${rword.bless}을 발견했습니다 보정값이 1 오릅니다.`);
+        case dice <= 30:
+          renderDialog("open", `${rword.bless}을 발견했습니다 보정값 + 1`);
           setBless(1);
           ctrlFind("finded");
           break;
-        case dice <= 50:
-          renderDialog("loading", "적과 마주칩니다.");
-          setTimeout(() => {
-            renderDialog(null);
-            ctrlFind("enemy");
-          }, 1000);
-          break;
-        case dice <= 80:
+        case dice <= 70:
           renderDialog("loading", `${rword.item}을 발견했습니다.`);
           setTimeout(() => {
             renderDialog(null);
@@ -209,20 +219,19 @@ const GameStage = () => {
             ctrlFind("finded");
           }, 1000);
           break;
+        case dice <= 80:
+          renderDialog("open", `저주받은 ${rword.bless}을 발견했습니다 보정값 - 1`);
+          setBless(-1);
+          ctrlFind("finded");
+          break;
         default:
           renderDialog("open", `${rword.item}을 찾지 못했습니다.`);
           break;
       }
     }, 1000);
   };
-  // ctrlFind
-  const ctrlFind = (v) => {
-    setFind(v);
-    localStorage.setItem("find", v);
-  };
   // activeFind
   const activeFind = (v) => {
-    setGameResult(null);
     renderDialog("confirm", `탐색에는 ${rword.hp}을 ${v}만큼 잃습니다. 괜찮습니까?`);
   };
 
@@ -270,12 +279,12 @@ const GameStage = () => {
     } else {
       renderDialog("open", `이미 ${rword.reward}을 얻었습니다.`);
     }
-    ctrlFind("");
+    ctrlStageState("");
   };
 
   const battleStage = () => {
     setGameResult(null);
-    ctrlFind("enemy");
+    ctrlStageState("enemy");
   };
 
   // nextStage 
@@ -283,11 +292,12 @@ const GameStage = () => {
     setGameResult(null);
     ctrlReward("true");
     ctrlStage();
+    ctrlFind("");
   };
 
   
   // debug
-  // console.log(`gameResult: ${gameResult}, find: ${find}`);
+  console.log(`gameResult: ${gameResult}, stageState: ${stageState} find: ${find}`);
 
   return (
     <div>
@@ -331,20 +341,20 @@ const GameStage = () => {
       {/* <button onClick={() => renderDialog("loading", "loading")}>loading</button> */}
       {/* <button onClick={() => renderDialog("open", "open")}>open</button> */}
       {/* <button onClick={() => renderDialog("confirm", "test")}>confirm</button> */}
-      <button onClick={() => setLooting(true)}>loot</button>
+      {/* <button onClick={() => setLooting(true)}>loot</button> */}
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {find !== "reward" && find !== "finded" && gameResult !== "win" &&
+      {find !== "finded2" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
-      {find !== "reward" && gameResult !== "win" &&
+      {stageState !== "reward" && gameResult !== "win" &&
       <button onClick={battleStage}>battle</button>
       }
       {gameResult === "win" && 
       <button onClick={nextStage}>next</button>
       }
-      {find === "reward" &&
+      {stageState === "reward" &&
       <button onClick={reward}>reward</button>
       }
       <Inventory
@@ -356,7 +366,7 @@ const GameStage = () => {
         maxItems={maxItems}
       />
       {/* dice */}
-      {find == "enemy" &&
+      {stageState == "enemy" &&
       <div className="intro">
         <div className="ground">
           <Dice
@@ -365,7 +375,7 @@ const GameStage = () => {
             setDiceCount={setDiceCount}
             diceCountEnemy={diceCountEnemy}
             diceBuff={diceBuff}
-            ctrlFind={ctrlFind}
+            ctrlStageState={ctrlStageState}
             setDiceBuff={setDiceBuff}
           />
         </div>

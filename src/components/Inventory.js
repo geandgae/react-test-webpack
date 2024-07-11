@@ -89,16 +89,13 @@ const Inventory = ({ ctrlHp, ctrlMaxHp, ctrlInven, buffDiceUp, equipDice, maxIte
         case "normal":
           switch (true) {
             case diceItem <= 60:
-              itemList = ["HEAL001", "HEAL002", "BUFF001"];
+              itemList = ["HEAL001", "HEAL002", "BUFF001", "BUFF002"];
               break;
-            case diceItem <= 83:
-              itemList = ["HEAL003", "HEAL004", "BUFF002"];
-              break;
-            case diceItem <= 93:
-              itemList = ["HEAL005", "BUFF003"];
+            case diceItem <= 90:
+              itemList = ["HEAL003", "HEAL004", "BUFF003"];
               break;
             case diceItem <= 98:
-              itemList = ["BUFF004", "BUFF005"];
+              itemList = ["HEAL005", "BUFF004", "BUFF005"];
               break;
             default:
               itemList = ["ELIX001", "ELIX002", "ELIX003"];

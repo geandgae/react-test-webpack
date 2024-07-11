@@ -3,7 +3,7 @@ import DialogComponent from "./Dialog";
 // store
 import { useAppState, useAppDispatch } from "../store/Store";
 
-const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlFind }) => {
+const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlStageState }) => {
   // store
   const { stage, environments, gameResult, bless, rword } = useAppState();
   const { renderDialog, setLooting, setGameResult } = useAppDispatch();
@@ -89,7 +89,7 @@ const Dice = ({ diceCount, diceCountEnemy, diceBuff, setDiceBuff, ctrlHp, ctrlFi
   };
   
   const resetBattle = () => {
-    ctrlFind("");
+    ctrlStageState("");
     setDiceBuff(0);
   }
 
