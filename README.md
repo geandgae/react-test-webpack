@@ -181,3 +181,4 @@ find 조건
 
 * 버그 find=finded 상태에서 전투 > 패배(전투가 끝나면 find="") find를 또 할 수 있다
 * find 분리 / find에서 전투 이벤트 삭제
+* test
