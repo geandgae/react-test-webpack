@@ -345,7 +345,7 @@ const GameStage = () => {
       {/* <button onClick={() => ctrlStage()}>sttest</button> */}
       {/* <button onClick={() => ctrlHp(-maxHp)}>end</button> */}
       <button onClick={() => setCurrentPage("main")}>메인으로</button>
-      {find !== "finded2" &&
+      {find !== "finded" &&
       <button onClick={() => activeFind(environments[stage])}>find</button>
       }
       {stageState !== "reward" && gameResult !== "win" &&
