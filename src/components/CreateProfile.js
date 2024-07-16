@@ -12,22 +12,22 @@ const CreateProfile = ({ saveUserToLocalStorage }) => {
     dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, [name]: value } });
   };
 
-  // 스킬 설정
+  // 직업 설정
   useEffect(() => {
-    switch (profile.skill) {
-      case "swordsmanship":
-        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 25, inv: 80 } });
+    switch (profile.job) {
+      case "warrior":
+        dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 25, inv: 8 } });
         break;
-      case "magic":
+      case "mage":
         dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 5, vit: 3, inv: 5 } });
         break;
-      case "archery":
+      case "hunter":
         dispatch({ type: actionTypes.SET_PROFILE, payload: { ...profile, str: 1, vit: 10, inv: 12 } });
         break;
       default:
         break;
     }
-  }, [profile.skill, dispatch]);
+  }, [profile.job, dispatch]);
 
   return (
     <div>
@@ -82,25 +82,28 @@ const CreateProfile = ({ saveUserToLocalStorage }) => {
         </div>
         <div>
           <label>
-            Job:
+            skill:
             <input
               className="input-name"
               type="text"
               name="name"
-              value={profile.job}
+              value={profile.skill}
               onChange={handleInputChange}
             />
           </label>
         </div>
         <div>
           <label>
-            Skill:
-            <select name="skill" value={profile.skill} onChange={handleInputChange}>
-              <option value="swordsmanship">Swordsmanship</option>
-              <option value="magic">Magic</option>
-              <option value="archery">Archery</option>
+            job:
+            <select name="job" value={profile.job} onChange={handleInputChange}>
+              <option value="warrior" selected>warrior</option>
+              <option value="mage">mage</option>
+              <option value="hunter">hunter</option>
             </select>
           </label>
+          {profile.job === "warrior" && (<div>주사위: 1 / 체력: 25 / 가방: 8</div>)}
+          {profile.job === "mage" && (<div>주사위: 5 / 체력: 3 / 가방: 5</div>)}
+          {profile.job === "hunter" && (<div>주사위: 1 / 체력: 10 / 가방: 12</div>)}
         </div>
       </div>
       <button onClick={saveUserToLocalStorage}>유저 정보 저장</button>
