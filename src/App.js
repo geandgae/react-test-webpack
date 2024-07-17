@@ -85,22 +85,25 @@ const App = () => {
     <>
       {/* intro */}
       {currentPage === "intro" && (
-        <div className="intro">
+        <div className="dimmed intro">
           <span>intro</span>
         </div>
       )}
       {/* main */}
       {currentPage === "main" && (
-        <nav className="main-menu">
-          {isProfileSaved ? <button disabled>new</button> : <button onClick={handleNewButtonClick}>new</button>}
-          {isProfileSaved ? <button onClick={() => setCurrentPage("load")}>load</button> : <button disabled>load</button>}
-          {isProfileSaved ? <button onClick={removeFromLocalStorage}>remove</button> : <button disabled>remove</button>}
-          <button onClick={() => setCurrentPage("trophy")}>trophy</button>
-        </nav>
+        <main className="main">
+          <div className="main-visual"></div>
+          <nav className="main-menu">
+            {isProfileSaved ? <button disabled>new</button> : <button onClick={handleNewButtonClick}>new</button>}
+            {isProfileSaved ? <button onClick={() => setCurrentPage("load")}>load</button> : <button disabled>load</button>}
+            {isProfileSaved ? <button onClick={removeFromLocalStorage}>remove</button> : <button disabled>remove</button>}
+            <button onClick={() => setCurrentPage("trophy")}>trophy</button>
+          </nav>
+        </main>
       )}
       {/* gameover */}
       {currentPage === "gameover" && (
-        <div className="intro" onClick={gameover}>
+        <div className="dimmed" onClick={gameover}>
           <span>gameover</span>
         </div>
       )}
@@ -116,10 +119,12 @@ const App = () => {
       )}
       {/* gamestage */}
       {currentPage === "trophy" && (
-        <nav className="main-menu">
-          <button onClick={() => setCurrentPage("main")}>main</button>
-          <span>trophy : {trophy}</span>
-        </nav>
+        <main className="trophy">
+          <nav className="main-menu">
+            <button onClick={() => setCurrentPage("main")}>main</button>
+            <span>trophy : {trophy}</span>
+          </nav>
+        </main>
       )}
     </>
   );

@@ -9,14 +9,14 @@ const ViewProfile = () => {
 
   return (
     <div>
-      <div className={`Avatar-preview ${profile.head} ${profile.eyes} ${profile.face}`}>
-        <div className="Avatar-inner">
-          <div className="Avatar-head"><span></span></div>
-          <div className="Avatar-eyes"><span></span></div>
-          <div className="Avatar-face"><span></span></div>
+      <div className={`avatar-preview ${profile.head} ${profile.eyes} ${profile.face}`}>
+        <div className="avatar-inner">
+          <div className="avatar-head"><span></span></div>
+          <div className="avatar-eyes"><span></span></div>
+          <div className="avatar-face"><span></span></div>
         </div>
       </div>
-      <div className="Avatar-figure view">
+      <div className="avatar-figure view">
         <div>name: {profile.name}</div>
         <div>job: {profile.job}</div>
         <div>skill: {profile.skill}</div>

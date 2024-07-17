@@ -465,7 +465,7 @@ a:hover {
   }
 }
 
-.Avatar-preview {
+.avatar-preview {
   width: 200px;
   height: 200px;
   border: 1px solid #111;
@@ -474,7 +474,7 @@ a:hover {
   justify-content: center;
   padding: 0;
   margin: 0;
-  .Avatar-inner {
+  .avatar-inner {
     width: 180px;
     height: 180px;
     position: relative;
@@ -482,7 +482,7 @@ a:hover {
     margin: 0;
     overflow: hidden;
   }
-  .Avatar-head {
+  .avatar-head {
     width: 100%;
     height: 90px;
     background-color: #1b1b1b;
@@ -493,7 +493,7 @@ a:hover {
     border-top-left-radius : 100px;
     border-bottom-right-radius : 20px;
   }
-  .Avatar-eyes {
+  .avatar-eyes {
     width: 100%;
     height: 20px;
     position: absolute;
@@ -518,7 +518,7 @@ a:hover {
       }
     }
   }
-  .Avatar-face {
+  .avatar-face {
     width: 100%;
     height: 60%;
     position: absolute;
@@ -537,13 +537,13 @@ a:hover {
     }
   }
   &.bald {
-    .Avatar-head { 
+    .avatar-head { 
       display: none;
     }
-    .Avatar-eyes {
+    .avatar-eyes {
       top: 100px;
     }
-    .Avatar-face {
+    .avatar-face {
       height: 100%;
       span {
         height: 90%;
@@ -552,7 +552,7 @@ a:hover {
     }
   }
   &.longHair {
-    .Avatar-head {
+    .avatar-head {
       z-index: 0;
       span {
         width: 100%;
@@ -563,7 +563,7 @@ a:hover {
     }
   }
   &.smallEyes {
-    .Avatar-eyes {
+    .avatar-eyes {
       span {
         width: 110px;
       }
@@ -576,7 +576,7 @@ a:hover {
     }
   }
   &.square {
-    .Avatar-face {
+    .avatar-face {
       span {
         background-color: #dfe9d2;
         border-radius : 5px;
@@ -589,7 +589,7 @@ a:hover {
   height: 50px;
   scale: 0.2;
 }
-.Avatar-figure {
+.avatar-figure {
   &.view {
     font-size: 10px;
     padding: 0;
@@ -598,16 +598,16 @@ a:hover {
     }
   }
 }
-.Avatar-figure, .Avatar-info {
+.avatar-figure, .avatar-info {
   margin: 5px 0;
 }
 
-.Avatar-figure label, .Avatar-info label {
+.avatar-figure label, .avatar-info label {
   display: block;
   margin: 5px 0;
 }
 
-.Avatar-figure select, .Avatar-info input, .Avatar-info select {
+.avatar-figure select, .avatar-info input, .avatar-info select {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -635,6 +635,20 @@ h2, h3 {
     bottom: 50px;
     right: 50px;
   }
+}
+
+.dimmed {
+  background-color: #000;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hide {

@@ -292,7 +292,7 @@ const Inventory = ({ ctrlHp, ctrlMaxHp, ctrlInven, buffDiceUp, equipDice, maxIte
 
       {/* looting */}
       {looting === true && 
-      <div className="intro">
+      <div className="dimmed">
         {itemsMsg ? (
         <div>
           <div className={itemsIcon}></div>

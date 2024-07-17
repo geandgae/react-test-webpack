@@ -303,11 +303,11 @@ const GameStage = () => {
     <div>
       <DialogComponent/>
       
-      <div className={`Avatar-preview only-stage ${profile.head} ${profile.eyes} ${profile.face}`}>
-        <div className="Avatar-inner">
-          <div className="Avatar-head"><span></span></div>
-          <div className="Avatar-eyes"><span></span></div>
-          <div className="Avatar-face"><span></span></div>
+      <div className={`avatar-preview only-stage ${profile.head} ${profile.eyes} ${profile.face}`}>
+        <div className="avatar-inner">
+          <div className="avatar-head"><span></span></div>
+          <div className="avatar-eyes"><span></span></div>
+          <div className="avatar-face"><span></span></div>
         </div>
       </div>
 
@@ -367,7 +367,7 @@ const GameStage = () => {
       />
       {/* dice */}
       {stageState == "enemy" &&
-      <div className="intro">
+      <div className="dimmed">
         <div className="ground">
           <Dice
             ctrlHp={ctrlHp}
